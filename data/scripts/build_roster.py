@@ -209,7 +209,7 @@ link_counters(roster)
 json.dump({"saison": 1, "titre": "Fiches Pokémon — Saison 1",
            "regles": "Stats PokéDraft = total officiel redistribué. Movepool de base = Smogon (Gen 9, National Dex pour les absents de Gen 9). La signature est disponible mais pas obligatoire. Puissances et précisions ajustables par patch.",
            "pokemon": roster},
-          open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+          open(out, "w", encoding="utf-8", newline="\n"), ensure_ascii=False, indent=2)
 
 print("pokemon:", len(roster))
 print("types:", dict(sorted(Counter(t for p in roster for t in p["types"]).items(), key=lambda x: x[1])))

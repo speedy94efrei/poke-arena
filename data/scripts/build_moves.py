@@ -212,7 +212,7 @@ def build():
         if entry["effet"] is None:
             problems.append(f"attaque sans texte FR: {entry['nom']} ({entry['id']})")
     doc["attaques"] = dict(sorted(dictionary.items(), key=lambda kv: fold(kv[1]["nom"])))
-    json.dump(doc, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+    json.dump(doc, open(out, "w", encoding="utf-8", newline="\n"), ensure_ascii=False, indent=2)
     return doc, problems, to_define
 
 
