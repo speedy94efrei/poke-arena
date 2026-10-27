@@ -31,10 +31,10 @@ Sous Windows, clone le dépôt dans le système de fichiers de WSL (par exemple 
 ```bash
 cd server
 npm ci
-node pokemon-showdown start
+node pokemon-showdown start --no-security 8100
 ```
 
-Le serveur écoute sur le port 8000.
+Le serveur écoute sur le port 8100, celui qu'attend le site. `--no-security` est réservé au développement : il accepte n'importe quel pseudo libre, sans passer par le serveur de connexion de Showdown.
 
 ### API
 
@@ -58,7 +58,26 @@ npm install
 npm run dev
 ```
 
-Le site répond sur http://localhost:3000. `npm run typecheck` vérifie les types, y compris ceux du roster.
+Le site répond sur http://localhost:3000, ou sur le port libre suivant si celui-ci est pris (le terminal l'affiche). `npm run typecheck` vérifie les types, y compris ceux du roster. Pour viser un autre serveur de combat, définis `NUXT_PUBLIC_SHOWDOWN_URL` (par défaut `ws://localhost:8100/showdown/websocket`).
+
+### Tester un combat
+
+1. Lance le serveur de combat et le site.
+2. Ouvre `/pokedraft/combat` dans deux fenêtres, dont une en navigation privée.
+3. Dans chacune, choisis un pseudo et une équipe de 6 parmi le roster (sets par défaut des fiches).
+4. Défie l'autre pseudo, ou lance la recherche dans les deux fenêtres.
+
+Recharger la page pendant un combat coupe la connexion : le combat est perdu pour cette fenêtre.
+
+### Décors de combat
+
+Les décors et plateformes de `web/public/combat/` ne sont pas versionnés : ce sont des découpes de planches tierces (décors de Pokémon Platine © Nintendo, extraits par Sunday-Domeko ; décors de Princess-Phoenix). Pour les générer à partir des deux planches :
+
+```bash
+python data/scripts/cut_battle_assets.py <planche Platine> <planche Princess-Phoenix> web/public/combat
+```
+
+Sans eux, le site se rabat sur les décors en ligne de Showdown.
 
 ### Données
 

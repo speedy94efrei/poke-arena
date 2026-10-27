@@ -1,0 +1,289 @@
+<template>
+  <div ref="wrapper" class="scene-wrap">
+    <div class="scene" :style="{ transform: `scale(${scale})`, backgroundImage: `url(${stage.decor}), url(${FALLBACK_DECOR})` }">
+      <div v-if="weatherClass" class="scene__weather" :class="weatherClass" />
+
+      <div v-if="fieldLabel" class="scene__field">{{ fieldLabel }}</div>
+
+      <div class="scene__platform scene__platform--opp">
+        <img v-if="stage.plateforme" :src="`${stage.plateforme}-adverse.png`" alt="" @error="hide">
+      </div>
+      <div v-if="opp" :key="`opp-${anims[oppSide].key}`" class="scene__sprite scene__sprite--opp" :class="{ 'scene__sprite--fainted': opp.fainted }" :style="{ animation: anims[oppSide].name }">
+        <img :alt="speciesName(opp.speciesId)" class="scene__img" :src="spriteUrl(opp.speciesId, 'face')">
+      </div>
+      <div class="scene__hazards scene__hazards--opp">
+        <span v-for="hazard in hazards(oppSide)" :key="hazard.id" class="hazard" :style="{ boxShadow: `0 0 0 2px ${hazard.couleur}` }">
+          <span class="hazard__icon" :style="{ background: hazard.couleur }">{{ hazard.icone }}</span>{{ hazard.label }}
+        </span>
+      </div>
+
+      <div class="scene__platform scene__platform--me">
+        <img v-if="stage.plateforme" :src="`${stage.plateforme}-joueur.png`" alt="" @error="hide">
+      </div>
+      <div v-if="me" :key="`me-${anims[meSide].key}`" class="scene__sprite scene__sprite--me" :class="{ 'scene__sprite--fainted': me.fainted }" :style="{ animation: anims[meSide].name }">
+        <img :alt="speciesName(me.speciesId)" class="scene__img" :src="spriteUrl(me.speciesId, meSide === battle.mySide ? 'dos' : 'face')">
+      </div>
+      <div class="scene__hazards scene__hazards--me">
+        <span v-for="hazard in hazards(meSide)" :key="hazard.id" class="hazard" :style="{ boxShadow: `0 0 0 2px ${hazard.couleur}` }">
+          <span class="hazard__icon" :style="{ background: hazard.couleur }">{{ hazard.icone }}</span>{{ hazard.label }}
+        </span>
+      </div>
+
+      <BattleHpCard v-if="opp" class="scene__card scene__card--opp" :battle="battle" :side="oppSide" :pokemon="opp" />
+      <BattleHpCard v-if="me" class="scene__card scene__card--me" :battle="battle" :side="meSide" :pokemon="me" />
+
+      <span
+        v-for="item in battle.floats"
+        :key="item.id"
+        class="scene__float"
+        :class="item.side === meSide ? 'scene__float--me' : 'scene__float--opp'"
+        :style="{ color: item.color }"
+      >{{ item.text }}</span>
+
+      <div class="scene__message">
+        <span aria-live="polite" class="scene__text">{{ battle.message }}</span>
+        <span v-if="waiting" class="scene__cursor" />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import type { BattleState, SideId } from '~/utils/battleTracker'
+import type { Stage } from '~/utils/stages'
+
+const props = defineProps<{ battle: BattleState, stage: Stage }>()
+
+const wrapper = ref<HTMLElement>()
+const scale = ref(1)
+const meSide = computed<SideId>(() => props.battle.mySide ?? 'p1')
+const oppSide = computed<SideId>(() => meSide.value === 'p1' ? 'p2' : 'p1')
+const me = computed(() => activePokemon(props.battle, meSide.value))
+const opp = computed(() => activePokemon(props.battle, oppSide.value))
+const anims = computed(() => props.battle.anims)
+const waiting = computed(() => Boolean(props.battle.request) && !props.battle.choiceSent)
+
+const weatherClass = computed(() => {
+  const weather = props.battle.weather
+  if (['raindance', 'primordialsea'].includes(weather)) return 'scene__weather--rain'
+  if (['snow', 'snowscape', 'hail'].includes(weather)) return 'scene__weather--snow'
+  if (['sunnyday', 'desolateland'].includes(weather)) return 'scene__weather--sun'
+  if (weather === 'sandstorm') return 'scene__weather--sand'
+  return ''
+})
+
+const fieldLabel = computed(() => [
+  WEATHERS[props.battle.weather]?.nom,
+  ...props.battle.fieldEffects.map(effect => FIELD_EFFECTS[effect] ?? effect),
+].filter(Boolean).join(' · '))
+
+const hazards = (side: SideId) => Object.entries(props.battle.sides[side].conditions).map(([id, layers]) => {
+  const info = SIDE_CONDITIONS[id] ?? { nom: id, couleur: '#5a6478', icone: '•' }
+  return { id, ...info, label: layers > 1 ? `${info.nom} ×${layers}` : info.nom }
+})
+
+const hide = (event: Event) => {
+  (event.target as HTMLImageElement).style.display = 'none'
+}
+
+let observer: ResizeObserver | undefined
+onMounted(() => {
+  observer = new ResizeObserver(() => {
+    const element = wrapper.value
+    if (element) scale.value = Math.max(.45, Math.min(1.35, element.clientWidth / 820, element.clientHeight / 470))
+  })
+  if (wrapper.value) observer.observe(wrapper.value)
+})
+onBeforeUnmount(() => observer?.disconnect())
+</script>
+
+<style scoped>
+.scene-wrap {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.scene {
+  position: relative;
+  width: 820px;
+  height: 470px;
+  flex: none;
+  transform-origin: 50% 50%;
+  border-radius: var(--r);
+  overflow: hidden;
+  background-color: #88b0c8;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  box-shadow: var(--pnS);
+}
+
+.scene__weather {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.scene__weather--rain {
+  background: rgba(30, 50, 90, .22) repeating-linear-gradient(105deg, rgba(220, 235, 255, 0) 0 14px, rgba(220, 235, 255, .28) 14px 15px, rgba(220, 235, 255, 0) 15px 40px);
+  background-size: 40px 120px;
+  animation: rain .5s linear infinite;
+}
+
+.scene__weather--snow {
+  background: rgba(220, 235, 255, .12) radial-gradient(circle, rgba(255, 255, 255, .9) 0 2px, transparent 3px);
+  background-size: 34px 40px;
+  animation: snow 3s linear infinite;
+}
+
+.scene__weather--sun { background: radial-gradient(circle at 85% 0, rgba(255, 220, 120, .55), rgba(255, 160, 60, .12) 60%, transparent); }
+.scene__weather--sand { background: rgba(196, 160, 90, .35) repeating-linear-gradient(170deg, rgba(240, 210, 150, 0) 0 22px, rgba(240, 210, 150, .3) 22px 24px); background-size: 120px 60px; animation: rain .9s linear infinite; }
+
+.scene__field {
+  position: absolute;
+  left: 50%;
+  top: 12px;
+  transform: translateX(-50%);
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 14px;
+  background: rgba(10, 30, 70, .85);
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .55);
+  display: flex;
+  align-items: center;
+  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  white-space: nowrap;
+  z-index: 6;
+}
+
+.scene__platform {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 40%, rgba(255, 255, 255, .35), rgba(60, 90, 60, .55) 60%, rgba(0, 0, 0, .25) 72%, transparent 73%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.scene__platform img {
+  width: 100%;
+  image-rendering: pixelated;
+}
+
+.scene__platform--opp { left: 480px; top: 200px; width: 260px; height: 44px; }
+.scene__platform--me { left: 30px; top: 330px; width: 340px; height: 58px; }
+
+.scene__sprite {
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 2;
+}
+
+.scene__sprite--opp { left: 520px; top: 28px; width: 180px; height: 196px; }
+.scene__sprite--me { left: 80px; top: 150px; width: 240px; height: 210px; }
+.scene__sprite--fainted { opacity: 0; transition: opacity .2s .7s; }
+
+.scene__img {
+  display: block;
+  max-width: none;
+  image-rendering: pixelated;
+  transform: scale(1.35);
+  transform-origin: 50% 100%;
+}
+
+.scene__sprite--opp .scene__img { transform: scale(1.15); }
+
+.scene__hazards {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  z-index: 4;
+}
+
+.scene__hazards--opp { left: 470px; top: 250px; width: 280px; }
+.scene__hazards--me { left: 30px; top: 380px; width: 340px; }
+
+.hazard {
+  height: 24px;
+  padding: 0 8px 0 3px;
+  border-radius: 6px;
+  background: rgba(12, 16, 24, .82);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  white-space: nowrap;
+}
+
+.hazard__icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+}
+
+.scene__card { position: absolute; z-index: 5; }
+.scene__card--opp { left: 22px; top: 22px; }
+.scene__card--me { left: 508px; top: 296px; }
+
+.scene__float {
+  position: absolute;
+  z-index: 7;
+  font: 700 26px 'Pixelify Sans', sans-serif;
+  text-shadow: 2px 2px 0 #000, 0 0 6px #000;
+  animation: floatUp 1.3s ease-out both;
+  pointer-events: none;
+}
+
+.scene__float--opp { left: 580px; top: 70px; }
+.scene__float--me { left: 170px; top: 200px; }
+
+.scene__message {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  height: 50px;
+  border-radius: 10px;
+  background: var(--tb);
+  box-shadow: inset 0 0 0 3px var(--tbB), inset 0 0 0 5px rgba(255, 255, 255, .55), 0 3px 0 rgba(0, 0, 0, .25);
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  gap: 10px;
+  z-index: 8;
+}
+
+.scene__text {
+  flex: 1;
+  font: 700 18px 'Atkinson Hyperlegible', sans-serif;
+  color: var(--tbTx);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scene__cursor {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid var(--tbB);
+  animation: cursor .6s steps(2) infinite;
+}
+</style>
