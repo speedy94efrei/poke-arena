@@ -2,7 +2,7 @@
   --pg: #18202c; --pgB: #141b25; --fr: #1e2735; --pn: #263142; --pn2: #2e3a4e; --tx: #f4f1e6; --sh: 2px 2px 0 #0b0f16;
   --mu: #b9c2d0; --bd: #0b0f16; --pnS: inset 0 0 0 2px #46566e, 0 0 0 3px #0b0f16, 0 4px 0 3px rgba(0, 0, 0, .35);
   --r: 12px; --hd: #2f74a3; --hdTx: #fff; --chip: #36435a; --dk: #111722; --ac: #c8362a; --sel: #f8d030; --selTx: #2a2410;
-  --in: #1a2230; --uA: #f8d030; --uAtx: #2a2410;
+  --in: #1a2230; --uA: #f8d030; --uAtx: #2a2410; --uB: #1b4a6b; --hdSh: 2px 2px 0 #1b4a6b;
   --hpB: #f4f0d8; --hpTx: #2a2a2a; --hpSh: 2px 2px 0 #d8d2b8; --hpTr: #3a3a3a; --hpLb: #f8c830; --cut: none;
   --tb: #f4f2ea; --tbB: #d84838; --tbTx: #2a2a2a;
 }
@@ -11,7 +11,7 @@
   --pg: #101319; --pgB: #0c0e13; --fr: #181c24; --pn: #222834; --pn2: #2a3140; --tx: #f2f4f8; --sh: 1px 1px 0 #000;
   --mu: #a7b2c6; --bd: #07090d; --pnS: inset 0 0 0 1px rgba(255, 255, 255, .08), 0 0 0 2px #07090d, 0 6px 14px rgba(0, 0, 0, .45);
   --r: 6px; --hd: #c85a0c; --hdTx: #fff; --chip: #323a4a; --dk: #0c0f14; --ac: #c85a0c; --sel: #ffb020; --selTx: #231500;
-  --in: #161a22; --uA: #ffb020; --uAtx: #231500;
+  --in: #161a22; --uA: #ffb020; --uAtx: #231500; --uB: #6a2a00; --hdSh: 1px 1px 0 #6a2a00;
   --hpB: rgba(14, 17, 24, .9); --hpTx: #fff; --hpSh: 1px 1px 0 #000; --hpTr: #07090d; --hpLb: #ff7a1a;
   --cut: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
   --tb: rgba(10, 12, 18, .92); --tbB: #ff7a1a; --tbTx: #fff;

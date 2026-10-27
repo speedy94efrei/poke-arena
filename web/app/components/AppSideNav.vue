@@ -40,7 +40,7 @@ const { gen, setGen } = useGenStyle()
 
 const items = [
   { icon: '◆', label: 'Accueil de saison', color: 'var(--hd)' },
-  { icon: 'C', label: 'Codex', color: 'var(--hd)' },
+  { icon: 'C', label: 'Codex', color: 'var(--hd)', to: '/pokedraft/codex' },
   { icon: 'A', label: 'Atelier PokéDraft', color: '#5a8a3a' },
   { icon: 'D', label: 'Classé · Draft', color: '#c8362a' },
   { icon: '⚔', label: 'Combat libre et défis', color: '#3d6fc8', to: '/pokedraft/combat' },

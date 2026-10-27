@@ -78,6 +78,11 @@ npm run dev
 
 Le site répond sur http://localhost:3000, ou sur le port libre suivant si celui-ci est pris (le terminal l'affiche). `npm run typecheck` vérifie les types, y compris ceux du roster. Pour viser un autre serveur de combat, définis `NUXT_PUBLIC_SHOWDOWN_URL` (par défaut `ws://localhost:8100/showdown/websocket`).
 
+Pages disponibles :
+
+- `/pokedraft/codex` : le Codex, les 50 fiches de la saison lues dans `data/rosters/roster-saison-1.json`. Vue par génération ou par archétype, filtres, comparaison de deux fiches, movepool complet et infobulle sur chaque attaque. « Copier dans l'Atelier » garde le set par défaut dans le navigateur (`localStorage`, 3 variantes par Pokémon) en attendant la page Atelier ;
+- `/pokedraft/combat` : le combat libre contre le serveur local (voir plus bas).
+
 ### Tester un combat
 
 1. Lance le serveur de combat et le site.
