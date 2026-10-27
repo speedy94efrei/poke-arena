@@ -45,6 +45,8 @@ export const SIDE_CONDITIONS: Record<string, { nom: string, couleur: string, ico
   tailwind: { nom: 'Vent Arrière', couleur: '#81b9ef', icone: '»' },
   safeguard: { nom: 'Rune Protect', couleur: '#ef70ef', icone: '✚' },
   mist: { nom: 'Brume', couleur: '#9fa19f', icone: '≈' },
+  murfossile: { nom: 'Mur Fossile', couleur: '#afa981', icone: '▣' },
+  nuageparfume: { nom: 'Nuage Parfumé', couleur: '#ef70ef', icone: '✿' },
 }
 
 export function boostVerb(amount: number): string {

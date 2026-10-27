@@ -57,14 +57,15 @@ def pokedex(roster, ability_names):
 
 
 def abilities(roster):
-    lines = ["export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTable = {"]
+    lines = ["import { avecEffets } from './outils';", "import { EffetsTalents } from './effets-talents';", "",
+             "const Fiches: import('../../../sim/dex-abilities').ModdedAbilityDataTable = {"]
     created = [p for p in roster if not p["talent"]["origine"].startswith("officiel")]
     for number, p in enumerate(created, start=1):
         talent = p["talent"]
         lines += [f"\t{talent['id']}: {{", f"\t\tname: {ps_name(talent['nom'])},",
                   f"\t\tshortDesc: {text(talent['effet'])},", "\t\trating: 3,", f"\t\tnum: -{number},",
                   "\t\tflags: {},", "\t},"]
-    return "\n".join(lines + ["};", ""])
+    return "\n".join(lines + ["};", "", "export const Abilities = avecEffets(Fiches, EffetsTalents);", ""])
 
 
 def move_flags(move):
@@ -83,7 +84,8 @@ def accuracy(move):
 
 
 def moves(roster, dictionary):
-    lines = ["export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {"]
+    lines = ["import { avecEffets } from './outils';", "import { EffetsAttaques } from './effets-attaques';", "",
+             "const Fiches: import('../../../sim/dex-moves').ModdedMoveDataTable = {"]
     hits = {p["signatureId"]: p["signature"]["coups"] for p in roster}
     created = [m for m in dictionary.values() if m["origine"] == "signature créée"]
     for number, move in enumerate(created, start=1):
@@ -98,7 +100,7 @@ def moves(roster, dictionary):
         lines += [f"\t\tpriority: {move['priorite']},", f"\t\tflags: {move_flags(move)},"]
         if hits.get(move["id"]):
             lines.append(f"\t\tmultihit: {hits[move['id']]},")
-        lines += [f"\t\ttarget: {text('self' if status else 'normal')},", "\t\tsecondary: null,",
+        lines += [f"\t\ttarget: {text('self' if status else 'normal')},",
                   f"\t\tshortDesc: {text(move['effet'])},", "\t},"]
     fields = {"puissance": "basePower", "precision": "accuracy", "priorite": "priority", "type": "type", "categorie": "category"}
     for move in dictionary.values():
@@ -110,7 +112,7 @@ def moves(roster, dictionary):
                      "categorie": text(CATEGORIES[move["categorie"]])}.get(field, str(move[field]))
             lines.append(f"\t\t{fields[field]}: {value},")
         lines.append("\t},")
-    return "\n".join(lines + ["};", ""])
+    return "\n".join(lines + ["};", "", "export const Moves = avecEffets(Fiches, EffetsAttaques);", ""])
 
 
 def movepool(roster):

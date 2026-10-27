@@ -36,6 +36,21 @@ node pokemon-showdown start --no-security 8100
 
 Le serveur écoute sur le port 8100, celui qu'attend le site. `--no-security` est réservé au développement : il accepte n'importe quel pseudo libre, sans passer par le serveur de connexion de Showdown.
 
+### Effets des fiches
+
+Dans `server/data/mods/pokedraft/`, `pokedex.ts`, `abilities.ts`, `moves.ts` et `movepool.ts` sont générés depuis le roster (voir [data/README.md](data/README.md)). Les effets des talents et des signatures s'écrivent à la main dans `effets-talents.ts` et `effets-attaques.ts`, avec un test par effet dans `server/test/sim/pokedraft/`. Pour lancer ces tests seuls, depuis `server/` :
+
+```bash
+npx mocha --no-config --ui bdd --exit --timeout 60000 test/main.js test/sim/pokedraft/*.js
+```
+
+`--no-config` évite de lancer toute la suite de tests de Showdown.
+
+Restent à coder :
+
+- **Talents** : Chien des Enfers, Mue Éclair, Lecture d'Aura, Rubans Apaisants, Mâchoire Royale, Sage de la Forêt, Majordome, Danse du Carnaval. L'amélioration d'Armure Miroir ne concerne que le combat double.
+- **Signatures** : Marque du Prédateur, Au Service, Halloween, Sommation, Marteau Mastoc. La redirection d'Étincelle Partagée ne concerne que le combat double.
+
 ### API
 
 ```bash

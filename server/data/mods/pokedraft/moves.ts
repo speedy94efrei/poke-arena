@@ -1,6 +1,9 @@
 // Généré depuis data/rosters/roster-saison-1.json par data/scripts/build_mod.py. Ne pas modifier à la main.
 
-export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
+import { avecEffets } from './outils';
+import { EffetsAttaques } from './effets-attaques';
+
+const Fiches: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 	ailesdecoton: {
 		num: -1,
 		name: "Ailes de Coton",
@@ -12,7 +15,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Le lanceur récupère 25 % de ses PV.",
 	},
 	auservice: {
@@ -26,7 +28,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 2,
 		flags: { metronome: 1 },
 		target: "self",
-		secondary: null,
 		shortDesc: "En double : son allié agit juste après lui ce tour-ci. En simple : Wimessir sort, et le Pokémon qui entre a +1 priorité sur sa première attaque au tour suivant.",
 	},
 	blizzardsacre: {
@@ -40,7 +41,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "10 % de chance de geler la cible.",
 	},
 	boldelait: {
@@ -54,7 +54,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { metronome: 1 },
 		target: "self",
-		secondary: null,
 		shortDesc: "Soigne 50 % de ses PV. La première fois qu'il l'utilise dans la game, retire aussi le statut de toute son équipe.",
 	},
 	bourrasqueboreale: {
@@ -68,7 +67,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Baisse la Vit de la cible de 1 cran ; en double, touche les 2 adversaires.",
 	},
 	brasierpurifiant: {
@@ -82,7 +80,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Retire les pièges de son côté du terrain.",
 	},
 	chantdesdunes: {
@@ -96,7 +93,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Touche aussi les Pokémon Vol et ceux qui ont Lévitation.",
 	},
 	chargeblindee: {
@@ -110,7 +106,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Dégâts calculés avec sa Défense au lieu de son Attaque.",
 	},
 	chocprimitif: {
@@ -124,7 +119,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Ignore les talents défensifs de la cible.",
 	},
 	cornecatapulte: {
@@ -138,7 +132,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "30 % de chance de forcer la cible à sortir (remplacée par un Pokémon au hasard).",
 	},
 	coupdecarapace: {
@@ -152,7 +145,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Pose 1 couche de Picots chez l'adversaire.",
 	},
 	coupdepoireau: {
@@ -166,7 +158,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Critique garanti si la cible a boosté une stat. Avec son talent : 50 % de chance de critique, 100 % contre un Pokémon boosté.",
 	},
 	crachatdegravier: {
@@ -180,7 +171,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Pose 1 couche de Picots chez l'adversaire.",
 	},
 	croctyrannique: {
@@ -194,7 +184,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "20 % de chance d'apeurer la cible.",
 	},
 	eboulissismique: {
@@ -208,7 +197,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Pose Piège de Roc chez l'adversaire.",
 	},
 	eclairpercant: {
@@ -222,7 +210,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "S'il met la cible KO avec cette attaque, il gagne +1 Atq et +1 Vit.",
 	},
 	envoleclair: {
@@ -236,7 +223,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 1,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Le lanceur ressort après l'attaque.",
 	},
 	etincellepartagee: {
@@ -250,7 +236,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 2,
 		flags: { metronome: 1 },
 		target: "self",
-		secondary: null,
 		shortDesc: "Soigne 25 % des PV de Pachirisu et de son allié, et attire sur lui les attaques adverses de ce tour.",
 	},
 	etreintevenimeuse: {
@@ -264,7 +249,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Empoisonne la cible et l'empêche de sortir pendant 2 tours.",
 	},
 	gazardent: {
@@ -278,7 +262,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "30 % de chance de brûler.",
 	},
 	glissebanquise: {
@@ -292,7 +275,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Le lanceur ressort après l'attaque.",
 	},
 	griffeglacee: {
@@ -306,7 +288,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 1,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "30 % de chance de baisser la Vit de la cible de 1 cran.",
 	},
 	lameduchef: {
@@ -320,7 +301,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 1,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Aucun effet supplémentaire.",
 	},
 	linceuldefeuilles: {
@@ -334,7 +314,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Baisse la Vit de la cible de 1 cran (2 crans avec son talent).",
 	},
 	linceuldegivre: {
@@ -348,7 +327,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { metronome: 1 },
 		target: "self",
-		secondary: null,
 		shortDesc: "Pose 1 couche de Picots et baisse la Vit du Pokémon en face de 1 cran.",
 	},
 	marquedupredateur: {
@@ -362,7 +340,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Marque la cible, qui ne peut plus sortir du terrain. La marque disparaît si Sharpedo est mis KO ou quitte le terrain. 1 marque par game : une fois la marque posée, l'attaque passe à 70 de puissance avec +1 priorité pour le reste de la game.",
 	},
 	murfossile: {
@@ -376,7 +353,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { metronome: 1 },
 		target: "self",
-		secondary: null,
 		shortDesc: "Pendant 4 tours, son équipe subit 33 % de dégâts physiques en moins, puis le lanceur ressort.",
 	},
 	nuageparfume: {
@@ -390,7 +366,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { metronome: 1 },
 		target: "self",
-		secondary: null,
 		shortDesc: "Pose un nuage sur son camp pendant 3 tours : chaque Pokémon de son camp sur le terrain récupère 15 % de ses PV à la fin de chaque tour, et ses stats ne peuvent pas être baissées.",
 	},
 	paumedaura: {
@@ -404,7 +379,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Priorité +1 si la cible a moins de 50 % de ses PV.",
 	},
 	phareabyssal: {
@@ -418,7 +392,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Le lanceur frappe, récupère 1/8 de ses PV, puis ressort.",
 	},
 	pleingaz: {
@@ -432,7 +405,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { metronome: 1 },
 		target: "self",
-		secondary: null,
 		shortDesc: "Récupère 33 % de ses PV et gagne +1 Vit.",
 	},
 	rechargeelectrique: {
@@ -446,7 +418,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { metronome: 1 },
 		target: "self",
-		secondary: null,
 		shortDesc: "Donne +1 Atq Spé et +1 Vit à son allié (en simple, à lui-même).",
 	},
 	revepartage: {
@@ -460,7 +431,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { metronome: 1 },
 		target: "self",
-		secondary: null,
 		shortDesc: "Le lanceur s'endort 2 tours et récupère tous ses PV ; son allié récupère 25 % de ses PV.",
 	},
 	ripostekaiju: {
@@ -474,7 +444,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: -4,
 		flags: { protect: 1, mirror: 1, metronome: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Puissance doublée (160) s'il a été touché par une attaque ce tour-ci.",
 	},
 	ruadedeboue: {
@@ -488,7 +457,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1, contact: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Baisse la Vit de la cible de 1 cran.",
 	},
 	rubanretour: {
@@ -502,7 +470,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Le lanceur ressort après l'attaque.",
 	},
 	souffledesenfers: {
@@ -516,7 +483,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "30 % de chance de brûler.",
 	},
 	souffledutombeau: {
@@ -530,7 +496,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Retire les pièges de son côté du terrain.",
 	},
 	transe: {
@@ -544,7 +509,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { metronome: 1 },
 		target: "self",
-		secondary: null,
 		shortDesc: "Pose Distorsion pendant 3 tours et soigne 25 % de ses PV.",
 	},
 	ventilofeuilles: {
@@ -558,7 +522,6 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		priority: 0,
 		flags: { protect: 1, mirror: 1, metronome: 1 },
 		target: "normal",
-		secondary: null,
 		shortDesc: "Retire les pièges de son côté.",
 	},
 	flyingpress: {
@@ -574,3 +537,5 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		basePower: 70,
 	},
 };
+
+export const Moves = avecEffets(Fiches, EffetsAttaques);

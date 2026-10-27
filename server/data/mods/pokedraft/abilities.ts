@@ -1,6 +1,9 @@
 // Généré depuis data/rosters/roster-saison-1.json par data/scripts/build_mod.py. Ne pas modifier à la main.
 
-export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTable = {
+import { avecEffets } from './outils';
+import { EffetsTalents } from './effets-talents';
+
+const Fiches: import('../../../sim/dex-abilities').ModdedAbilityDataTable = {
 	couchepolaire: {
 		name: "Couche Polaire",
 		shortDesc: "−25 % de dégâts physiques reçus tant qu'il a plus de 50 % de ses PV.",
@@ -303,3 +306,5 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 		flags: {},
 	},
 };
+
+export const Abilities = avecEffets(Fiches, EffetsTalents);

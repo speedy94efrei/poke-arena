@@ -27,8 +27,7 @@ python data/scripts/build_mod.py data/rosters/roster-saison-1.json server/data s
 3. `build_roster.py` lit les fiches, applique les corrections (une fiche corrigée remplace celle du PDF), vérifie les stats et relie les contres entre Pokémon du roster.
 4. `build_moves.py` ajoute le movepool National Dex de chaque Pokémon, lu dans `server/data`, le dictionnaire des attaques avec les valeurs PokéDraft, et les identifiants Showdown du talent, de l'objet et de la nature des sets par défaut.
 5. `validate_roster.py` vérifie le fichier par rapport au schéma, puis sa cohérence : totaux de stats, attaques référencées présentes dans le dictionnaire, signature dans le movepool, contres réciproques. Il s'arrête en erreur au moindre problème.
-
-6. `build_mod.py` écrit les fiches dans le mod Showdown (`server/data/mods/pokedraft/`) : stats, talents créés, signatures créées, valeurs des attaques officielles modifiées et ajouts au movepool. Les talents et signatures créés y ont leurs valeurs et leur description, mais leurs effets restent à coder à la main. Une signature sans PP dans sa fiche reçoit 10 PP en attendant.
+6. `build_mod.py` écrit les fiches dans le mod Showdown (`server/data/mods/pokedraft/`) : stats, talents créés, signatures créées, valeurs des attaques officielles modifiées et ajouts au movepool. Les effets des talents et des signatures, eux, s'écrivent à la main dans `effets-talents.ts` et `effets-attaques.ts`, que les fichiers générés fusionnent avec les données des fiches. Une signature sans PP dans sa fiche reçoit 10 PP en attendant.
 
 `build_moves.py` et `validate_roster.py` listent aussi ce qui reste à compléter dans les fiches, sans bloquer : attaques du set absentes du movepool, signatures sans PP ni contact, fiches à valider.
 
