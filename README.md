@@ -80,14 +80,15 @@ Le site répond sur http://localhost:3000, ou sur le port libre suivant si celui
 
 Pages disponibles :
 
-- `/pokedraft/codex` : le Codex, les 50 fiches de la saison lues dans `data/rosters/roster-saison-1.json`. Vue par génération ou par archétype, filtres, comparaison de deux fiches, movepool complet et infobulle sur chaque attaque. « Copier dans l'Atelier » garde le set par défaut dans le navigateur (`localStorage`, 3 variantes par Pokémon) en attendant la page Atelier ;
-- `/pokedraft/combat` : le combat libre contre le serveur local (voir plus bas).
+- `/pokedraft/codex` : le Codex, les 50 fiches de la saison lues dans `data/rosters/roster-saison-1.json`. Vue par génération ou par archétype, filtres, comparaison de deux fiches, movepool complet et infobulle sur chaque attaque. « Copier dans l'Atelier » y crée une variante à partir du set par défaut ;
+- `/pokedraft/atelier` : l'Atelier, jusqu'à 3 variantes par Pokémon. Le talent est fixe ; on choisit les 4 attaques dans le movepool (les attaques refusées par le format sont grisées), l'objet, la nature, les EV (répartitions toutes faites ou curseurs) et deux IV à 0 (Vitesse pour la Distorsion, Attaque). Les variantes sont gardées dans le navigateur (`localStorage`) en attendant les comptes ;
+- `/pokedraft/combat` : le combat libre contre le serveur local (voir plus bas). Chaque Pokémon de l'équipe part avec sa variante favorite, ou le set par défaut s'il n'en a pas ; un menu par Pokémon permet d'en choisir une autre.
 
 ### Tester un combat
 
 1. Lance le serveur de combat et le site.
 2. Ouvre `/pokedraft/combat` dans deux fenêtres, dont une en navigation privée.
-3. Dans chacune, choisis un pseudo et une équipe de 6 parmi le roster (sets par défaut des fiches).
+3. Dans chacune, choisis un pseudo et une équipe de 6 parmi le roster (variantes de l'Atelier ou sets par défaut des fiches).
 4. Défie l'autre pseudo, ou lance la recherche dans les deux fenêtres.
 
 Recharger la page pendant un combat coupe la connexion : le combat est perdu pour cette fenêtre.

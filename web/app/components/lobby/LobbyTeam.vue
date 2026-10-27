@@ -1,6 +1,6 @@
 <template>
   <UiPanel title="Ton équipe">
-    <template #aside>{{ selected.length }}/{{ TEAM_SIZE }} · sets par défaut des fiches</template>
+    <template #aside>{{ selected.length }}/{{ TEAM_SIZE }} · sets de l'Atelier ou par défaut</template>
 
     <div class="slots">
       <div v-for="index in TEAM_SIZE" :key="index" class="slot" :class="{ 'slot--empty': !team[index - 1] }">
@@ -41,15 +41,30 @@
       </button>
     </div>
 
-    <div v-if="team.length" class="details">
-      <div v-for="(pokemon, index) in team" :key="pokemon.id" class="detail">
-        <span class="detail__name">{{ pokemon.nom }}</span>
-        <span class="detail__meta">{{ pokemon.setParDefaut.objet }} · {{ pokemon.talent.nom }} · {{ pokemon.setParDefaut.nature }}</span>
+    <div v-if="entries.length" class="details">
+      <div v-for="(entry, index) in entries" :key="entry.pokemon.id" class="detail">
+        <span class="detail__name">{{ entry.pokemon.nom }}</span>
+        <div class="detail__line">
+          <select
+            class="detail__select"
+            :value="entry.choice"
+            :aria-label="`Set de ${entry.pokemon.nom}`"
+            @change="event => chooseVariant(entry.pokemon.id, Number((event.target as HTMLSelectElement).value))"
+          >
+            <option :value="DEFAULT_SET">Set par défaut</option>
+            <option v-for="(variant, variantIndex) in variants(entry.pokemon.id)" :key="variantIndex" :value="variantIndex">
+              {{ variant.favorite ? '★ ' : '' }}{{ variant.nom }}
+            </option>
+          </select>
+          <span class="detail__meta">{{ findObjet(entry.variant.objetId)?.nom ?? itemName(entry.variant.objetId) }} · {{ entry.pokemon.talent.nom }} · {{ findNature(entry.variant.natureId)?.nom }}</span>
+          <NuxtLink class="detail__edit" :to="`/pokedraft/atelier?id=${entry.pokemon.id}`">Modifier ▸</NuxtLink>
+        </div>
         <span class="detail__moves">
           <span v-for="move in sets[index]!.moves" :key="move" class="detail__move" :style="{ background: moveColor(move) }">{{ moveName(move) }}</span>
-          <span v-if="pokemon.setParDefaut.horsMovepool.length" class="detail__warning" :title="`Retirée${pokemon.setParDefaut.horsMovepool.length > 1 ? 's' : ''} : hors movepool dans la fiche`">
-            ! {{ pokemon.setParDefaut.horsMovepool.map(moveName).join(', ') }}
+          <span v-if="entry.choice === DEFAULT_SET && entry.pokemon.setParDefaut.horsMovepool.length" class="detail__warning detail__warning--struck" :title="`Retirée${entry.pokemon.setParDefaut.horsMovepool.length > 1 ? 's' : ''} : hors movepool dans la fiche`">
+            ! {{ entry.pokemon.setParDefaut.horsMovepool.map(moveName).join(', ') }}
           </span>
+          <span v-for="warning in entry.warnings" :key="warning" class="detail__warning">! {{ warning }}</span>
         </span>
       </div>
     </div>
@@ -57,7 +72,8 @@
 </template>
 
 <script setup lang="ts">
-const { selected, team, sets, complete, toggle, randomize, makeLead, clear } = useTeamPicker()
+const { selected, team, entries, sets, complete, toggle, randomize, makeLead, chooseVariant, clear } = useTeamPicker()
+const { variants } = useAtelier()
 const query = ref('')
 
 const filtered = computed(() => {
@@ -246,7 +262,29 @@ const moveColor = (moveId: string) => {
 }
 
 .detail__name { font: 700 14px 'Pixelify Sans', sans-serif; grid-row: span 2; }
-.detail__meta { font: 400 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+
+.detail__line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.detail__select {
+  height: 26px;
+  border: 0;
+  border-radius: 6px;
+  padding: 0 6px;
+  font-weight: 700;
+  font-size: 12px;
+  background: var(--in);
+  color: var(--tx);
+  box-shadow: inset 0 0 0 2px var(--chip);
+}
+
+.detail__meta { flex: 1; min-width: 0; font: 400 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.detail__edit { font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
 
 .detail__moves {
   display: flex;
@@ -274,6 +312,7 @@ const moveColor = (moveId: string) => {
   font: 700 11px 'Atkinson Hyperlegible', sans-serif;
   display: flex;
   align-items: center;
-  text-decoration: line-through;
 }
+
+.detail__warning--struck { text-decoration: line-through; }
 </style>

@@ -94,6 +94,7 @@ const rows = computed(() => {
     if (move.id === props.pokemon.signatureId) badges.push({ label: '★ Signature', bg: 'var(--uA)', fg: 'var(--uAtx)' })
     if (props.pokemon.ajoutsMovepoolIds.includes(move.id)) badges.push({ label: '+ Ajout PokéDraft', bg: '#48c070', fg: '#062010' })
     if (move.origine === 'officielle modifiée') badges.push({ label: '✎ Modifiée', bg: '#e8704a', fg: '#1a0a00' })
+    if (banReason(props.pokemon.id, move.id)) badges.push({ label: '⛔ Interdite', bg: '#c8362a', fg: '#fff' })
     return {
       move,
       badges,

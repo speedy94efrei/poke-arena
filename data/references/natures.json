@@ -1,0 +1,152 @@
+[
+  {
+    "id": "quirky",
+    "nom": "Bizarre",
+    "plus": null,
+    "moins": null
+  },
+  {
+    "id": "docile",
+    "nom": "Docile",
+    "plus": null,
+    "moins": null
+  },
+  {
+    "id": "hardy",
+    "nom": "Hardi",
+    "plus": null,
+    "moins": null
+  },
+  {
+    "id": "bashful",
+    "nom": "Pudique",
+    "plus": null,
+    "moins": null
+  },
+  {
+    "id": "serious",
+    "nom": "Sérieux",
+    "plus": null,
+    "moins": null
+  },
+  {
+    "id": "bold",
+    "nom": "Assuré",
+    "plus": "def",
+    "moins": "atk"
+  },
+  {
+    "id": "brave",
+    "nom": "Brave",
+    "plus": "atk",
+    "moins": "spe"
+  },
+  {
+    "id": "calm",
+    "nom": "Calme",
+    "plus": "spd",
+    "moins": "atk"
+  },
+  {
+    "id": "quiet",
+    "nom": "Discret",
+    "plus": "spa",
+    "moins": "spe"
+  },
+  {
+    "id": "mild",
+    "nom": "Doux",
+    "plus": "spa",
+    "moins": "def"
+  },
+  {
+    "id": "rash",
+    "nom": "Foufou",
+    "plus": "spa",
+    "moins": "spd"
+  },
+  {
+    "id": "gentle",
+    "nom": "Gentil",
+    "plus": "spd",
+    "moins": "def"
+  },
+  {
+    "id": "jolly",
+    "nom": "Jovial",
+    "plus": "spe",
+    "moins": "spa"
+  },
+  {
+    "id": "lax",
+    "nom": "Lâche",
+    "plus": "def",
+    "moins": "spd"
+  },
+  {
+    "id": "impish",
+    "nom": "Malin",
+    "plus": "def",
+    "moins": "spa"
+  },
+  {
+    "id": "sassy",
+    "nom": "Malpoli",
+    "plus": "spd",
+    "moins": "spe"
+  },
+  {
+    "id": "naughty",
+    "nom": "Mauvais",
+    "plus": "atk",
+    "moins": "spd"
+  },
+  {
+    "id": "modest",
+    "nom": "Modeste",
+    "plus": "spa",
+    "moins": "atk"
+  },
+  {
+    "id": "naive",
+    "nom": "Naïf",
+    "plus": "spe",
+    "moins": "spd"
+  },
+  {
+    "id": "hasty",
+    "nom": "Pressé",
+    "plus": "spe",
+    "moins": "def"
+  },
+  {
+    "id": "careful",
+    "nom": "Prudent",
+    "plus": "spd",
+    "moins": "spa"
+  },
+  {
+    "id": "relaxed",
+    "nom": "Relax",
+    "plus": "def",
+    "moins": "spe"
+  },
+  {
+    "id": "adamant",
+    "nom": "Rigide",
+    "plus": "atk",
+    "moins": "spa"
+  },
+  {
+    "id": "lonely",
+    "nom": "Solo",
+    "plus": "atk",
+    "moins": "def"
+  },
+  {
+    "id": "timid",
+    "nom": "Timide",
+    "plus": "spe",
+    "moins": "atk"
+  }
+]

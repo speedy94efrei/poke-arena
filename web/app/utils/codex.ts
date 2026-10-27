@@ -80,13 +80,3 @@ export function multiplierLabel(multiplier: number): string {
 export function statColor(value: number): string {
   return value >= 120 ? '#48c070' : value >= 90 ? '#a8c838' : value >= 60 ? 'var(--uA)' : '#e8704a'
 }
-
-export function setText(pokemon: Pokemon): string {
-  const set = pokemon.setParDefaut
-  return [
-    `${pokemon.nom} @ ${set.objet}`,
-    `Talent : ${pokemon.talent.nom}`,
-    `Nature : ${set.nature}`,
-    ...set.attaquesIds.map(id => `- ${moveName(id)}`),
-  ].join('\n')
-}

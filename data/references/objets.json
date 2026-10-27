@@ -1,0 +1,326 @@
+[
+  {
+    "id": "lifeorb",
+    "nom": "Orbe Vie",
+    "groupe": "Puissance",
+    "description": "Objet à tenir. Augmente la puissance des capacités, mais dépense des PV à chaque coup."
+  },
+  {
+    "id": "choiceband",
+    "nom": "Bandeau Choix",
+    "groupe": "Puissance",
+    "description": "Objet à tenir. Ce bandeau augmente l’Attaque, mais ne permet d’utiliser qu’une seule capacité."
+  },
+  {
+    "id": "choicespecs",
+    "nom": "Lunettes Choix",
+    "groupe": "Puissance",
+    "description": "Objet à tenir. Augmente l’Attaque Spéciale, mais ne permet d’utiliser qu’une seule capacité."
+  },
+  {
+    "id": "choicescarf",
+    "nom": "Mouchoir Choix",
+    "groupe": "Puissance",
+    "description": "Objet à tenir. Augmente la Vitesse, mais ne permet d’utiliser qu’une seule capacité."
+  },
+  {
+    "id": "expertbelt",
+    "nom": "Ceinture Pro",
+    "groupe": "Puissance",
+    "description": "Objet à tenir. Une ceinture usée qui augmente légèrement la puissance des capacités super efficaces."
+  },
+  {
+    "id": "muscleband",
+    "nom": "Bandeau Muscle",
+    "groupe": "Puissance",
+    "description": "Objet à tenir. Un bandeau qui augmente légèrement la puissance des capacités physiques."
+  },
+  {
+    "id": "wiseglasses",
+    "nom": "Lunettes Sages",
+    "groupe": "Puissance",
+    "description": "Objet à tenir. Une paire de lunettes épaisses qui augmente légèrement la puissance des capacités spéciales."
+  },
+  {
+    "id": "loadeddice",
+    "nom": "Dé Pipé",
+    "groupe": "Puissance",
+    "description": "Objet à tenir. Les capacités qui frappent plusieurs fois touchent le plus souvent 4 ou 5 fois."
+  },
+  {
+    "id": "weaknesspolicy",
+    "nom": "Vulné-Assurance",
+    "groupe": "Puissance",
+    "description": "Objet à tenir. Augmente beaucoup l’Attaque et l’Attaque Spéciale du Pokémon lorsqu’il est touché par une capacité d’un type auquel il est vulnérable."
+  },
+  {
+    "id": "throatspray",
+    "nom": "Spray Gorge",
+    "groupe": "Puissance",
+    "description": "Augmente l’Attaque Spéciale du porteur lorsqu’il utilise une capacité basée sur le son."
+  },
+  {
+    "id": "powerherb",
+    "nom": "Herbe Pouvoir",
+    "groupe": "Puissance",
+    "description": "Objet à tenir et à usage unique. Permet d’utiliser immédiatement une capacité qui devrait se charger au premier tour."
+  },
+  {
+    "id": "metronome",
+    "nom": "Métronome",
+    "groupe": "Puissance",
+    "description": "Objet à tenir. Booste une capacité utilisée à répétition. L’effet s’annule si une autre capacité est utilisée."
+  },
+  {
+    "id": "scopelens",
+    "nom": "Lentilscope",
+    "groupe": "Puissance",
+    "description": "Objet à tenir. Une lentille qui augmente le taux de critiques du porteur."
+  },
+  {
+    "id": "razorclaw",
+    "nom": "Griffe Rasoir",
+    "groupe": "Puissance",
+    "description": "Objet à tenir. Une griffe crochue et pointue augmentant le taux de critiques."
+  },
+  {
+    "id": "widelens",
+    "nom": "Loupe",
+    "groupe": "Puissance",
+    "description": "Objet à tenir. Une loupe qui augmente légèrement la Précision des capacités."
+  },
+  {
+    "id": "zoomlens",
+    "nom": "Lentille Zoom",
+    "groupe": "Puissance",
+    "description": "Objet à tenir. Augmente la Précision du porteur s’il attaque après l’ennemi."
+  },
+  {
+    "id": "leftovers",
+    "nom": "Restes",
+    "groupe": "Défense et soin",
+    "description": "Objet à tenir. Permet de restaurer graduellement les PV du porteur durant le combat."
+  },
+  {
+    "id": "blacksludge",
+    "nom": "Boue Noire",
+    "groupe": "Défense et soin",
+    "description": "Objet à tenir. Restaure peu à peu les PV des Pokémon de type Poison. Inflige des dégâts à tous les autres types."
+  },
+  {
+    "id": "rockyhelmet",
+    "nom": "Casque Brut",
+    "groupe": "Défense et soin",
+    "description": "Objet à tenir. Inflige des dégâts à l’attaquant si ce dernier utilise une capacité qui atteint directement le porteur."
+  },
+  {
+    "id": "assaultvest",
+    "nom": "Veste de Combat",
+    "groupe": "Défense et soin",
+    "description": "Objet à tenir. Une veste augmentant la Défense Spéciale, mais empêchant d’utiliser des capacités de statut."
+  },
+  {
+    "id": "heavydutyboots",
+    "nom": "Grosses Bottes",
+    "groupe": "Défense et soin",
+    "description": "Le porteur ne subit plus les effets des pièges ou autres entraves posés sur le terrain."
+  },
+  {
+    "id": "focussash",
+    "nom": "Ceinture Force",
+    "groupe": "Défense et soin",
+    "description": "Objet à tenir. S’il a encore tous ses PV, le porteur pourra éviter d’être mis K.O. en un coup. Il ne conservera alors qu’un seul PV."
+  },
+  {
+    "id": "eviolite",
+    "nom": "Évoluroc",
+    "groupe": "Défense et soin",
+    "description": "Objet à tenir. Un étrange concentré d’évolution qui augmente la Défense et la Défense Spéciale d’un Pokémon pouvant évoluer."
+  },
+  {
+    "id": "airballoon",
+    "nom": "Ballon",
+    "groupe": "Défense et soin",
+    "description": "Objet à tenir. Permet au porteur de flotter dans les airs. Il éclate quand le porteur encaisse une attaque."
+  },
+  {
+    "id": "covertcloak",
+    "nom": "Cape Obscure",
+    "groupe": "Défense et soin",
+    "description": "Objet à tenir. Protège le porteur des effets secondaires des capacités adverses."
+  },
+  {
+    "id": "clearamulet",
+    "nom": "Talisman Sain",
+    "groupe": "Défense et soin",
+    "description": "Objet à tenir. Empêche les capacités et talents adverses de baisser les stats du porteur."
+  },
+  {
+    "id": "protectivepads",
+    "nom": "Pare-Effet",
+    "groupe": "Défense et soin",
+    "description": "Objet à tenir. Annule les effets subis par le porteur quand il utilise une attaque directe sur un autre Pokémon."
+  },
+  {
+    "id": "shellbell",
+    "nom": "Grelot Coque",
+    "groupe": "Défense et soin",
+    "description": "Objet à tenir. Restaure un peu les PV du porteur chaque fois qu’il inflige des dégâts."
+  },
+  {
+    "id": "bigroot",
+    "nom": "Grosse Racine",
+    "groupe": "Défense et soin",
+    "description": "Objet à tenir. Augmente la puissance des capacités volant des PV."
+  },
+  {
+    "id": "mentalherb",
+    "nom": "Herbe Mental",
+    "groupe": "Défense et soin",
+    "description": "Objet à tenir. Guérit de certaines attaques limitant le choix des capacités. Ne peut être utilisé qu’une fois."
+  },
+  {
+    "id": "whiteherb",
+    "nom": "Herbe Blanche",
+    "groupe": "Défense et soin",
+    "description": "Objet à tenir. Restaure les stats qui ont subi une baisse. Ne peut être utilisé qu’une fois."
+  },
+  {
+    "id": "sitrusberry",
+    "nom": "Baie Sitrus",
+    "groupe": "Baies",
+    "description": "Une Baie qui restaure quelques PV lorsqu’elle est tenue par un Pokémon."
+  },
+  {
+    "id": "lumberry",
+    "nom": "Baie Prine",
+    "groupe": "Baies",
+    "description": "Une Baie qui soigne toutes les altérations de statut lorsqu’elle est tenue par un Pokémon."
+  },
+  {
+    "id": "salacberry",
+    "nom": "Baie Sailak",
+    "groupe": "Baies",
+    "description": "Tenue, cette Baie augmente la Vitesse en cas de besoin."
+  },
+  {
+    "id": "liechiberry",
+    "nom": "Baie Lichii",
+    "groupe": "Baies",
+    "description": "Tenue, cette Baie augmente l’Attaque en cas de besoin."
+  },
+  {
+    "id": "petayaberry",
+    "nom": "Baie Pitaye",
+    "groupe": "Baies",
+    "description": "Tenue, cette Baie augmente l’Attaque Spéciale en cas de besoin."
+  },
+  {
+    "id": "custapberry",
+    "nom": "Baie Chérim",
+    "groupe": "Baies",
+    "description": "Tenue, cette Baie permet d’utiliser une capacité en priorité une fois en cas de besoin."
+  },
+  {
+    "id": "ejectbutton",
+    "nom": "Bouton Fuite",
+    "groupe": "Contrôle",
+    "description": "Objet à tenir. Permet au porteur de quitter le combat après avoir été touché par une attaque."
+  },
+  {
+    "id": "ejectpack",
+    "nom": "Sac Fuite",
+    "groupe": "Contrôle",
+    "description": "Objet à tenir. Si le porteur subit une baisse de stats, il revient vers son Dresseur et change de place avec un coéquipier."
+  },
+  {
+    "id": "redcard",
+    "nom": "Carton Rouge",
+    "groupe": "Contrôle",
+    "description": "Objet à tenir. Une carte au pouvoir mystérieux qui permet d’éjecter un Pokémon du combat si ce dernier attaque le porteur."
+  },
+  {
+    "id": "shedshell",
+    "nom": "Carapace Mue",
+    "groupe": "Contrôle",
+    "description": "Objet à tenir. Une carapace dure qui permet au porteur de se retirer même s’il est affecté par une attaque immobilisante."
+  },
+  {
+    "id": "roomservice",
+    "nom": "Chariot Distordu",
+    "groupe": "Contrôle",
+    "description": "Objet à tenir. Baisse la Vitesse du porteur lorsque la capacité Distorsion est active."
+  },
+  {
+    "id": "lightclay",
+    "nom": "Lumargile",
+    "groupe": "Contrôle",
+    "description": "Objet à tenir. Prolonge la durée des capacités barrières telles que Mur Lumière et Protection."
+  },
+  {
+    "id": "toxicorb",
+    "nom": "Orbe Toxique",
+    "groupe": "Contrôle",
+    "description": "Objet à tenir. Un orbe bizarre qui empoisonne gravement son porteur durant le combat."
+  },
+  {
+    "id": "flameorb",
+    "nom": "Orbe Flamme",
+    "groupe": "Contrôle",
+    "description": "Objet à tenir. Un orbe bizarre qui brûle son porteur durant le combat."
+  },
+  {
+    "id": "adrenalineorb",
+    "nom": "Orbe Frousse",
+    "groupe": "Contrôle",
+    "description": "Objet à tenir. Si le porteur subit une Intimidation, sa Vitesse augmente."
+  },
+  {
+    "id": "blunderpolicy",
+    "nom": "Assurance Échec",
+    "groupe": "Contrôle",
+    "description": "Si un Pokémon manque sa cible parce qu’une capacité a peu de Précision, sa Vitesse augmente beaucoup."
+  },
+  {
+    "id": "damprock",
+    "nom": "Roche Humide",
+    "groupe": "Météo et champs",
+    "description": "Objet à tenir. Prolonge la durée de la capacité Danse Pluie utilisée par le porteur."
+  },
+  {
+    "id": "heatrock",
+    "nom": "Roche Chaude",
+    "groupe": "Météo et champs",
+    "description": "Objet à tenir. Prolonge la durée de la capacité Zénith utilisée par le porteur."
+  },
+  {
+    "id": "smoothrock",
+    "nom": "Roche Lisse",
+    "groupe": "Météo et champs",
+    "description": "Objet à tenir. Prolonge la durée de la capacité Tempête de Sable utilisée par le porteur."
+  },
+  {
+    "id": "icyrock",
+    "nom": "Roche Glace",
+    "groupe": "Météo et champs",
+    "description": "Objet à tenir. Prolonge la durée de la capacité Chute de Neige utilisée par le porteur."
+  },
+  {
+    "id": "terrainextender",
+    "nom": "Champ’Duit",
+    "groupe": "Météo et champs",
+    "description": "Objet à tenir. Prolonge la durée des champs que le Pokémon peut créer sur le terrain avec une capacité ou un talent."
+  },
+  {
+    "id": "utilityumbrella",
+    "nom": "Parapluie Solide",
+    "groupe": "Météo et champs",
+    "description": "Objet à tenir. Protège le porteur des effets de la pluie et des rayons du soleil."
+  },
+  {
+    "id": "thickclub",
+    "nom": "Masse Os",
+    "groupe": "Propres à un Pokémon",
+    "description": "Objet à faire tenir à Osselait ou Ossatueur. Un os dur qui augmente leur Attaque."
+  }
+]

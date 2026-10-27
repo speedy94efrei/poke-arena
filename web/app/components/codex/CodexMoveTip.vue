@@ -15,6 +15,7 @@
         <div v-for="num in nums" :key="num.label" class="tip__num"><span>{{ num.label }}</span><b>{{ num.value }}</b></div>
       </div>
       <span class="tip__effet">{{ move.effet }}</span>
+      <span v-if="ban" class="tip__ban">⛔ {{ ban }}</span>
       <div v-if="changes.length" class="tip__mods">
         <span class="tip__mods-title">Modifiée par PokéDraft</span>
         <span v-for="change in changes" :key="change.label" class="tip__mod">{{ change.label }} : <s>{{ change.before }}</s> → {{ change.after }}</span>
@@ -90,6 +91,7 @@ const changes = computed(() => {
 })
 
 const properties = computed(() => move.value ? moveProperties(move.value) : [])
+const ban = computed(() => tip.value ? banReason(tip.value.pokemonId, tip.value.moveId) : undefined)
 
 const onPointerDown = (event: PointerEvent) => {
   if (!tip.value?.pinned) return
@@ -239,6 +241,14 @@ onBeforeUnmount(() => {
 .tip__num span { font: 700 10px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
 .tip__num b { font: 600 15px 'Pixelify Sans', sans-serif; white-space: nowrap; }
 .tip__effet { font: 400 14px/1.45 'Atkinson Hyperlegible', sans-serif; text-wrap: pretty; }
+
+.tip__ban {
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: rgba(200, 54, 42, .22);
+  box-shadow: inset 0 0 0 1px #c8362a;
+  font: 700 12px/1.4 'Atkinson Hyperlegible', sans-serif;
+}
 
 .tip__mods {
   padding: 6px 8px;

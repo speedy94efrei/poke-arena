@@ -139,7 +139,7 @@ const copy = (pokemon: Pokemon) => {
 
 const exportSet = async (pokemon: Pokemon) => {
   try {
-    await navigator.clipboard.writeText(setText(pokemon))
+    await navigator.clipboard.writeText(variantText(pokemon, defaultVariant(pokemon)))
     say(`Set de ${pokemon.nom} copié dans le presse-papiers.`)
   } catch {
     say('Copie impossible : le navigateur refuse l\'accès au presse-papiers.')

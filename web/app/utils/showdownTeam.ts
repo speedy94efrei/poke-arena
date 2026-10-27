@@ -1,7 +1,7 @@
 import type { Pokemon } from '#data/types/roster'
 
-type StatId = 'hp' | 'atk' | 'def' | 'spa' | 'spd' | 'spe'
-type Evs = Record<StatId, number>
+export type StatId = 'hp' | 'atk' | 'def' | 'spa' | 'spd' | 'spe'
+export type Evs = Record<StatId, number>
 
 export interface TeamSet {
   nickname: string
@@ -11,6 +11,7 @@ export interface TeamSet {
   moves: string[]
   natureId: string
   evs: Evs
+  ivs?: Partial<Evs>
 }
 
 const NATURE_PLUS: Record<string, StatId> = {
@@ -41,22 +42,14 @@ export function defaultEvs(pokemon: Pokemon): Evs {
 }
 
 export function defaultSet(pokemon: Pokemon): TeamSet {
-  const set = pokemon.setParDefaut
-  return {
-    nickname: pokemon.nom,
-    speciesId: pokemon.id,
-    itemId: set.objetId,
-    abilityId: pokemon.talent.id,
-    moves: set.attaquesIds.filter(move => !set.horsMovepool.includes(move)),
-    natureId: set.natureId,
-    evs: defaultEvs(pokemon),
-  }
+  return variantToSet(pokemon, defaultVariant(pokemon))
 }
 
 export function packTeam(sets: TeamSet[]): string {
   return sets.map((set) => {
     const evs = STAT_ORDER.map(stat => set.evs[stat] || '').join(',')
+    const ivs = STAT_ORDER.map(stat => set.ivs?.[stat] ?? '').join(',')
     return [set.nickname, set.speciesId, set.itemId, set.abilityId, set.moves.join(','), set.natureId,
-      evs === ',,,,,' ? '' : evs, '', '', '', '', ''].join('|')
+      evs === ',,,,,' ? '' : evs, '', ivs === ',,,,,' ? '' : ivs, '', '', ''].join('|')
   }).join(']')
 }

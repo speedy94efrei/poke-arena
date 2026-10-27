@@ -43,11 +43,15 @@
 
 <script setup lang="ts">
 const { store, challenge, cancelChallenge, accept, reject, search, cancelSearch } = useShowdown()
-const { sets, complete } = useTeamPicker()
+const { sets, complete, playable } = useTeamPicker()
 const opponent = ref('')
 
-const canPlay = computed(() => store.status === 'connecte' && complete.value)
-const blocker = computed(() => store.status !== 'connecte' ? 'Connecte-toi pour jouer.' : `Choisis ${TEAM_SIZE} Pokémon.`)
+const canPlay = computed(() => store.status === 'connecte' && playable.value)
+const blocker = computed(() => {
+  if (store.status !== 'connecte') return 'Connecte-toi pour jouer.'
+  if (!complete.value) return `Choisis ${TEAM_SIZE} Pokémon.`
+  return 'Un set de ton équipe n\'a aucune attaque : corrige-le dans l\'Atelier.'
+})
 const incoming = computed(() => Object.values(store.challengesFrom))
 
 const sendChallenge = () => challenge(opponent.value.trim(), sets.value)
