@@ -6,7 +6,7 @@
       :key="item.label"
       :to="item.to"
       class="sidenav__item"
-      :class="{ 'sidenav__item--active': item.to && route.path.startsWith(item.to), 'sidenav__item--soon': !item.to }"
+      :class="{ 'sidenav__item--active': isActive(item.to), 'sidenav__item--soon': !item.to }"
       :title="item.to ? undefined : 'Bientôt'"
     >
       <span class="sidenav__icon" :style="{ background: item.color }">{{ item.icon }}</span>
@@ -39,14 +39,16 @@ const route = useRoute()
 const { gen, setGen } = useGenStyle()
 
 const items = [
-  { icon: '◆', label: 'Accueil de saison', color: 'var(--hd)' },
+  { icon: '◆', label: 'Accueil de saison', color: 'var(--hd)', to: '/pokedraft' },
   { icon: 'C', label: 'Codex', color: 'var(--hd)', to: '/pokedraft/codex' },
   { icon: 'A', label: 'Atelier PokéDraft', color: '#5a8a3a', to: '/pokedraft/atelier' },
   { icon: 'D', label: 'Classé · Draft', color: '#c8362a', to: '/pokedraft/draft' },
   { icon: '⚔', label: 'Combat libre et défis', color: '#3d6fc8', to: '/pokedraft/combat' },
   { icon: 'E', label: 'Entraînement', color: '#7a5ab0' },
-  { icon: '★', label: 'Classement et saison', color: '#3f8fa3' },
+  { icon: '★', label: 'Classement et saison', color: '#3f8fa3', to: '/pokedraft/classement' },
 ]
+
+const isActive = (to?: string) => Boolean(to) && (route.path === to || (to !== '/pokedraft' && route.path.startsWith(`${to}/`)))
 </script>
 
 <style scoped>

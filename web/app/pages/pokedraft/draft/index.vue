@@ -13,12 +13,21 @@
         <LobbyConnection />
         <UiPanel title="Partie classée">
           <template #aside>Saison {{ roster.saison }}</template>
-          <button v-if="!store.searching" type="button" class="btn btn--primary salon__play" :disabled="!connected" @click="search">▶ Chercher un adversaire</button>
+          <div v-if="store.account.ranked" class="ranked" :class="{ 'ranked--ok': store.account.verified }">
+            <template v-if="store.account.verified">✓ Compte <b>{{ store.account.name }}</b> vérifié : tes drafts de la file comptent pour le classement.</template>
+            <template v-else-if="!loggedIn">Connecte-toi à ton compte Arène pour jouer en classé. <button type="button" class="btn btn--small" @click="dialog = 'login'">Se connecter</button></template>
+            <template v-else-if="connected">Connecte-toi au serveur de combat sous le pseudo <b>{{ session.name }}</b> pour jouer en classé.</template>
+            <template v-else>Connecte-toi au serveur de combat sous le pseudo <b>{{ session.name }}</b>.</template>
+          </div>
+          <button v-if="!store.searching" type="button" class="btn btn--primary salon__play" :disabled="!canSearch" @click="search">▶ Chercher un adversaire</button>
           <div v-else class="pending">
             <span class="pending__pulse">Recherche d'un adversaire…</span>
             <button type="button" class="btn btn--small" @click="cancelSearch">Annuler</button>
           </div>
-          <p class="hint">Deux joueurs qui cherchent en même temps lancent un draft. Le classement (points, rangs) arrivera avec les comptes : pour l'instant, la partie n'est pas comptée.</p>
+          <p class="hint">
+            Deux joueurs qui cherchent en même temps lancent un draft.
+            {{ store.account.ranked ? 'Victoire +20 PL (plus un bonus de série), défaite −18 PL, abandon du draft −5 PL. Les défis entre joueurs restent amicaux.' : "Le classement n'est pas branché sur ce serveur : la partie n'est pas comptée." }}
+          </p>
         </UiPanel>
       </div>
 
@@ -59,11 +68,13 @@
 <script setup lang="ts">
 const { store: showdown } = useShowdown()
 const { store, refresh, search, cancelSearch, challenge, cancelChallenge, accept, reject } = useDraft()
+const { session, loggedIn, dialog } = useAccount()
 const opponent = ref('')
 
 useHead({ title: 'Classé · Draft · PokéDraft' })
 
 const connected = computed(() => showdown.status === 'connecte')
+const canSearch = computed(() => connected.value && (!store.account.ranked || store.account.verified))
 
 const sendChallenge = () => challenge(opponent.value.trim())
 
@@ -112,6 +123,17 @@ watch(() => store.draft?.id, (id) => {
 }
 
 .salon__play { height: 48px; font: 700 18px 'Pixelify Sans', sans-serif; }
+
+.ranked {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--in);
+  box-shadow: inset 0 0 0 2px #e8704a;
+  font: 700 13px/1.45 'Atkinson Hyperlegible', sans-serif;
+  color: #ffd9c8;
+}
+
+.ranked--ok { box-shadow: inset 0 0 0 2px #58d080; color: #c8f0d8; }
 
 .notice {
   padding: 10px 14px;

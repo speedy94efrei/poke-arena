@@ -22,6 +22,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       showdownUrl: 'ws://localhost:8100/showdown/websocket',
+      apiUrl: 'http://localhost:8088/api',
     },
   },
   alias: {

@@ -1,9 +1,20 @@
 // Adversaire de test pour le serveur local : accepte les défis (combat libre et draft), drafte et joue au hasard.
-// Usage : npm run bot -- [url du websocket] [pseudo]
+// Usage : npm run bot -- [--url ws://…] [--name "Bot Test"] [--api http://localhost:8088/api [--ranked]]
+// Avec --api et un mot de passe (ARENE_BOT_PASSWORD, ou --password), le bot se connecte à son compte Arène
+// (créé au besoin) ; --ranked le met en file classée.
 import { readFileSync } from 'node:fs';
+import { parseArgs } from 'node:util';
 
-const url = process.argv[2] ?? 'ws://localhost:8100/showdown/websocket';
-const name = process.argv[3] ?? 'Bot Test';
+const { values: options } = parseArgs({
+  options: {
+    url: { type: 'string', default: 'ws://localhost:8100/showdown/websocket' },
+    name: { type: 'string', default: 'Bot Test' },
+    api: { type: 'string' },
+    password: { type: 'string', default: process.env.ARENE_BOT_PASSWORD },
+    ranked: { type: 'boolean', default: false },
+  },
+});
+const { url, name } = options;
 const roster = JSON.parse(readFileSync(new URL('../../data/rosters/roster-saison-1.json', import.meta.url), 'utf8'));
 
 const NATURE_PLUS = {
@@ -26,18 +37,48 @@ function packedSet(pokemon) {
 }
 
 const shuffle = list => [...list].sort(() => Math.random() - 0.5);
+
+async function api(method, path, body, token) {
+  const response = await fetch(`${options.api}${path}`, {
+    method,
+    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(`${response.status} ${JSON.stringify(data.errors ?? data.message ?? data)}`);
+  return data;
+}
+
+async function linkAccount() {
+  const credentials = { name, password: options.password };
+  const session = await api('POST', '/session', credentials).catch(() => api('POST', '/players', credentials));
+  const { token } = await api('POST', '/me/showdown-tokens', undefined, session.token);
+  send(`|/pokedraft auth ${token}`);
+}
+
+function searchRanked() {
+  if (options.ranked) setTimeout(() => send('|/pokedraft search'), 2000);
+}
 const freeTeam = shuffle(roster.pokemon).slice(0, 6);
 const handled = new Set();
 const ws = new WebSocket(url);
 const send = text => ws.send(text);
 
 function onDraft(message) {
+  if (message.type === 'account' && message.verified) {
+    console.log('compte vérifié :', message.name);
+    searchRanked();
+  }
+  if (message.type === 'result') console.log(`résultat classé : ${message.outcome}, ${message.points_delta} PL (${message.points_after}) ${message.note ?? ''}`);
   if (message.type === 'challenged' && message.active) {
     console.log('draft proposé par', message.from);
     send(`|/pokedraft accept ${message.from}`);
   }
   if (message.type === 'battle') console.log('combat de draft :', message.roomid);
-  if (message.type === 'cancelled') console.log('draft annulé :', message.reason);
+  if (message.type === 'cancelled') {
+    console.log('draft annulé :', message.reason);
+    searchRanked();
+  }
   if (message.type === 'error') console.log('erreur de draft :', message.message);
   if (message.type !== 'state' || !message.draft) return;
   const draft = message.draft;
@@ -81,7 +122,10 @@ ws.onmessage = (event) => {
   const room = lines[0].startsWith('>') ? lines[0].slice(1) : '';
   for (const line of lines) {
     if (line.startsWith('|challstr|')) send(`|/trn ${name}`);
-    else if (line.startsWith('|updateuser|') && line.includes(name)) console.log('connecté :', name, '· équipe de combat libre :', freeTeam.map(p => p.nom).join(', '));
+    else if (line.startsWith('|updateuser|') && line.includes(name)) {
+      console.log('connecté :', name, '· équipe de combat libre :', freeTeam.map(p => p.nom).join(', '));
+      if (options.api && options.password) linkAccount().catch(error => console.log('compte Arène :', error.message));
+    }
     else if (line.startsWith('|pokedraft|')) onDraft(JSON.parse(line.slice('|pokedraft|'.length)));
     else if (line.startsWith('|pm|') && line.includes('/challenge gen9pokedraft')) {
       const from = line.split('|')[2].slice(1);
@@ -89,7 +133,11 @@ ws.onmessage = (event) => {
       send(`|/utm ${freeTeam.map(packedSet).join(']')}`);
       send(`|/accept ${from}`);
     } else if (line.startsWith('|request|') && line.length > 9) onRequest(room, JSON.parse(line.slice(9)));
-    else if (line.startsWith('|win|') || line === '|tie') console.log('fin du combat :', line);
+    else if (line.startsWith('|win|') || line === '|tie') {
+      console.log('fin du combat :', line);
+      send(`|/leave ${room}`);
+      searchRanked();
+    }
     else if (line.startsWith('|error|')) console.log('erreur :', line);
   }
 };

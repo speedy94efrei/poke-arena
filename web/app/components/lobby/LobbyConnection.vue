@@ -18,7 +18,12 @@
 
 <script setup lang="ts">
 const { store, serverUrl, connect } = useShowdown()
-const name = useState('lobby-name', () => '')
+const { session } = useAccount()
+const name = useState('lobby-name', () => session.value.name ?? '')
+
+watch(() => session.value.name, (account) => {
+  if (account && !name.value) name.value = account
+})
 
 const statusText = computed(() => ({ connecte: '● en ligne', connexion: '◌ connexion…', deconnecte: '○ hors ligne' })[store.status])
 </script>

@@ -1,3 +1,3 @@
 <script setup lang="ts">
-await navigateTo('/pokedraft/combat', { replace: true })
+await navigateTo('/pokedraft', { replace: true })
 </script>

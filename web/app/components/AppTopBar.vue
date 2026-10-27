@@ -10,25 +10,9 @@
       </span>
     </div>
     <span class="topbar__spacer" />
-    <div class="topbar__profile">
-      <span class="topbar__avatar" :class="{ 'topbar__avatar--off': store.status !== 'connecte' }" />
-      <span class="topbar__who">
-        <span class="topbar__name">{{ store.status === 'connecte' ? store.name : 'Non connecté' }}</span>
-        <span class="topbar__state">{{ statusLabel }}</span>
-      </span>
-    </div>
+    <AccountMenu />
   </header>
 </template>
-
-<script setup lang="ts">
-const { store } = useShowdown()
-
-const statusLabel = computed(() => ({
-  connecte: '● Serveur de combat local',
-  connexion: '◌ Connexion…',
-  deconnecte: '○ Hors ligne',
-})[store.status])
-</script>
 
 <style scoped>
 .topbar {
@@ -82,37 +66,4 @@ const statusLabel = computed(() => ({
 
 .topbar__spacer { flex: 1; }
 
-.topbar__profile {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  height: 44px;
-  padding: 0 14px 0 4px;
-  border-radius: var(--r);
-  background: var(--pn);
-  box-shadow: var(--pnS);
-}
-
-.topbar__avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 8px;
-  background: var(--chip) url(https://play.pokemonshowdown.com/sprites/gen5/houndoom.png) center/150% no-repeat;
-  image-rendering: pixelated;
-}
-
-.topbar__avatar--off { filter: grayscale(1) opacity(.5); }
-
-.topbar__who {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.1;
-}
-
-.topbar__name { font: 700 15px 'Atkinson Hyperlegible', sans-serif; }
-
-.topbar__state {
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
-  color: var(--uA);
-}
 </style>

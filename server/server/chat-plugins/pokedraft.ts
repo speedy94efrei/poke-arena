@@ -72,6 +72,7 @@ export class DraftSession {
 	turn = 0;
 	preselection: [string | null, string | null] = [null, null];
 	teams: [string | null, string | null] = [null, null];
+	ranked = false;
 	deadline: number;
 
 	constructor(
@@ -208,6 +209,7 @@ export class DraftSession {
 			picks: this.picks.map(pick => ({ id: pick.id, mine: pick.side === side, random: pick.random })),
 			preselection: this.preselection[side],
 			ready: { mine: this.teams[side] !== null, theirs: this.teams[other] !== null },
+			ranked: this.ranked,
 		};
 	}
 
@@ -233,12 +235,52 @@ export class DraftSession {
 	}
 }
 
+/**
+ * API du site (comptes et classement). Sans ARENE_API_URL ni ARENE_API_SECRET, les drafts restent amicaux.
+ */
+export const Arene = new class {
+	get url() {
+		return (process.env.ARENE_API_URL ?? '').replace(/\/+$/, '');
+	}
+
+	get enabled() {
+		return Boolean(this.url && process.env.ARENE_API_SECRET);
+	}
+
+	async request<T = AnyObject>(method: 'GET' | 'POST', path: string, body?: AnyObject): Promise<T> {
+		const response = await fetch(`${this.url}/internal${path}`, {
+			method,
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'X-Arene-Secret': process.env.ARENE_API_SECRET ?? '',
+			},
+			body: body ? JSON.stringify(body) : undefined,
+		});
+		const data = await response.json().catch(() => ({})) as AnyObject;
+		if (response.status === 422) {
+			const errors = Object.values(data.errors ?? {}).flat() as string[];
+			throw new DraftError(errors[0] ?? data.message ?? "Requête refusée par l'API du classement.");
+		}
+		if (!response.ok) throw new DraftError(`L'API du classement a répondu ${response.status}.`);
+		return data as T;
+	}
+};
+
+interface RankedBattle {
+	players: [ID, ID];
+	bans: [string[], string[]];
+	picks: Pick[];
+}
+
 export const Drafts = new class {
 	queue: ID[] = [];
 	challenges = new Map<ID, ID>();
 	sessions = new Map<string, DraftSession>();
 	timers = new Map<string, NodeJS.Timeout>();
 	byUser = new Map<ID, string>();
+	verified = new Map<ID, string>();
+	rankedBattles = new Map<RoomID, RankedBattle>();
 	counter = 0;
 	roster: Roster | null = null;
 
@@ -253,12 +295,26 @@ export const Drafts = new class {
 		return session;
 	}
 
-	search(user: User) {
+	async verify(user: User, token: string) {
+		if (!Arene.enabled) throw new DraftError("Le classement n'est pas branché sur ce serveur.");
+		const account = await Arene.request<{ name: string }>('POST', '/showdown-sessions', { token, showdown_id: user.id });
+		this.verified.set(user.id, account.name);
+		this.send(user.id, { type: 'account', ranked: true, verified: true, name: account.name });
+	}
+
+	async search(user: User) {
 		if (this.byUser.has(user.id)) throw new DraftError("Tu es déjà dans un draft.");
+		if (Arene.enabled) {
+			if (!this.verified.has(user.id)) throw new DraftError("Connecte ton compte Arène pour jouer en classé.");
+			const status = await Arene.request<{ wait_seconds: number }>('GET', `/players/${user.id}/queue-status`);
+			if (status.wait_seconds > 0) {
+				throw new DraftError(`Trop d'abandons récents : attends encore ${Math.ceil(status.wait_seconds / 60)} min avant le prochain classé.`);
+			}
+		}
 		const opponent = this.queue.find(id => id !== user.id && Users.get(id)?.connected);
 		if (opponent) {
 			this.queue = this.queue.filter(id => id !== opponent && id !== user.id);
-			this.start([opponent, user.id]);
+			this.start([opponent, user.id], Arene.enabled);
 			return;
 		}
 		if (!this.queue.includes(user.id)) this.queue.push(user.id);
@@ -284,7 +340,7 @@ export const Drafts = new class {
 		const from = toID(fromName);
 		if (this.challenges.get(from) !== user.id) throw new DraftError("Ce défi n'existe plus.");
 		this.challenges.delete(from);
-		this.start([from, user.id]);
+		this.start([from, user.id], false);
 	}
 
 	reject(user: User, fromName: string) {
@@ -304,7 +360,8 @@ export const Drafts = new class {
 		this.send(user.id, { type: 'challenge', to: null });
 	}
 
-	start(players: [ID, ID]) {
+	/** Les drafts de la file sont classés quand l'API est branchée ; les défis restent amicaux. */
+	start(players: [ID, ID], ranked: boolean) {
 		this.roster ??= loadRoster();
 		for (const id of players) {
 			for (const [from, target] of this.challenges) {
@@ -314,6 +371,7 @@ export const Drafts = new class {
 		const shuffled: [ID, ID] = Math.random() < 0.5 ? players : [players[1], players[0]];
 		const names = shuffled.map(id => Users.get(id)?.name ?? id) as [string, string];
 		const session = new DraftSession(`draft${++this.counter}`, shuffled, this.roster, Date.now(), Math.random, names);
+		session.ranked = ranked;
 		this.sessions.set(session.id, session);
 		for (const id of players) {
 			this.byUser.set(id, session.id);
@@ -329,13 +387,18 @@ export const Drafts = new class {
 		this.broadcast(session);
 	}
 
-	quit(user: User) {
+	async quit(user: User) {
 		const session = this.sessionOf(user.id);
 		session.cancel();
 		const other = session.players.find(id => id !== user.id)!;
-		this.send(other, { type: 'cancelled', reason: `${user.name} a quitté le draft.` });
-		this.send(user.id, { type: 'cancelled', reason: "Tu as quitté le draft." });
 		this.end(session);
+		this.send(other, { type: 'cancelled', reason: `${user.name} a quitté le draft.` });
+		let reason = "Tu as quitté le draft.";
+		if (session.ranked) {
+			const penalty = await Arene.request<{ points_delta: number }>('POST', '/abandons', { showdown_id: user.id, opponent_showdown_id: other });
+			reason += ` Pénalité : ${penalty.points_delta < 0 ? '−' : ''}${Math.abs(penalty.points_delta)} PL.`;
+		}
+		this.send(user.id, { type: 'cancelled', reason });
 	}
 
 	broadcast(session: DraftSession) {
@@ -363,8 +426,32 @@ export const Drafts = new class {
 			players: users.map((user, side) => ({ user: user!, team: session.teamFor(side as Side) })),
 			rated: false,
 		});
-		session.players.forEach(id => this.send(id, room ? { type: 'battle', roomid: room.roomid } : { type: 'cancelled', reason: "Le combat n'a pas pu démarrer." }));
+		if (room && session.ranked) {
+			this.rankedBattles.set(room.roomid, { players: session.players, bans: session.bans, picks: session.picks });
+		}
+		session.players.forEach(id => this.send(id, room ? { type: 'battle', roomid: room.roomid, ranked: session.ranked } : { type: 'cancelled', reason: "Le combat n'a pas pu démarrer." }));
 		this.end(session);
+	}
+
+	/** Envoie le résultat d'un draft classé à l'API, puis le gain ou la perte de PL à chaque joueur. */
+	async report(roomid: RoomID, winner: ID, turns: number) {
+		const battle = this.rankedBattles.get(roomid);
+		if (!battle) return;
+		this.rankedBattles.delete(roomid);
+		const result = await Arene.request<{ players: { showdown_id: ID, type: string, points_delta: number, points_after: number, note: string | null }[] }>('POST', '/battles', {
+			room_id: roomid,
+			turns,
+			winner: battle.players.includes(winner) ? winner : null,
+			players: battle.players.map((id, side) => ({
+				showdown_id: id,
+				bans: battle.bans[side],
+				picks: battle.picks.filter(pick => pick.side === side).map(pick => ({ pokemon: pick.id, random: pick.random })),
+			})),
+		});
+		for (const player of result.players) {
+			const { showdown_id: showdownId, type: outcome, ...points } = player;
+			this.send(showdownId, { type: 'result', roomid, outcome, ...points });
+		}
 	}
 
 	end(session: DraftSession) {
@@ -377,6 +464,7 @@ export const Drafts = new class {
 	}
 
 	resend(user: User) {
+		this.send(user.id, { type: 'account', ranked: Arene.enabled, verified: this.verified.has(user.id), name: this.verified.get(user.id) ?? null });
 		const id = this.byUser.get(user.id);
 		const session = id ? this.sessions.get(id) : undefined;
 		if (session) {
@@ -393,9 +481,9 @@ export const Drafts = new class {
 	}
 };
 
-function run(user: User, action: () => void) {
+async function run(user: User, action: () => void | Promise<void>) {
 	try {
-		action();
+		await action();
 	} catch (error) {
 		if (!(error instanceof DraftError)) throw error;
 		Drafts.send(user.id, { type: 'error', message: error.message });
@@ -405,43 +493,51 @@ function run(user: User, action: () => void) {
 export const commands: Chat.ChatCommands = {
 	pokedraft: {
 		''(target, room, user) {
-			run(user, () => Drafts.resend(user));
+			return run(user, () => Drafts.resend(user));
+		},
+		auth(target, room, user) {
+			return run(user, () => Drafts.verify(user, target.trim()));
+		},
+		deauth(target, room, user) {
+			Drafts.verified.delete(user.id);
+			Drafts.queue = Drafts.queue.filter(id => id !== user.id);
+			Drafts.send(user.id, { type: 'account', ranked: Arene.enabled, verified: false, name: null });
 		},
 		search(target, room, user) {
-			run(user, () => Drafts.search(user));
+			return run(user, () => Drafts.search(user));
 		},
 		cancelsearch(target, room, user) {
-			run(user, () => Drafts.cancelSearch(user));
+			return run(user, () => Drafts.cancelSearch(user));
 		},
 		challenge(target, room, user) {
-			run(user, () => Drafts.challenge(user, target.trim()));
+			return run(user, () => Drafts.challenge(user, target.trim()));
 		},
 		accept(target, room, user) {
-			run(user, () => Drafts.accept(user, target.trim()));
+			return run(user, () => Drafts.accept(user, target.trim()));
 		},
 		reject(target, room, user) {
-			run(user, () => Drafts.reject(user, target.trim()));
+			return run(user, () => Drafts.reject(user, target.trim()));
 		},
 		cancelchallenge(target, room, user) {
-			run(user, () => Drafts.cancelChallenge(user));
+			return run(user, () => Drafts.cancelChallenge(user));
 		},
 		bans(target, room, user) {
-			run(user, () => Drafts.act(user, (session, side) => session.setBans(side, target.split(',').map(toID).filter(Boolean))));
+			return run(user, () => Drafts.act(user, (session, side) => session.setBans(side, target.split(',').map(toID).filter(Boolean))));
 		},
 		lockbans(target, room, user) {
-			run(user, () => Drafts.act(user, (session, side, now) => session.lockBans(side, now)));
+			return run(user, () => Drafts.act(user, (session, side, now) => session.lockBans(side, now)));
 		},
 		preselect(target, room, user) {
-			run(user, () => Drafts.act(user, (session, side) => session.preselect(side, toID(target) || null)));
+			return run(user, () => Drafts.act(user, (session, side) => session.preselect(side, toID(target) || null)));
 		},
 		pick(target, room, user) {
-			run(user, () => Drafts.act(user, (session, side, now) => session.pick(side, toID(target), now)));
+			return run(user, () => Drafts.act(user, (session, side, now) => session.pick(side, toID(target), now)));
 		},
 		team(target, room, user) {
-			run(user, () => Drafts.act(user, (session, side) => session.submitTeam(side, target.trim())));
+			return run(user, () => Drafts.act(user, (session, side) => session.submitTeam(side, target.trim())));
 		},
 		quit(target, room, user) {
-			run(user, () => Drafts.quit(user));
+			return run(user, () => Drafts.quit(user));
 		},
 	},
 };
@@ -451,5 +547,15 @@ export const handlers: Chat.Handlers = {
 		if (user.connected) return;
 		Drafts.queue = Drafts.queue.filter(id => id !== user.id);
 		Drafts.challenges.delete(user.id);
+		Drafts.verified.delete(user.id);
+	},
+	onRename(user, oldID) {
+		Drafts.verified.delete(oldID);
+		Drafts.queue = Drafts.queue.filter(id => id !== oldID);
+	},
+	onBattleEnd(battle, winner) {
+		Drafts.report(battle.roomid, winner, battle.turn).catch(error => {
+			Monitor.warn(`Résultat PokéDraft non enregistré (${battle.roomid}) : ${error.message}`);
+		});
 	},
 };

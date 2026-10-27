@@ -7,7 +7,16 @@ interface DraftEvent {
   tone: 'info' | 'alerte' | 'adverse'
 }
 
+interface RankedResult {
+  outcome: 'victoire' | 'defaite' | 'egalite'
+  points_delta: number
+  points_after: number
+  note: string | null
+}
+
 interface DraftStore {
+  account: { ranked: boolean, verified: boolean, name: string | null }
+  results: Record<string, RankedResult>
   draft: DraftView | null
   deadline: number
   searching: boolean
@@ -20,6 +29,8 @@ interface DraftStore {
 }
 
 const store = reactive<DraftStore>({
+  account: { ranked: false, verified: false, name: null },
+  results: {},
   draft: null, deadline: 0, searching: false, challengeTo: null, challengedBy: [], battle: '', battles: [], cancelled: '', event: null,
 })
 let eventCounter = 0
@@ -63,6 +74,12 @@ function handle(payload: string) {
     }
     case 'search':
       store.searching = message.searching
+      break
+    case 'account':
+      store.account = { ranked: message.ranked, verified: message.verified, name: message.name }
+      break
+    case 'result':
+      store.results[message.roomid] = { outcome: message.outcome, points_delta: message.points_delta, points_after: message.points_after, note: message.note }
       break
     case 'challenge':
       store.challengeTo = message.to
@@ -109,7 +126,12 @@ export function useDraft() {
     preselect: (id: string | null) => run(`preselect ${id ?? ''}`),
     pick: (id: string) => run(`pick ${id}`),
     submitTeam: (team: TeamSet[]) => run(`team ${packTeam(team)}`),
-    quit: () => run('quit'),
+    quit: () => {
+      run('quit')
+      store.draft = null
+    },
+    link: (token: string) => run(`auth ${token}`),
+    unlink: () => run('deauth'),
     clearBattle: () => {
       store.battle = ''
     },

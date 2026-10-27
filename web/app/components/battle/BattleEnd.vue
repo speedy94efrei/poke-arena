@@ -3,6 +3,9 @@
     <div class="end__text">
       <span class="end__title">{{ title }}</span>
       <span class="end__sub">{{ subtitle }}</span>
+      <span v-if="ranked" class="end__ranked" :class="ranked.points_delta >= 0 ? 'end__ranked--up' : 'end__ranked--down'">
+        Classé : {{ ranked.points_delta >= 0 ? '+' : '−' }}{{ Math.abs(ranked.points_delta) }} PL<template v-if="ranked.note"> · {{ ranked.note }}</template>
+      </span>
       <div class="end__buttons">
         <button type="button" class="btn btn--primary" @click="emit('leave')">Retour au salon</button>
       </div>
@@ -19,6 +22,13 @@ import type { Stage } from '~/utils/stages'
 
 const props = defineProps<{ battle: BattleState, stage: Stage, me: string }>()
 const emit = defineEmits<{ leave: [] }>()
+const { store: draft } = useDraft()
+const { refresh } = useAccount()
+
+const ranked = computed(() => draft.results[props.battle.roomid])
+watch(ranked, (result) => {
+  if (result) refresh()
+}, { immediate: true })
 
 const won = computed(() => toId(props.battle.winner) === toId(props.me))
 const winnerSide = computed(() => (['p1', 'p2'] as const).find(side => toId(props.battle.sides[side].name) === toId(props.battle.winner)))
@@ -31,6 +41,20 @@ const subtitle = computed(() => {
 </script>
 
 <style scoped>
+.end__ranked {
+  align-self: flex-start;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  animation: pop .3s both;
+}
+
+.end__ranked--up { background: #2f6a48; color: #e8fff0; }
+.end__ranked--down { background: #8a2a1c; color: #ffe8e0; }
+
 .end {
   position: relative;
   flex: none;
