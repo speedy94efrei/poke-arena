@@ -3,324 +3,672 @@
     "id": "lifeorb",
     "nom": "Orbe Vie",
     "groupe": "Puissance",
-    "description": "Objet à tenir. Augmente la puissance des capacités, mais dépense des PV à chaque coup."
+    "sprite": 249,
+    "description": "Augmente la puissance des capacités, mais dépense des PV à chaque coup."
   },
   {
     "id": "choiceband",
     "nom": "Bandeau Choix",
     "groupe": "Puissance",
-    "description": "Objet à tenir. Ce bandeau augmente l’Attaque, mais ne permet d’utiliser qu’une seule capacité."
+    "sprite": 68,
+    "description": "Ce bandeau augmente l’Attaque, mais ne permet d’utiliser qu’une seule capacité."
   },
   {
     "id": "choicespecs",
     "nom": "Lunettes Choix",
     "groupe": "Puissance",
-    "description": "Objet à tenir. Augmente l’Attaque Spéciale, mais ne permet d’utiliser qu’une seule capacité."
+    "sprite": 70,
+    "description": "Augmente l’Attaque Spéciale, mais ne permet d’utiliser qu’une seule capacité."
   },
   {
     "id": "choicescarf",
     "nom": "Mouchoir Choix",
     "groupe": "Puissance",
-    "description": "Objet à tenir. Augmente la Vitesse, mais ne permet d’utiliser qu’une seule capacité."
+    "sprite": 69,
+    "description": "Augmente la Vitesse, mais ne permet d’utiliser qu’une seule capacité."
   },
   {
     "id": "expertbelt",
     "nom": "Ceinture Pro",
     "groupe": "Puissance",
-    "description": "Objet à tenir. Une ceinture usée qui augmente légèrement la puissance des capacités super efficaces."
+    "sprite": 132,
+    "description": "Une ceinture usée qui augmente légèrement la puissance des capacités super efficaces."
   },
   {
     "id": "muscleband",
     "nom": "Bandeau Muscle",
     "groupe": "Puissance",
-    "description": "Objet à tenir. Un bandeau qui augmente légèrement la puissance des capacités physiques."
+    "sprite": 297,
+    "description": "Un bandeau qui augmente légèrement la puissance des capacités physiques."
   },
   {
     "id": "wiseglasses",
     "nom": "Lunettes Sages",
     "groupe": "Puissance",
-    "description": "Objet à tenir. Une paire de lunettes épaisses qui augmente légèrement la puissance des capacités spéciales."
+    "sprite": 539,
+    "description": "Une paire de lunettes épaisses qui augmente légèrement la puissance des capacités spéciales."
   },
   {
     "id": "loadeddice",
     "nom": "Dé Pipé",
     "groupe": "Puissance",
-    "description": "Objet à tenir. Les capacités qui frappent plusieurs fois touchent le plus souvent 4 ou 5 fois."
+    "sprite": 751,
+    "description": "Les capacités qui frappent plusieurs fois touchent le plus souvent 4 ou 5 fois."
   },
   {
     "id": "weaknesspolicy",
     "nom": "Vulné-Assurance",
     "groupe": "Puissance",
-    "description": "Objet à tenir. Augmente beaucoup l’Attaque et l’Attaque Spéciale du Pokémon lorsqu’il est touché par une capacité d’un type auquel il est vulnérable."
+    "sprite": 609,
+    "description": "Augmente beaucoup l’Attaque et l’Attaque Spéciale du Pokémon lorsqu’il est touché par une capacité d’un type auquel il est vulnérable."
   },
   {
     "id": "throatspray",
     "nom": "Spray Gorge",
     "groupe": "Puissance",
+    "sprite": 713,
     "description": "Augmente l’Attaque Spéciale du porteur lorsqu’il utilise une capacité basée sur le son."
   },
   {
     "id": "powerherb",
     "nom": "Herbe Pouvoir",
     "groupe": "Puissance",
+    "sprite": 358,
     "description": "Objet à tenir et à usage unique. Permet d’utiliser immédiatement une capacité qui devrait se charger au premier tour."
   },
   {
     "id": "metronome",
     "nom": "Métronome",
     "groupe": "Puissance",
-    "description": "Objet à tenir. Booste une capacité utilisée à répétition. L’effet s’annule si une autre capacité est utilisée."
+    "sprite": 289,
+    "description": "Booste une capacité utilisée à répétition. L’effet s’annule si une autre capacité est utilisée."
   },
   {
     "id": "scopelens",
     "nom": "Lentilscope",
     "groupe": "Puissance",
-    "description": "Objet à tenir. Une lentille qui augmente le taux de critiques du porteur."
+    "sprite": 429,
+    "description": "Une lentille qui augmente le taux de critiques du porteur."
   },
   {
     "id": "razorclaw",
     "nom": "Griffe Rasoir",
     "groupe": "Puissance",
-    "description": "Objet à tenir. Une griffe crochue et pointue augmentant le taux de critiques."
+    "sprite": 382,
+    "description": "Une griffe crochue et pointue augmentant le taux de critiques."
   },
   {
     "id": "widelens",
     "nom": "Loupe",
     "groupe": "Puissance",
-    "description": "Objet à tenir. Une loupe qui augmente légèrement la Précision des capacités."
+    "sprite": 537,
+    "description": "Une loupe qui augmente légèrement la Précision des capacités."
   },
   {
     "id": "zoomlens",
     "nom": "Lentille Zoom",
     "groupe": "Puissance",
-    "description": "Objet à tenir. Augmente la Précision du porteur s’il attaque après l’ennemi."
+    "sprite": 574,
+    "description": "Augmente la Précision du porteur s’il attaque après l’ennemi."
   },
   {
     "id": "leftovers",
     "nom": "Restes",
     "groupe": "Défense et soin",
-    "description": "Objet à tenir. Permet de restaurer graduellement les PV du porteur durant le combat."
+    "sprite": 242,
+    "description": "Permet de restaurer graduellement les PV du porteur durant le combat."
   },
   {
     "id": "blacksludge",
     "nom": "Boue Noire",
     "groupe": "Défense et soin",
-    "description": "Objet à tenir. Restaure peu à peu les PV des Pokémon de type Poison. Inflige des dégâts à tous les autres types."
+    "sprite": 34,
+    "description": "Restaure peu à peu les PV des Pokémon de type Poison. Inflige des dégâts à tous les autres types."
   },
   {
     "id": "rockyhelmet",
     "nom": "Casque Brut",
     "groupe": "Défense et soin",
-    "description": "Objet à tenir. Inflige des dégâts à l’attaquant si ce dernier utilise une capacité qui atteint directement le porteur."
+    "sprite": 417,
+    "description": "Inflige des dégâts à l’attaquant si ce dernier utilise une capacité qui atteint directement le porteur."
   },
   {
     "id": "assaultvest",
     "nom": "Veste de Combat",
     "groupe": "Défense et soin",
-    "description": "Objet à tenir. Une veste augmentant la Défense Spéciale, mais empêchant d’utiliser des capacités de statut."
+    "sprite": 581,
+    "description": "Une veste augmentant la Défense Spéciale, mais empêchant d’utiliser des capacités de statut."
   },
   {
     "id": "heavydutyboots",
     "nom": "Grosses Bottes",
     "groupe": "Défense et soin",
+    "sprite": 715,
     "description": "Le porteur ne subit plus les effets des pièges ou autres entraves posés sur le terrain."
   },
   {
     "id": "focussash",
     "nom": "Ceinture Force",
     "groupe": "Défense et soin",
-    "description": "Objet à tenir. S’il a encore tous ses PV, le porteur pourra éviter d’être mis K.O. en un coup. Il ne conservera alors qu’un seul PV."
+    "sprite": 151,
+    "description": "S’il a encore tous ses PV, le porteur pourra éviter d’être mis K.O. en un coup. Il ne conservera alors qu’un seul PV."
   },
   {
     "id": "eviolite",
     "nom": "Évoluroc",
     "groupe": "Défense et soin",
-    "description": "Objet à tenir. Un étrange concentré d’évolution qui augmente la Défense et la Défense Spéciale d’un Pokémon pouvant évoluer."
+    "sprite": 130,
+    "description": "Un étrange concentré d’évolution qui augmente la Défense et la Défense Spéciale d’un Pokémon pouvant évoluer."
   },
   {
     "id": "airballoon",
     "nom": "Ballon",
     "groupe": "Défense et soin",
-    "description": "Objet à tenir. Permet au porteur de flotter dans les airs. Il éclate quand le porteur encaisse une attaque."
+    "sprite": 6,
+    "description": "Permet au porteur de flotter dans les airs. Il éclate quand le porteur encaisse une attaque."
   },
   {
     "id": "covertcloak",
     "nom": "Cape Obscure",
     "groupe": "Défense et soin",
-    "description": "Objet à tenir. Protège le porteur des effets secondaires des capacités adverses."
+    "sprite": 750,
+    "description": "Protège le porteur des effets secondaires des capacités adverses."
   },
   {
     "id": "clearamulet",
     "nom": "Talisman Sain",
     "groupe": "Défense et soin",
-    "description": "Objet à tenir. Empêche les capacités et talents adverses de baisser les stats du porteur."
+    "sprite": 747,
+    "description": "Empêche les capacités et talents adverses de baisser les stats du porteur."
   },
   {
     "id": "protectivepads",
     "nom": "Pare-Effet",
     "groupe": "Défense et soin",
-    "description": "Objet à tenir. Annule les effets subis par le porteur quand il utilise une attaque directe sur un autre Pokémon."
+    "sprite": 663,
+    "description": "Annule les effets subis par le porteur quand il utilise une attaque directe sur un autre Pokémon."
   },
   {
     "id": "shellbell",
     "nom": "Grelot Coque",
     "groupe": "Défense et soin",
-    "description": "Objet à tenir. Restaure un peu les PV du porteur chaque fois qu’il inflige des dégâts."
+    "sprite": 438,
+    "description": "Restaure un peu les PV du porteur chaque fois qu’il inflige des dégâts."
   },
   {
     "id": "bigroot",
     "nom": "Grosse Racine",
     "groupe": "Défense et soin",
-    "description": "Objet à tenir. Augmente la puissance des capacités volant des PV."
+    "sprite": 29,
+    "description": "Augmente la puissance des capacités volant des PV."
   },
   {
     "id": "mentalherb",
     "nom": "Herbe Mental",
     "groupe": "Défense et soin",
-    "description": "Objet à tenir. Guérit de certaines attaques limitant le choix des capacités. Ne peut être utilisé qu’une fois."
+    "sprite": 285,
+    "description": "Guérit de certaines attaques limitant le choix des capacités. Ne peut être utilisé qu’une fois."
   },
   {
     "id": "whiteherb",
     "nom": "Herbe Blanche",
     "groupe": "Défense et soin",
-    "description": "Objet à tenir. Restaure les stats qui ont subi une baisse. Ne peut être utilisé qu’une fois."
+    "sprite": 535,
+    "description": "Restaure les stats qui ont subi une baisse. Ne peut être utilisé qu’une fois."
+  },
+  {
+    "id": "silkscarf",
+    "nom": "Mouchoir Soie",
+    "groupe": "Renfort de type",
+    "sprite": 444,
+    "description": "Un mouchoir somptueux qui augmente la puissance des capacités de type Normal."
+  },
+  {
+    "id": "charcoal",
+    "nom": "Charbon",
+    "groupe": "Renfort de type",
+    "sprite": 61,
+    "description": "Un combustible qui augmente la puissance des capacités de type Feu."
+  },
+  {
+    "id": "mysticwater",
+    "nom": "Eau Mystique",
+    "groupe": "Renfort de type",
+    "sprite": 300,
+    "description": "Une gemme en forme de goutte d’eau qui augmente la puissance des capacités de type Eau."
+  },
+  {
+    "id": "magnet",
+    "nom": "Aimant",
+    "groupe": "Renfort de type",
+    "sprite": 273,
+    "description": "Un aimant puissant qui augmente la puissance des capacités de type Électrik."
+  },
+  {
+    "id": "miracleseed",
+    "nom": "Graine Miracle",
+    "groupe": "Renfort de type",
+    "sprite": 292,
+    "description": "Une graine remplie de vie qui augmente la puissance des capacités de type Plante."
+  },
+  {
+    "id": "nevermeltice",
+    "nom": "Glace Éternelle",
+    "groupe": "Renfort de type",
+    "sprite": 305,
+    "description": "Un morceau de glace qui réfléchit la chaleur et augmente la puissance des capacités de type Glace."
+  },
+  {
+    "id": "blackbelt",
+    "nom": "Ceinture Noire",
+    "groupe": "Renfort de type",
+    "sprite": 32,
+    "description": "Une ceinture d’art martial qui augmente la puissance des capacités de type Combat."
+  },
+  {
+    "id": "poisonbarb",
+    "nom": "Pic Venin",
+    "groupe": "Renfort de type",
+    "sprite": 343,
+    "description": "Un petit pic empoisonné qui augmente la puissance des capacités de type Poison."
+  },
+  {
+    "id": "softsand",
+    "nom": "Sable Doux",
+    "groupe": "Renfort de type",
+    "sprite": 456,
+    "description": "Du sable fin et soyeux qui augmente la puissance des capacités de type Sol."
+  },
+  {
+    "id": "sharpbeak",
+    "nom": "Bec Pointu",
+    "groupe": "Renfort de type",
+    "sprite": 436,
+    "description": "Un bec long et pointu qui augmente la puissance des capacités de type Vol."
+  },
+  {
+    "id": "twistedspoon",
+    "nom": "Cuillère Tordue",
+    "groupe": "Renfort de type",
+    "sprite": 520,
+    "description": "Une cuillère contenant un pouvoir télékinétique qui augmente la puissance des capacités de type Psy."
+  },
+  {
+    "id": "silverpowder",
+    "nom": "Poudre Argentée",
+    "groupe": "Renfort de type",
+    "sprite": 447,
+    "description": "De la poudre d’argent brillante qui augmente la puissance des capacités de type Insecte."
+  },
+  {
+    "id": "hardstone",
+    "nom": "Pierre Dure",
+    "groupe": "Renfort de type",
+    "sprite": 187,
+    "description": "Une pierre incassable qui augmente la puissance des capacités de type Roche."
+  },
+  {
+    "id": "spelltag",
+    "nom": "Rune Sort",
+    "groupe": "Renfort de type",
+    "sprite": 461,
+    "description": "Un talisman sinistre et étrange qui augmente la puissance des capacités de type Spectre."
+  },
+  {
+    "id": "dragonfang",
+    "nom": "Croc Dragon",
+    "groupe": "Renfort de type",
+    "sprite": 106,
+    "description": "Un croc dur et pointu qui augmente la puissance des capacités de type Dragon."
+  },
+  {
+    "id": "blackglasses",
+    "nom": "Lunettes Noires",
+    "groupe": "Renfort de type",
+    "sprite": 35,
+    "description": "Une paire de lunettes à l’aspect louche qui augmente la puissance des capacités de type Ténèbres."
+  },
+  {
+    "id": "metalcoat",
+    "nom": "Peau Métal",
+    "groupe": "Renfort de type",
+    "sprite": 286,
+    "description": "Une pellicule métallique spéciale qui augmente la puissance des capacités de type Acier."
+  },
+  {
+    "id": "fairyfeather",
+    "nom": "Plume Enchantée",
+    "groupe": "Renfort de type",
+    "sprite": 754,
+    "description": "Une plume qui augmente la puissance des capacités de type Fée."
   },
   {
     "id": "sitrusberry",
     "nom": "Baie Sitrus",
     "groupe": "Baies",
+    "sprite": 448,
     "description": "Une Baie qui restaure quelques PV lorsqu’elle est tenue par un Pokémon."
   },
   {
     "id": "lumberry",
     "nom": "Baie Prine",
     "groupe": "Baies",
+    "sprite": 262,
     "description": "Une Baie qui soigne toutes les altérations de statut lorsqu’elle est tenue par un Pokémon."
+  },
+  {
+    "id": "chestoberry",
+    "nom": "Baie Maron",
+    "groupe": "Baies",
+    "sprite": 65,
+    "description": "Une Baie qui soigne le sommeil lorsqu’elle est tenue par un Pokémon."
   },
   {
     "id": "salacberry",
     "nom": "Baie Sailak",
     "groupe": "Baies",
+    "sprite": 426,
     "description": "Tenue, cette Baie augmente la Vitesse en cas de besoin."
   },
   {
     "id": "liechiberry",
     "nom": "Baie Lichii",
     "groupe": "Baies",
+    "sprite": 248,
     "description": "Tenue, cette Baie augmente l’Attaque en cas de besoin."
   },
   {
     "id": "petayaberry",
     "nom": "Baie Pitaye",
     "groupe": "Baies",
+    "sprite": 335,
     "description": "Tenue, cette Baie augmente l’Attaque Spéciale en cas de besoin."
   },
   {
     "id": "custapberry",
     "nom": "Baie Chérim",
     "groupe": "Baies",
+    "sprite": 86,
     "description": "Tenue, cette Baie permet d’utiliser une capacité en priorité une fois en cas de besoin."
+  },
+  {
+    "id": "chilanberry",
+    "nom": "Baie Zalis",
+    "groupe": "Baies de résistance",
+    "sprite": 66,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie de type Normal."
+  },
+  {
+    "id": "occaberry",
+    "nom": "Baie Chocco",
+    "groupe": "Baies de résistance",
+    "sprite": 311,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Feu."
+  },
+  {
+    "id": "passhoberry",
+    "nom": "Baie Pocpoc",
+    "groupe": "Baies de résistance",
+    "sprite": 329,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Eau."
+  },
+  {
+    "id": "wacanberry",
+    "nom": "Baie Parma",
+    "groupe": "Baies de résistance",
+    "sprite": 526,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Électrik."
+  },
+  {
+    "id": "rindoberry",
+    "nom": "Baie Ratam",
+    "groupe": "Baies de résistance",
+    "sprite": 409,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Plante."
+  },
+  {
+    "id": "yacheberry",
+    "nom": "Baie Nanone",
+    "groupe": "Baies de résistance",
+    "sprite": 567,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Glace."
+  },
+  {
+    "id": "chopleberry",
+    "nom": "Baie Pomroz",
+    "groupe": "Baies de résistance",
+    "sprite": 71,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Combat."
+  },
+  {
+    "id": "kebiaberry",
+    "nom": "Baie Kébia",
+    "groupe": "Baies de résistance",
+    "sprite": 234,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Poison."
+  },
+  {
+    "id": "shucaberry",
+    "nom": "Baie Jouca",
+    "groupe": "Baies de résistance",
+    "sprite": 443,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Sol."
+  },
+  {
+    "id": "cobaberry",
+    "nom": "Baie Cobaba",
+    "groupe": "Baies de résistance",
+    "sprite": 76,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Vol."
+  },
+  {
+    "id": "payapaberry",
+    "nom": "Baie Yapap",
+    "groupe": "Baies de résistance",
+    "sprite": 330,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Psy."
+  },
+  {
+    "id": "tangaberry",
+    "nom": "Baie Panga",
+    "groupe": "Baies de résistance",
+    "sprite": 487,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Insecte."
+  },
+  {
+    "id": "chartiberry",
+    "nom": "Baie Charti",
+    "groupe": "Baies de résistance",
+    "sprite": 62,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Roche."
+  },
+  {
+    "id": "kasibberry",
+    "nom": "Baie Sédra",
+    "groupe": "Baies de résistance",
+    "sprite": 233,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Spectre."
+  },
+  {
+    "id": "habanberry",
+    "nom": "Baie Fraigo",
+    "groupe": "Baies de résistance",
+    "sprite": 185,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Dragon."
+  },
+  {
+    "id": "colburberry",
+    "nom": "Baie Lampou",
+    "groupe": "Baies de résistance",
+    "sprite": 78,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Ténèbres."
+  },
+  {
+    "id": "babiriberry",
+    "nom": "Baie Babiri",
+    "groupe": "Baies de résistance",
+    "sprite": 17,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Acier."
+  },
+  {
+    "id": "roseliberry",
+    "nom": "Baie Selro",
+    "groupe": "Baies de résistance",
+    "sprite": 603,
+    "description": "Tenue, cette Baie affaiblit une attaque ennemie super efficace de type Fée."
   },
   {
     "id": "ejectbutton",
     "nom": "Bouton Fuite",
     "groupe": "Contrôle",
-    "description": "Objet à tenir. Permet au porteur de quitter le combat après avoir été touché par une attaque."
+    "sprite": 118,
+    "description": "Permet au porteur de quitter le combat après avoir été touché par une attaque."
   },
   {
     "id": "ejectpack",
     "nom": "Sac Fuite",
     "groupe": "Contrôle",
-    "description": "Objet à tenir. Si le porteur subit une baisse de stats, il revient vers son Dresseur et change de place avec un coéquipier."
+    "sprite": 714,
+    "description": "Si le porteur subit une baisse de stats, il revient vers son Dresseur et change de place avec un coéquipier."
   },
   {
     "id": "redcard",
     "nom": "Carton Rouge",
     "groupe": "Contrôle",
-    "description": "Objet à tenir. Une carte au pouvoir mystérieux qui permet d’éjecter un Pokémon du combat si ce dernier attaque le porteur."
+    "sprite": 387,
+    "description": "Une carte au pouvoir mystérieux qui permet d’éjecter un Pokémon du combat si ce dernier attaque le porteur."
   },
   {
     "id": "shedshell",
     "nom": "Carapace Mue",
     "groupe": "Contrôle",
-    "description": "Objet à tenir. Une carapace dure qui permet au porteur de se retirer même s’il est affecté par une attaque immobilisante."
+    "sprite": 437,
+    "description": "Une carapace dure qui permet au porteur de se retirer même s’il est affecté par une attaque immobilisante."
   },
   {
     "id": "roomservice",
     "nom": "Chariot Distordu",
     "groupe": "Contrôle",
-    "description": "Objet à tenir. Baisse la Vitesse du porteur lorsque la capacité Distorsion est active."
+    "sprite": 717,
+    "description": "Baisse la Vitesse du porteur lorsque la capacité Distorsion est active."
   },
   {
     "id": "lightclay",
     "nom": "Lumargile",
     "groupe": "Contrôle",
-    "description": "Objet à tenir. Prolonge la durée des capacités barrières telles que Mur Lumière et Protection."
+    "sprite": 252,
+    "description": "Prolonge la durée des capacités barrières telles que Mur Lumière et Protection."
   },
   {
     "id": "toxicorb",
     "nom": "Orbe Toxique",
     "groupe": "Contrôle",
-    "description": "Objet à tenir. Un orbe bizarre qui empoisonne gravement son porteur durant le combat."
+    "sprite": 515,
+    "description": "Un orbe bizarre qui empoisonne gravement son porteur durant le combat."
   },
   {
     "id": "flameorb",
     "nom": "Orbe Flamme",
     "groupe": "Contrôle",
-    "description": "Objet à tenir. Un orbe bizarre qui brûle son porteur durant le combat."
+    "sprite": 145,
+    "description": "Un orbe bizarre qui brûle son porteur durant le combat."
   },
   {
     "id": "adrenalineorb",
     "nom": "Orbe Frousse",
     "groupe": "Contrôle",
-    "description": "Objet à tenir. Si le porteur subit une Intimidation, sa Vitesse augmente."
+    "sprite": 660,
+    "description": "Si le porteur subit une Intimidation, sa Vitesse augmente."
   },
   {
     "id": "blunderpolicy",
     "nom": "Assurance Échec",
     "groupe": "Contrôle",
+    "sprite": 716,
     "description": "Si un Pokémon manque sa cible parce qu’une capacité a peu de Précision, sa Vitesse augmente beaucoup."
   },
   {
     "id": "damprock",
     "nom": "Roche Humide",
     "groupe": "Météo et champs",
-    "description": "Objet à tenir. Prolonge la durée de la capacité Danse Pluie utilisée par le porteur."
+    "sprite": 88,
+    "description": "Prolonge la durée de la capacité Danse Pluie utilisée par le porteur."
   },
   {
     "id": "heatrock",
     "nom": "Roche Chaude",
     "groupe": "Météo et champs",
-    "description": "Objet à tenir. Prolonge la durée de la capacité Zénith utilisée par le porteur."
+    "sprite": 193,
+    "description": "Prolonge la durée de la capacité Zénith utilisée par le porteur."
   },
   {
     "id": "smoothrock",
     "nom": "Roche Lisse",
     "groupe": "Météo et champs",
-    "description": "Objet à tenir. Prolonge la durée de la capacité Tempête de Sable utilisée par le porteur."
+    "sprite": 453,
+    "description": "Prolonge la durée de la capacité Tempête de Sable utilisée par le porteur."
   },
   {
     "id": "icyrock",
     "nom": "Roche Glace",
     "groupe": "Météo et champs",
-    "description": "Objet à tenir. Prolonge la durée de la capacité Chute de Neige utilisée par le porteur."
+    "sprite": 221,
+    "description": "Prolonge la durée de la capacité Chute de Neige utilisée par le porteur."
   },
   {
     "id": "terrainextender",
     "nom": "Champ’Duit",
     "groupe": "Météo et champs",
-    "description": "Objet à tenir. Prolonge la durée des champs que le Pokémon peut créer sur le terrain avec une capacité ou un talent."
+    "sprite": 662,
+    "description": "Prolonge la durée des champs que le Pokémon peut créer sur le terrain avec une capacité ou un talent."
   },
   {
     "id": "utilityumbrella",
     "nom": "Parapluie Solide",
     "groupe": "Météo et champs",
-    "description": "Objet à tenir. Protège le porteur des effets de la pluie et des rayons du soleil."
+    "sprite": 718,
+    "description": "Protège le porteur des effets de la pluie et des rayons du soleil."
+  },
+  {
+    "id": "electricseed",
+    "nom": "Graine Électrik",
+    "groupe": "Météo et champs",
+    "sprite": 664,
+    "description": "Augmente la Défense lorsque le terrain est couvert d’un Champ Électrifié."
+  },
+  {
+    "id": "grassyseed",
+    "nom": "Graine Herbe",
+    "groupe": "Météo et champs",
+    "sprite": 667,
+    "description": "Augmente la Défense lorsque le terrain est couvert d’un Champ Herbu."
+  },
+  {
+    "id": "psychicseed",
+    "nom": "Graine Psychique",
+    "groupe": "Météo et champs",
+    "sprite": 665,
+    "description": "Augmente la Défense Spéciale lorsque le terrain est couvert d’un Champ Psychique."
+  },
+  {
+    "id": "mistyseed",
+    "nom": "Graine Brume",
+    "groupe": "Météo et champs",
+    "sprite": 666,
+    "description": "Augmente la Défense Spéciale lorsque le terrain est couvert d’un Champ Brumeux."
   },
   {
     "id": "thickclub",
     "nom": "Masse Os",
     "groupe": "Propres à un Pokémon",
+    "sprite": 491,
     "description": "Objet à faire tenir à Osselait ou Ossatueur. Un os dur qui augmente leur Attaque."
+  },
+  {
+    "id": "leek",
+    "nom": "Poireau",
+    "groupe": "Propres à un Pokémon",
+    "sprite": 475,
+    "description": "Objet à faire tenir à Canarticho. Un poireau très long et solide qui augmente son taux de critiques."
   }
 ]

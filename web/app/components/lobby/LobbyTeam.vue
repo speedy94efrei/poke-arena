@@ -56,6 +56,7 @@
               {{ variant.favorite ? '★ ' : '' }}{{ variant.nom }}
             </option>
           </select>
+          <ItemIcon :id="entry.variant.objetId" />
           <span class="detail__meta">{{ findObjet(entry.variant.objetId)?.nom ?? itemName(entry.variant.objetId) }} · {{ entry.pokemon.talent.nom }} · {{ findNature(entry.variant.natureId)?.nom }}</span>
           <NuxtLink class="detail__edit" :to="`/pokedraft/atelier?id=${entry.pokemon.id}`">Modifier ▸</NuxtLink>
         </div>

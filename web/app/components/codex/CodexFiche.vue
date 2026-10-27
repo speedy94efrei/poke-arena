@@ -84,7 +84,7 @@
 
     <CodexBlock title="Set par défaut">
       <div class="set__chips">
-        <span class="set__chip"><span>Objet</span>{{ pokemon.setParDefaut.objet }}</span>
+        <span class="set__chip"><span>Objet</span><ItemIcon :id="pokemon.setParDefaut.objetId" />{{ pokemon.setParDefaut.objet }}</span>
         <span class="set__chip"><span>Nature</span>{{ pokemon.setParDefaut.nature }}</span>
       </div>
       <div class="set__moves">

@@ -1,84 +1,67 @@
 <template>
-  <CodexBlock title="Objet et nature">
-    <div class="pair">
-      <label class="pair__field">
-        <span class="pair__label">Objet</span>
-        <select class="pair__select" :value="variant.objetId" @change="event => emit('update', { objetId: (event.target as HTMLSelectElement).value })">
-          <option v-if="!findObjet(variant.objetId)" :value="variant.objetId">{{ itemName(variant.objetId) }}</option>
-          <optgroup v-for="group in objetGroups" :key="group.label" :label="group.label">
-            <option v-for="objet in group.objets" :key="objet.id" :value="objet.id">{{ objet.nom }}</option>
-          </optgroup>
-        </select>
-      </label>
-      <label class="pair__field">
-        <span class="pair__label">Nature</span>
-        <select class="pair__select" :value="variant.natureId" @change="event => emit('update', { natureId: (event.target as HTMLSelectElement).value })">
-          <option v-for="nature in NATURES" :key="nature.id" :value="nature.id">{{ natureLabel(nature) }}</option>
-        </select>
-      </label>
-    </div>
-    <span v-if="findObjet(variant.objetId)?.description" class="description">{{ findObjet(variant.objetId)!.description }}</span>
-  </CodexBlock>
-
-  <CodexBlock title="EV, IV et stats finales">
+  <CodexBlock title="Nature, EV et IV">
     <template #aside>Niveau <b class="num">100</b> · stats PokéDraft</template>
-    <div class="modes">
-      <button v-for="tab in MODES" :key="tab.value" type="button" class="modes__tab" :class="{ 'modes__tab--active': mode === tab.value }" :aria-pressed="mode === tab.value" @click="mode = tab.value">
-        {{ tab.label }}
-      </button>
-    </div>
-    <div v-if="mode === 'simple'" class="presets">
+    <div class="presets">
+      <span class="presets__label">Départ rapide</span>
       <button
         v-for="preset in EV_PRESETS"
         :key="preset.id"
         type="button"
-        class="preset"
-        :class="{ 'preset--active': variant.preset === preset.id }"
+        class="chip"
+        :class="{ 'chip--on': variant.preset === preset.id }"
         :aria-pressed="variant.preset === preset.id"
+        :title="preset.detail"
         @click="emit('update', presetPatch(pokemon, preset.id, variant))"
       >
-        <span class="preset__dot" />
-        <span class="preset__text">
-          <span class="preset__label">{{ preset.label }}</span>
-          <span class="preset__detail">{{ preset.detail }}</span>
-        </span>
+        {{ preset.label }}
       </button>
     </div>
-    <div class="stats">
-      <div v-for="stat in stats" :key="stat.id" class="stat">
-        <span class="stat__label" :style="{ color: stat.color }">{{ stat.label }} {{ stat.arrow }}</span>
-        <input
-          v-if="mode === 'avance'"
-          type="range"
-          class="stat__range"
-          min="0"
-          :max="MAX_EV"
-          step="4"
-          :value="stat.ev"
-          :aria-label="`EV ${stat.label}`"
-          @input="event => setEv(stat.id, Number((event.target as HTMLInputElement).value))"
-        >
-        <div v-else class="stat__track"><div class="stat__fill" :style="{ width: `${stat.ev / MAX_EV * 100}%` }" /></div>
-        <span class="stat__ev">{{ stat.ev }}</span>
-        <span class="stat__final">{{ stat.final }}</span>
-      </div>
-      <div class="total">
-        <span class="total__label">EV utilisés</span>
-        <div class="total__track"><div class="total__fill" :style="{ width: `${total / MAX_EV_TOTAL * 100}%`, background: totalColor }" /></div>
-        <span class="total__value" :style="{ color: totalColor }">{{ total }}/{{ MAX_EV_TOTAL }}</span>
-      </div>
+    <div class="summary">
+      <span class="summary__label">Nature</span>
+      <span class="summary__nature">{{ natureText }}</span>
+      <span v-if="!draft.plus || !draft.moins" class="summary__hint">· choisis un ▲ et un ▼</span>
+      <span class="summary__spacer" />
+      <span class="summary__label">EV <b class="num" :style="{ color: total === MAX_EV_TOTAL ? '#58d080' : 'var(--uA)' }">{{ total }}/{{ MAX_EV_TOTAL }}</b></span>
     </div>
-    <div class="ivs">
-      <span class="ivs__title">IV à 31 partout, sauf :</span>
-      <label class="iv">
-        <input type="checkbox" :checked="variant.ivVit0" @change="emit('update', { ivVit0: !variant.ivVit0 })">
-        Vitesse minimale <span class="iv__detail">IV Vit 0 · pour la Distorsion</span>
-      </label>
-      <label class="iv">
-        <input type="checkbox" :checked="variant.ivAtq0" @change="emit('update', { ivAtq0: !variant.ivAtq0 })">
-        Attaque minimale <span class="iv__detail">IV Atq 0 · réduit les dégâts de la confusion</span>
-      </label>
+    <div class="row row--head">
+      <span>Stat</span><span>Nature</span><span>EV</span><span /><span>IV</span><span class="row__final">Finale</span>
     </div>
+    <div v-for="stat in rows" :key="stat.id" class="row">
+      <span class="row__label" :class="{ up: stat.up, down: stat.down }">{{ stat.label }}</span>
+      <span class="row__nature">
+        <template v-if="stat.id !== 'hp'">
+          <button type="button" class="chip" :class="{ 'chip--on': stat.up }" :aria-pressed="stat.up" :aria-label="`Nature : monter ${stat.label}`" @click="toggle('plus', stat.id)">▲</button>
+          <button type="button" class="chip" :class="{ 'chip--on': stat.down }" :aria-pressed="stat.down" :aria-label="`Nature : baisser ${stat.label}`" @click="toggle('moins', stat.id)">▼</button>
+        </template>
+        <span v-else class="row__none">—</span>
+      </span>
+      <input
+        type="range"
+        class="row__range"
+        min="0"
+        :max="MAX_EV"
+        step="4"
+        :value="stat.ev"
+        :aria-label="`EV ${stat.label}`"
+        @input="event => setEv(stat.id, Number((event.target as HTMLInputElement).value))"
+      >
+      <input
+        type="number"
+        class="row__ev"
+        min="0"
+        :max="MAX_EV"
+        step="4"
+        :value="stat.ev"
+        :aria-label="`EV ${stat.label}, valeur`"
+        @change="event => setEv(stat.id, Number((event.target as HTMLInputElement).value))"
+      >
+      <span class="row__ivs">
+        <button type="button" class="chip" :class="{ 'chip--on': stat.iv === MAX_IV }" :aria-pressed="stat.iv === MAX_IV" :aria-label="`IV ${stat.label} à 31`" @click="setIv(stat.id, MAX_IV)">31</button>
+        <button type="button" class="chip" :class="{ 'chip--on': stat.iv === 0 }" :aria-pressed="stat.iv === 0" :aria-label="`IV ${stat.label} à 0`" @click="setIv(stat.id, 0)">0</button>
+      </span>
+      <span class="row__final" :class="{ up: stat.up, down: stat.down }">{{ stat.final }}</span>
+    </div>
+    <span class="hint">IV à 0 : en Vitesse pour la Distorsion, en Attaque pour réduire les dégâts de la confusion sur un attaquant spécial.</span>
   </CodexBlock>
 </template>
 
@@ -87,200 +70,128 @@ import type { Pokemon } from '#data/types/roster'
 import type { StatId } from '~/utils/showdownTeam'
 import type { Variante } from '~/utils/atelier'
 
-const MODES = [{ value: 'simple', label: 'Simple' }, { value: 'avance', label: 'Avancé' }] as const
-
 const props = defineProps<{ pokemon: Pokemon, variant: Variante }>()
 const emit = defineEmits<{ update: [patch: Partial<Variante>] }>()
-const mode = ref<'simple' | 'avance'>('simple')
 
-const objetGroups = computed(() => [...new Set(OBJETS.map(objet => objet.groupe))]
-  .map(label => ({ label, objets: OBJETS.filter(objet => objet.groupe === label) })))
+const fromNature = () => {
+  const nature = findNature(props.variant.natureId)
+  return { plus: nature?.plus ?? null, moins: nature?.moins ?? null }
+}
+
+const draft = ref<{ plus: StatId | null, moins: StatId | null }>(fromNature())
+
+watch(() => props.variant.natureId, () => {
+  const synced = fromNature()
+  if (synced.plus || (draft.value.plus && draft.value.moins)) draft.value = synced
+})
 
 const total = computed(() => evTotal(props.variant.evs))
-const totalColor = computed(() => total.value === MAX_EV_TOTAL ? '#58d080' : 'var(--uA)')
-
-const stats = computed(() => {
+const natureText = computed(() => {
   const nature = findNature(props.variant.natureId)
-  return STATS.map((stat) => {
-    const up = nature?.plus === stat.id
-    const down = nature?.moins === stat.id
-    return {
-      ...stat,
-      ev: props.variant.evs[stat.id],
-      final: finalStat(props.pokemon, props.variant, stat.id),
-      arrow: up ? '▲' : down ? '▼' : '',
-      color: up ? '#58d080' : down ? '#ff8a7a' : 'var(--mu)',
-    }
-  })
+  return nature?.plus ? natureLabel(nature) : 'Neutre'
 })
+
+const rows = computed(() => STATS.map(stat => ({
+  ...stat,
+  ev: props.variant.evs[stat.id],
+  iv: props.variant.ivs[stat.id],
+  final: finalStat(props.pokemon, props.variant, stat.id),
+  up: draft.value.plus === stat.id,
+  down: draft.value.moins === stat.id,
+})))
+
+const toggle = (side: 'plus' | 'moins', stat: StatId) => {
+  const other = side === 'plus' ? 'moins' : 'plus'
+  const next = { ...draft.value }
+  next[side] = next[side] === stat ? null : stat
+  if (next[other] === stat) next[other] = null
+  draft.value = next
+  emit('update', { natureId: natureFor(next.plus, next.moins) })
+}
 
 const setEv = (stat: StatId, value: number) => {
   const others = total.value - props.variant.evs[stat]
-  const ev = Math.max(0, Math.min(value, MAX_EV, MAX_EV_TOTAL - others))
+  const ev = Math.max(0, Math.min(Number.isFinite(value) ? value : 0, MAX_EV, MAX_EV_TOTAL - others))
   emit('update', { evs: { ...props.variant.evs, [stat]: ev - (ev % 4) }, preset: null })
+}
+
+const setIv = (stat: StatId, value: number) => {
+  emit('update', { ivs: { ...props.variant.ivs, [stat]: value }, preset: null })
 }
 </script>
 
 <style scoped>
-.pair {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.pair__field {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 0;
-}
-
-.pair__label { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-
-.pair__select {
-  height: 36px;
-  min-width: 0;
-  border: 0;
-  border-radius: 7px;
-  padding: 0 8px;
-  font-weight: 700;
-  font-size: 13px;
-  background: var(--in);
-  color: var(--tx);
-  box-shadow: inset 0 0 0 2px var(--chip);
-}
-
-.description { font: 400 13px/1.4 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.num { font: 600 13px 'Pixelify Sans', sans-serif; }
-
-.modes {
-  display: flex;
-  gap: 4px;
-  padding: 3px;
-  border-radius: 9px;
-  background: var(--dk);
-  align-self: flex-start;
-}
-
-.modes__tab {
-  border: 0;
-  cursor: pointer;
-  height: 30px;
-  padding: 0 12px;
-  border-radius: 7px;
-  background: transparent;
-  color: var(--mu);
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
-}
-
-.modes__tab--active { background: var(--uA); color: var(--uAtx); }
+.num { font: 600 14px 'Pixelify Sans', sans-serif; }
 
 .presets {
   display: flex;
-  flex-direction: column;
   gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
-.preset {
+.presets__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); margin-right: 2px; }
+
+.chip {
   border: 0;
   cursor: pointer;
-  text-align: left;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: transparent;
-  box-shadow: inset 0 0 0 2px var(--chip);
+  border-radius: 6px;
+  background: var(--chip);
   color: var(--tx);
+  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  padding: 4px 8px;
+}
+
+.chip--on { background: var(--uA); color: var(--uAtx); }
+
+.summary {
   display: flex;
-  align-items: center;
   gap: 8px;
-}
-
-.preset--active { background: var(--in); box-shadow: inset 0 0 0 2px var(--uA); }
-
-.preset__dot {
-  flex: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 2px var(--mu);
-}
-
-.preset--active .preset__dot { background: var(--uA); }
-
-.preset__text {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.preset__label { font: 700 14px 'Atkinson Hyperlegible', sans-serif; }
-.preset__detail { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-
-.stats {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.stat {
-  display: grid;
-  grid-template-columns: 70px minmax(0, 1fr) 38px 44px;
-  gap: 8px;
-  align-items: center;
-}
-
-.stat__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
-.stat__range { width: 100%; accent-color: var(--uA); }
-
-.stat__track {
-  height: 10px;
-  border-radius: 2px;
-  background: var(--in);
-  overflow: hidden;
-}
-
-.stat__fill { height: 100%; background: var(--uA); }
-.stat__ev { font: 600 13px 'Pixelify Sans', sans-serif; color: var(--mu); text-align: right; }
-.stat__final { font: 600 17px 'Pixelify Sans', sans-serif; text-align: right; }
-
-.total {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-top: 4px;
-}
-
-.total__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-
-.total__track {
-  flex: 1;
-  height: 8px;
-  border-radius: 2px;
-  background: var(--in);
-  overflow: hidden;
-}
-
-.total__fill { height: 100%; }
-.total__value { font: 600 14px 'Pixelify Sans', sans-serif; }
-
-.ivs {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding-top: 8px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  padding-top: 6px;
   border-top: 2px solid var(--chip);
 }
 
-.ivs__title { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.summary__label, .summary__hint { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.summary__nature { font: 700 15px 'Atkinson Hyperlegible', sans-serif; }
+.summary__spacer { flex: 1; }
 
-.iv {
-  display: flex;
+.row {
+  display: grid;
+  grid-template-columns: 62px 58px minmax(0, 1fr) 50px 66px 42px;
+  gap: 6px;
   align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
 }
 
-.iv input { width: 18px; height: 18px; accent-color: var(--uA); }
-.iv__detail { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.row--head { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.row__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.row__nature, .row__ivs { display: flex; gap: 3px; }
+.row__nature .chip, .row__ivs .chip { padding: 4px 7px; }
+.row__none { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); padding-left: 6px; }
+.row__range { width: 100%; accent-color: var(--uA); }
+
+.row__ev {
+  width: 100%;
+  box-sizing: border-box;
+  height: 26px;
+  border: 0;
+  border-radius: 5px;
+  padding: 0 4px;
+  background: var(--in);
+  box-shadow: inset 0 0 0 2px var(--chip);
+  color: var(--tx);
+  font: 600 13px 'Pixelify Sans', sans-serif;
+  text-align: right;
+}
+
+.row__final { font: 600 17px 'Pixelify Sans', sans-serif; text-align: right; }
+.row--head .row__final { font: inherit; }
+.up { color: #58d080; }
+.down { color: #ff8a7a; }
+.hint { font: 700 11px/1.4 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+
+@media (max-width: 640px) {
+  .row { grid-template-columns: 52px 54px minmax(0, 1fr) 44px 60px 38px; gap: 4px; }
+}
 </style>

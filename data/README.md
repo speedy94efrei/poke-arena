@@ -4,7 +4,7 @@
 - `schemas/roster.schema.json` : le format de ce fichier (JSON Schema 2020-12). Le roster y fait référence, donc un éditeur comme VS Code le vérifie et le complète pendant qu'on l'édite.
 - `types/roster.d.ts` : les types TypeScript du roster, générés depuis le schéma. Ne pas les modifier à la main.
 - `sources/saison-N/` : les fiches de la saison (PDF) et leurs corrections (Markdown), à partir desquelles le roster est généré.
-- `references/` : les listes que l'Atelier propose, générées elles aussi (voir plus bas) : `objets.json` (objets autorisés, nom et description en français), `natures.json` (les 25 natures et la stat qu'elles montent et baissent) et `attaques-interdites.json` (attaques du movepool que le format refuse, par Pokémon, avec la raison).
+- `references/` : les listes que l'Atelier propose, générées elles aussi (voir plus bas) : `objets.json` (objets autorisés, nom et description en français, numéro d'icône Showdown), `natures.json` (les 25 natures et la stat qu'elles montent et baissent), `attaques-interdites.json` (attaques du movepool que le format refuse, par Pokémon, avec la raison) et `smogon.json` (objets recommandés par les analyses Smogon, par Pokémon).
 - `scripts/` : la génération. Les scripts sont en Python pour l'instant ; ils seront portés en TypeScript.
 
 `cache/` contient les fichiers intermédiaires et n'est pas versionné.
@@ -38,11 +38,14 @@ Depuis la racine du dépôt, après le roster et une fois le serveur de combat c
 
 ```bash
 python data/scripts/build_references.py data/cache/pokeapi server data/rosters/roster-saison-1.json data/references
+python data/scripts/fetch_smogon.py data/cache/smogon
+python data/scripts/build_smogon.py data/cache/smogon data/rosters/roster-saison-1.json data/references/objets.json data/references/smogon.json
 node data/scripts/build_interdits.cjs server data/rosters/roster-saison-1.json data/references/attaques-interdites.json
 ```
 
-1. `build_references.py` écrit la liste des objets proposés (choisie à la main dans le script, regroupée par usage) et les natures, avec les noms et descriptions français de PokéAPI. Il s'arrête si un objet manque à Showdown ou si un objet d'un set par défaut n'est pas dans la liste.
-2. `build_interdits.cjs` passe chaque attaque du movepool de chaque fiche au validateur du format `[Gen 9] PokeDraft` et note celles qu'il refuse : clause d'esquive (Reflet, Lilliput…), clause K.O. en un coup (Abîme, Glaciation…), attaques bannies (Relais, Assistance, Queulonage) et attaques impossibles à obtenir (Escalade sur certains Pokémon). L'Atelier les grise, le Codex les signale.
+1. `build_references.py` écrit la liste des objets proposés (choisie à la main dans le script, regroupée par usage) et les natures, avec les noms et descriptions français de PokéAPI et le numéro de l'icône de chaque objet dans la planche de Showdown. Il s'arrête si un objet manque à Showdown ou si un objet d'un set par défaut n'est pas dans la liste.
+2. `fetch_smogon.py` télécharge les sets des analyses Smogon (Gen 4 à 9) publiés par [data.pkmn.cc](https://data.pkmn.cc). `build_smogon.py` en tire, pour chaque Pokémon, les objets recommandés dans les tiers simples (Ubers à ZU, LC, National Dex), à partir de la génération la plus récente qui en propose un de la liste. Ces conseils valent pour les stats et talents officiels : l'Atelier les donne à titre indicatif. Le script affiche les Pokémon sans recommandation et les objets recommandés absents de la liste (méga-gemmes, cristaux Z…).
+3. `build_interdits.cjs` passe chaque attaque du movepool de chaque fiche au validateur du format `[Gen 9] PokeDraft` et note celles qu'il refuse : clause d'esquive (Reflet, Lilliput…), clause K.O. en un coup (Abîme, Glaciation…), attaques bannies (Relais, Assistance, Queulonage) et attaques impossibles à obtenir (Escalade sur certains Pokémon). L'Atelier les grise, le Codex les signale.
 
 Le test `server/test/sim/pokedraft/atelier.js` vérifie que ces listes collent au format : chaque objet et chaque nature sont acceptés, et le validateur refuse exactement les attaques listées. Il échoue si le roster ou le format change sans que les références soient régénérées.
 

@@ -1,0 +1,902 @@
+{
+  "dewgong": {
+    "generation": 7,
+    "objets": [
+      {
+        "id": "leftovers",
+        "formats": [
+          "Gen 7 PU"
+        ]
+      }
+    ]
+  },
+  "onix": {
+    "generation": 8,
+    "objets": [
+      {
+        "id": "eviolite",
+        "formats": [
+          "Gen 8 LC"
+        ]
+      }
+    ]
+  },
+  "marowak": {
+    "generation": 8,
+    "objets": [
+      {
+        "id": "thickclub",
+        "formats": [
+          "Gen 8 ZU"
+        ]
+      }
+    ]
+  },
+  "arbok": {
+    "generation": 7,
+    "objets": [
+      {
+        "id": "choiceband",
+        "formats": [
+          "Gen 7 ZU"
+        ]
+      }
+    ]
+  },
+  "farfetchd": {
+    "generation": 8,
+    "objets": [
+      {
+        "id": "leek",
+        "formats": [
+          "Gen 8 ZU"
+        ]
+      }
+    ]
+  },
+  "hypno": {
+    "generation": 6,
+    "objets": [
+      {
+        "id": "leftovers",
+        "formats": [
+          "Gen 6 PU",
+          "Gen 6 ZU"
+        ]
+      },
+      {
+        "id": "colburberry",
+        "formats": [
+          "Gen 6 PU"
+        ]
+      }
+    ]
+  },
+  "miltank": {
+    "generation": 8,
+    "objets": [
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "Gen 8 ZU"
+        ]
+      },
+      {
+        "id": "rockyhelmet",
+        "formats": [
+          "Gen 8 ZU"
+        ]
+      },
+      {
+        "id": "leftovers",
+        "formats": [
+          "Gen 8 ZU"
+        ]
+      }
+    ]
+  },
+  "lanturn": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "PU",
+          "ZU"
+        ]
+      },
+      {
+        "id": "leftovers",
+        "formats": [
+          "PU"
+        ]
+      }
+    ]
+  },
+  "typhlosion": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "choicespecs",
+        "formats": [
+          "ZU"
+        ]
+      },
+      {
+        "id": "choicescarf",
+        "formats": [
+          "ZU"
+        ]
+      }
+    ]
+  },
+  "qwilfish": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "rockyhelmet",
+        "formats": [
+          "PU",
+          "ZU"
+        ]
+      },
+      {
+        "id": "leftovers",
+        "formats": [
+          "PU",
+          "ZU"
+        ]
+      },
+      {
+        "id": "lifeorb",
+        "formats": [
+          "PU"
+        ]
+      },
+      {
+        "id": "choicescarf",
+        "formats": [
+          "ZU"
+        ]
+      },
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "ZU"
+        ]
+      }
+    ]
+  },
+  "houndoom": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "ZU"
+        ]
+      }
+    ]
+  },
+  "heracross": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "flameorb",
+        "formats": [
+          "PU",
+          "NU"
+        ]
+      },
+      {
+        "id": "choicescarf",
+        "formats": [
+          "PU"
+        ]
+      },
+      {
+        "id": "leftovers",
+        "formats": [
+          "NU"
+        ]
+      },
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "NU"
+        ]
+      }
+    ]
+  },
+  "relicanth": {
+    "generation": 8,
+    "objets": [
+      {
+        "id": "leftovers",
+        "formats": [
+          "Gen 8 ZU"
+        ]
+      }
+    ]
+  },
+  "ninjask": {
+    "generation": 8,
+    "objets": [
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "Gen 8 PU"
+        ]
+      }
+    ]
+  },
+  "tropius": {
+    "generation": 7,
+    "objets": [
+      {
+        "id": "sitrusberry",
+        "formats": [
+          "Gen 7 PU"
+        ]
+      }
+    ]
+  },
+  "flygon": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "leftovers",
+        "formats": [
+          "RU",
+          "NU",
+          "NatDex UU"
+        ]
+      },
+      {
+        "id": "loadeddice",
+        "formats": [
+          "RU",
+          "NU"
+        ]
+      },
+      {
+        "id": "choiceband",
+        "formats": [
+          "RU",
+          "NU"
+        ]
+      },
+      {
+        "id": "choicescarf",
+        "formats": [
+          "RU",
+          "NU"
+        ]
+      },
+      {
+        "id": "clearamulet",
+        "formats": [
+          "NU"
+        ]
+      },
+      {
+        "id": "lifeorb",
+        "formats": [
+          "NU"
+        ]
+      }
+    ]
+  },
+  "sharpedo": {
+    "generation": 8,
+    "objets": [
+      {
+        "id": "lifeorb",
+        "formats": [
+          "Gen 8 RU",
+          "Gen 8 NatDex RU"
+        ]
+      }
+    ]
+  },
+  "altaria": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "NU"
+        ]
+      }
+    ]
+  },
+  "bastiodon": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "leftovers",
+        "formats": [
+          "NU"
+        ]
+      }
+    ]
+  },
+  "abomasnow": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "PU",
+          "ZU"
+        ]
+      },
+      {
+        "id": "ejectpack",
+        "formats": [
+          "PU"
+        ]
+      }
+    ]
+  },
+  "froslass": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "focussash",
+        "formats": [
+          "ZU",
+          "RU",
+          "PU"
+        ]
+      },
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "ZU",
+          "NU"
+        ]
+      }
+    ]
+  },
+  "lucario": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "lifeorb",
+        "formats": [
+          "RU"
+        ]
+      },
+      {
+        "id": "airballoon",
+        "formats": [
+          "RU"
+        ]
+      }
+    ]
+  },
+  "weavile": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "UU",
+          "OU",
+          "NatDex"
+        ]
+      },
+      {
+        "id": "choiceband",
+        "formats": [
+          "OU",
+          "NatDex"
+        ]
+      }
+    ]
+  },
+  "pachirisu": {
+    "generation": 7,
+    "objets": [
+      {
+        "id": "leftovers",
+        "formats": [
+          "Gen 7 PU"
+        ]
+      }
+    ]
+  },
+  "luxray": {
+    "generation": 8,
+    "objets": [
+      {
+        "id": "flameorb",
+        "formats": [
+          "Gen 8 ZU"
+        ]
+      }
+    ]
+  },
+  "cofagrigus": {
+    "generation": 8,
+    "objets": [
+      {
+        "id": "colburberry",
+        "formats": [
+          "Gen 8 ZU"
+        ]
+      },
+      {
+        "id": "chestoberry",
+        "formats": [
+          "Gen 8 ZU"
+        ]
+      }
+    ]
+  },
+  "bisharp": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "eviolite",
+        "formats": [
+          "UU",
+          "RU",
+          "NatDex UU"
+        ]
+      },
+      {
+        "id": "lifeorb",
+        "formats": [
+          "NatDex UU"
+        ]
+      },
+      {
+        "id": "blackglasses",
+        "formats": [
+          "NatDex UU"
+        ]
+      },
+      {
+        "id": "choiceband",
+        "formats": [
+          "NatDex UU"
+        ]
+      }
+    ]
+  },
+  "leavanny": {
+    "generation": 7,
+    "objets": [
+      {
+        "id": "focussash",
+        "formats": [
+          "Gen 7 PU"
+        ]
+      }
+    ]
+  },
+  "crustle": {
+    "generation": 8,
+    "objets": [
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "Gen 8 ZU"
+        ]
+      }
+    ]
+  },
+  "musharna": {
+    "generation": 7,
+    "objets": [
+      {
+        "id": "colburberry",
+        "formats": [
+          "Gen 7 PU"
+        ]
+      },
+      {
+        "id": "leftovers",
+        "formats": [
+          "Gen 7 PU"
+        ]
+      }
+    ]
+  },
+  "sylveon": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "leftovers",
+        "formats": [
+          "NU",
+          "NatDex RU"
+        ]
+      },
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "NU",
+          "NatDex RU"
+        ]
+      },
+      {
+        "id": "choicespecs",
+        "formats": [
+          "NU"
+        ]
+      }
+    ]
+  },
+  "tyrantrum": {
+    "generation": 8,
+    "objets": [
+      {
+        "id": "lumberry",
+        "formats": [
+          "Gen 8 RU",
+          "Gen 8 NU"
+        ]
+      },
+      {
+        "id": "lifeorb",
+        "formats": [
+          "Gen 8 RU",
+          "Gen 8 NU"
+        ]
+      },
+      {
+        "id": "choiceband",
+        "formats": [
+          "Gen 8 NU",
+          "Gen 8 NatDex RU"
+        ]
+      },
+      {
+        "id": "choicescarf",
+        "formats": [
+          "Gen 8 RU"
+        ]
+      }
+    ]
+  },
+  "hawlucha": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "psychicseed",
+        "formats": [
+          "UU",
+          "NatDex"
+        ]
+      },
+      {
+        "id": "grassyseed",
+        "formats": [
+          "OU",
+          "NatDex"
+        ]
+      },
+      {
+        "id": "electricseed",
+        "formats": [
+          "NatDex"
+        ]
+      }
+    ]
+  },
+  "dedenne": {
+    "generation": 8,
+    "objets": [
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "Gen 8 ZU"
+        ]
+      }
+    ]
+  },
+  "gourgeist": {
+    "generation": 8,
+    "objets": [
+      {
+        "id": "weaknesspolicy",
+        "formats": [
+          "Gen 8 ZU"
+        ]
+      }
+    ]
+  },
+  "mudsdale": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "leftovers",
+        "formats": [
+          "PU",
+          "NU"
+        ]
+      },
+      {
+        "id": "rockyhelmet",
+        "formats": [
+          "PU"
+        ]
+      }
+    ]
+  },
+  "palossand": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "colburberry",
+        "formats": [
+          "RU",
+          "PU"
+        ]
+      },
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "RU"
+        ]
+      },
+      {
+        "id": "rockyhelmet",
+        "formats": [
+          "PU"
+        ]
+      }
+    ]
+  },
+  "ninetalesalola": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "lightclay",
+        "formats": [
+          "UU",
+          "OU"
+        ]
+      },
+      {
+        "id": "icyrock",
+        "formats": [
+          "RU",
+          "PU"
+        ]
+      },
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "PU"
+        ]
+      }
+    ]
+  },
+  "salazzle": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "PU",
+          "NU"
+        ]
+      },
+      {
+        "id": "focussash",
+        "formats": [
+          "PU",
+          "NU"
+        ]
+      }
+    ]
+  },
+  "oranguru": {
+    "generation": 8,
+    "objets": [
+      {
+        "id": "leftovers",
+        "formats": [
+          "Gen 8 ZU"
+        ]
+      }
+    ]
+  },
+  "duraludon": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "eviolite",
+        "formats": [
+          "NU"
+        ]
+      }
+    ]
+  },
+  "corviknight": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "rockyhelmet",
+        "formats": [
+          "NatDex",
+          "OU"
+        ]
+      },
+      {
+        "id": "leftovers",
+        "formats": [
+          "Ubers",
+          "OU"
+        ]
+      }
+    ]
+  },
+  "sandaconda": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "rockyhelmet",
+        "formats": [
+          "PU",
+          "ZU",
+          "NU"
+        ]
+      },
+      {
+        "id": "leftovers",
+        "formats": [
+          "PU",
+          "ZU",
+          "NU"
+        ]
+      },
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "PU"
+        ]
+      }
+    ]
+  },
+  "toxtricity": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "choicespecs",
+        "formats": [
+          "RU",
+          "NatDex RU"
+        ]
+      },
+      {
+        "id": "throatspray",
+        "formats": [
+          "RU",
+          "NatDex RU"
+        ]
+      },
+      {
+        "id": "choicescarf",
+        "formats": [
+          "NatDex RU"
+        ]
+      }
+    ]
+  },
+  "indeedee": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "terrainextender",
+        "formats": [
+          "UU",
+          "OU",
+          "NU"
+        ]
+      }
+    ]
+  },
+  "cyclizar": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "assaultvest",
+        "formats": [
+          "UU",
+          "RU"
+        ]
+      },
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "RU"
+        ]
+      }
+    ]
+  },
+  "tinkaton": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "airballoon",
+        "formats": [
+          "UU",
+          "OU",
+          "NatDex RU"
+        ]
+      },
+      {
+        "id": "leftovers",
+        "formats": [
+          "UU",
+          "NatDex RU"
+        ]
+      },
+      {
+        "id": "lifeorb",
+        "formats": [
+          "UU"
+        ]
+      }
+    ]
+  },
+  "scovillain": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "choicespecs",
+        "formats": [
+          "UU",
+          "RU",
+          "NU"
+        ]
+      },
+      {
+        "id": "charcoal",
+        "formats": [
+          "RU"
+        ]
+      },
+      {
+        "id": "heavydutyboots",
+        "formats": [
+          "RU"
+        ]
+      }
+    ]
+  },
+  "quaquaval": {
+    "generation": 9,
+    "objets": [
+      {
+        "id": "assaultvest",
+        "formats": [
+          "OU"
+        ]
+      },
+      {
+        "id": "lumberry",
+        "formats": [
+          "OU"
+        ]
+      },
+      {
+        "id": "lifeorb",
+        "formats": [
+          "OU"
+        ]
+      },
+      {
+        "id": "leftovers",
+        "formats": [
+          "OU"
+        ]
+      }
+    ]
+  }
+}

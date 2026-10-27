@@ -51,10 +51,10 @@ describe('[PokéDraft] Atelier', () => {
 		assert.deepEqual([...refusees].sort(), [...listees].sort());
 	});
 
-	it('accepte 510 EV et les IV Atq 0 et Vit 0', () => {
+	it('accepte 510 EV et des IV à 0 sur chaque stat', () => {
 		const sets = roster.pokemon.map(pokemon => [pokemon.nom, set(pokemon, {
 			evs: { hp: 252, atk: 0, def: 4, spa: 252, spd: 0, spe: 0 },
-			ivs: { hp: 31, atk: 0, def: 31, spa: 31, spd: 31, spe: 0 },
+			ivs: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 },
 		})]);
 		assert.deepEqual(erreurs(sets), []);
 	});

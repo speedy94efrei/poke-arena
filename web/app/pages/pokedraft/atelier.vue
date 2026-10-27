@@ -37,11 +37,13 @@
               <template #aside><span class="tag">Fixe · celui de la fiche</span></template>
               <span class="talent__name">{{ pokemon.talent.nom }}</span>
               <span class="talent__effect">{{ pokemon.talent.effet }}</span>
+              <span v-if="pokemon.talent.lore" class="talent__lore">« {{ pokemon.talent.lore }} »</span>
             </CodexBlock>
             <AtelierMoves :key="`${pokemon.id}-${current}`" :pokemon="pokemon" :variant="variant" @update="update" />
           </div>
           <div class="editor__column">
-            <AtelierStats :pokemon="pokemon" :variant="variant" @update="update" />
+            <AtelierItem :key="`objet-${pokemon.id}`" :pokemon="pokemon" :variant="variant" @update="update" />
+            <AtelierStats :key="`stats-${pokemon.id}-${current}`" :pokemon="pokemon" :variant="variant" @update="update" />
             <div class="editor__actions">
               <button type="button" class="btn btn--primary" @click="exportText">Exporter en texte</button>
               <button type="button" class="btn" @click="reset">Revenir au set par défaut</button>
@@ -211,6 +213,7 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
 .editor__actions { display: flex; gap: 6px; flex-wrap: wrap; }
 .talent__name { font: 700 16px 'Atkinson Hyperlegible', sans-serif; }
 .talent__effect { font: 400 14px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.talent__lore { font: italic 400 13px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
 
 .warning {
   padding: 10px 12px;
