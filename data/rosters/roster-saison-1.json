@@ -1,4 +1,5 @@
 {
+  "$schema": "../schemas/roster.schema.json",
   "saison": 1,
   "titre": "Fiches Pokémon — Saison 1",
   "regles": "Stats PokéDraft = total officiel redistribué. Movepool de base = National Dex pour tous les Pokémon (toutes les attaques apprises dans une génération), plus les ajouts de la fiche. La signature est disponible mais pas obligatoire. Puissances et précisions ajustables par patch.",

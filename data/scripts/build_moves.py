@@ -13,6 +13,7 @@ EXCLUDED_NONSTANDARD = {"Unobtainable", "LGPE", "CAP", "Custom", "Gigantamax", "
 OLD_FRENCH_NAMES = {"vitextreme": "extremespeed", "dracopulse": "dragonpulse"}
 FRENCH = "5"
 NO_EFFECT = "Aucun effet supplémentaire."
+SCHEMA_REF = "../schemas/roster.schema.json"
 
 
 def to_id(text):
@@ -121,7 +122,7 @@ def signature_effect(sig):
 
 
 def build():
-    doc = json.load(open(roster_path, encoding="utf-8"))
+    doc = {"$schema": SCHEMA_REF, **json.load(open(roster_path, encoding="utf-8"))}
     ps_moves, learnsets, prevos = load_ps_moves(), load_learnsets(), load_prevos()
     ps_to_api, names, texts = load_pokeapi()
     fr_to_id = {fold(names[api]): mid for mid, api in ps_to_api.items() if api in names and mid in ps_moves}

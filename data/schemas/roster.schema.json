@@ -1,0 +1,308 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Roster PokéDraft",
+  "description": "Roster d'une saison PokéDraft : les fiches des Pokémon et le dictionnaire des attaques. Une valeur null dans une attaque veut dire « à définir ».",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["saison", "titre", "regles", "pokemon", "attaques"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "saison": { "type": "integer", "minimum": 1 },
+    "titre": { "type": "string", "minLength": 1 },
+    "regles": { "type": "string", "minLength": 1 },
+    "pokemon": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/pokemon" }
+    },
+    "attaques": {
+      "description": "Dictionnaire des attaques, indexé par identifiant Showdown.",
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/id" },
+      "additionalProperties": { "$ref": "#/$defs/attaque" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "description": "Identifiant Showdown : minuscules et chiffres.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+$"
+    },
+    "ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/id" }
+    },
+    "texte": { "type": "string", "minLength": 1 },
+    "texteOuNull": { "type": ["string", "null"], "minLength": 1 },
+    "type": {
+      "enum": [
+        "Acier", "Combat", "Dragon", "Eau", "Électrik", "Fée", "Feu", "Glace", "Insecte",
+        "Normal", "Plante", "Poison", "Psy", "Roche", "Sol", "Spectre", "Ténèbres", "Vol"
+      ]
+    },
+    "categorie": { "enum": ["physique", "spécial", "statut"] },
+    "archetype": {
+      "enum": [
+        "Hyper offense", "Balance", "Stall", "Volt-Turn", "Distorsion",
+        "Pluie", "Soleil", "Sable", "Neige",
+        "Champ Électrifié", "Champ Psychique", "Champ Brumeux", "Champ Herbu"
+      ]
+    },
+    "nature": {
+      "enum": [
+        "Assuré", "Bizarre", "Brave", "Calme", "Discret", "Docile", "Doux", "Foufou", "Gentil",
+        "Hardi", "Jovial", "Lâche", "Malin", "Malpoli", "Mauvais", "Modeste", "Naïf", "Pressé",
+        "Prudent", "Pudique", "Relax", "Rigide", "Sérieux", "Solo", "Timide"
+      ]
+    },
+    "puissance": { "type": ["integer", "null"], "minimum": 1 },
+    "precision": {
+      "description": "En pourcentage. null : l'attaque ne rate jamais.",
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "maximum": 100
+    },
+    "priorite": { "type": "integer", "minimum": -7, "maximum": 5 },
+    "stat": { "type": "integer", "minimum": 1, "maximum": 255 },
+    "stats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pv", "atq", "def", "atqSpe", "defSpe", "vit", "total"],
+      "properties": {
+        "pv": { "$ref": "#/$defs/stat" },
+        "atq": { "$ref": "#/$defs/stat" },
+        "def": { "$ref": "#/$defs/stat" },
+        "atqSpe": { "$ref": "#/$defs/stat" },
+        "defSpe": { "$ref": "#/$defs/stat" },
+        "vit": { "$ref": "#/$defs/stat" },
+        "total": { "type": "integer", "minimum": 6 }
+      }
+    },
+    "talent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nom", "origine", "aValider", "effet", "lore"],
+      "properties": {
+        "nom": { "$ref": "#/$defs/texte" },
+        "origine": { "$ref": "#/$defs/texte" },
+        "aValider": { "type": "boolean" },
+        "effet": { "$ref": "#/$defs/texte" },
+        "lore": { "$ref": "#/$defs/texteOuNull" }
+      }
+    },
+    "signature": {
+      "description": "L'attaque signature telle qu'écrite dans la fiche. Les valeurs de jeu sont dans le dictionnaire des attaques.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nom", "origine", "aValider", "type", "categorie", "puissance", "coups",
+        "precision", "neRateJamais", "priorite", "description", "lore"
+      ],
+      "properties": {
+        "nom": { "$ref": "#/$defs/texte" },
+        "origine": { "$ref": "#/$defs/texte" },
+        "aValider": { "type": "boolean" },
+        "type": { "$ref": "#/$defs/type" },
+        "categorie": { "$ref": "#/$defs/categorie" },
+        "puissance": { "$ref": "#/$defs/puissance" },
+        "coups": { "type": ["integer", "null"], "minimum": 2 },
+        "precision": { "$ref": "#/$defs/precision" },
+        "neRateJamais": { "type": "boolean" },
+        "priorite": { "$ref": "#/$defs/priorite" },
+        "description": { "$ref": "#/$defs/texte" },
+        "lore": { "$ref": "#/$defs/texteOuNull" }
+      }
+    },
+    "setParDefaut": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["objet", "nature", "attaques", "note", "attaquesIds", "horsMovepool"],
+      "properties": {
+        "objet": { "$ref": "#/$defs/texte" },
+        "nature": { "$ref": "#/$defs/nature" },
+        "attaques": {
+          "description": "Noms tels qu'écrits dans la fiche.",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": { "$ref": "#/$defs/texte" }
+        },
+        "note": { "$ref": "#/$defs/texteOuNull" },
+        "attaquesIds": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "horsMovepool": {
+          "description": "Attaques du set que le Pokémon ne peut pas apprendre : à corriger dans la fiche.",
+          "$ref": "#/$defs/ids"
+        }
+      }
+    },
+    "pokemon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "nom", "generation", "types", "roles", "archetypes", "tierSmogonFiche",
+        "tierShowdownActuel", "stats", "statsOfficielles", "statsOfficiellesNote", "talent",
+        "signature", "ajoutsMovepool", "setParDefaut", "faiblesses", "contres", "conseilDraft",
+        "piegeables", "correction", "sprite", "contresIds", "ilContre", "signatureId",
+        "ajoutsMovepoolIds", "movepool"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "nom": { "$ref": "#/$defs/texte" },
+        "generation": { "type": "integer", "minimum": 1, "maximum": 9 },
+        "types": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/type" }
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/texte" }
+        },
+        "archetypes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/archetype" }
+        },
+        "tierSmogonFiche": { "$ref": "#/$defs/texte" },
+        "tierShowdownActuel": { "$ref": "#/$defs/texte" },
+        "stats": {
+          "description": "Stats PokéDraft : le total officiel, réparti autrement.",
+          "$ref": "#/$defs/stats"
+        },
+        "statsOfficielles": { "$ref": "#/$defs/stats" },
+        "statsOfficiellesNote": { "$ref": "#/$defs/texteOuNull" },
+        "talent": { "$ref": "#/$defs/talent" },
+        "signature": { "$ref": "#/$defs/signature" },
+        "ajoutsMovepool": {
+          "description": "Texte de la fiche. La liste exploitable est ajoutsMovepoolIds.",
+          "$ref": "#/$defs/texte"
+        },
+        "setParDefaut": { "$ref": "#/$defs/setParDefaut" },
+        "faiblesses": { "$ref": "#/$defs/texte" },
+        "contres": {
+          "description": "Texte de la fiche. La liste exploitable est contresIds.",
+          "$ref": "#/$defs/texte"
+        },
+        "conseilDraft": { "$ref": "#/$defs/texte" },
+        "piegeables": {
+          "description": "Noms des Pokémon que son talent peut piéger, pour les piégeurs.",
+          "type": ["array", "null"],
+          "items": { "$ref": "#/$defs/texte" }
+        },
+        "correction": {
+          "description": "Ce qui a changé dans la fiche et pourquoi. Affiché avec le badge « Corrigé ».",
+          "$ref": "#/$defs/texteOuNull"
+        },
+        "sprite": { "type": "string", "pattern": "^https://" },
+        "contresIds": {
+          "description": "Pokémon du roster qui le contrent.",
+          "$ref": "#/$defs/ids"
+        },
+        "ilContre": {
+          "description": "Pokémon du roster qu'il contre (inverse de contresIds).",
+          "$ref": "#/$defs/ids"
+        },
+        "signatureId": { "$ref": "#/$defs/id" },
+        "ajoutsMovepoolIds": { "$ref": "#/$defs/ids" },
+        "movepool": {
+          "description": "Movepool complet : National Dex, ajouts de la fiche et signature.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        }
+      }
+    },
+    "valeursOfficielles": {
+      "description": "Valeurs officielles remplacées par PokéDraft.",
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "type": { "$ref": "#/$defs/type" },
+        "categorie": { "$ref": "#/$defs/categorie" },
+        "puissance": { "$ref": "#/$defs/puissance" },
+        "precision": { "$ref": "#/$defs/precision" },
+        "priorite": { "$ref": "#/$defs/priorite" }
+      }
+    },
+    "attaque": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "nom", "nomAnglais", "type", "categorie", "puissance", "precision", "pp", "priorite",
+        "contact", "son", "morsure", "danse", "coupsMultiples", "effet", "origine"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "nom": { "$ref": "#/$defs/texte" },
+        "nomAnglais": { "$ref": "#/$defs/texteOuNull" },
+        "type": { "$ref": "#/$defs/type" },
+        "categorie": { "$ref": "#/$defs/categorie" },
+        "puissance": { "$ref": "#/$defs/puissance" },
+        "precision": { "$ref": "#/$defs/precision" },
+        "pp": { "type": ["integer", "null"], "minimum": 1 },
+        "priorite": { "$ref": "#/$defs/priorite" },
+        "contact": { "type": ["boolean", "null"] },
+        "son": { "type": "boolean" },
+        "morsure": { "type": ["boolean", "null"] },
+        "danse": { "type": "boolean" },
+        "coupsMultiples": { "type": "boolean" },
+        "effet": { "$ref": "#/$defs/texte" },
+        "origine": { "enum": ["officielle", "officielle modifiée", "signature créée"] },
+        "signatureDe": {
+          "description": "Le Pokémon dont c'est l'attaque signature.",
+          "$ref": "#/$defs/id"
+        },
+        "effetOfficiel": { "$ref": "#/$defs/texte" },
+        "officiel": { "$ref": "#/$defs/valeursOfficielles" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "origine": { "const": "officielle" } } },
+          "then": {
+            "properties": {
+              "nomAnglais": { "type": "string" },
+              "pp": { "type": "integer" },
+              "contact": { "type": "boolean" },
+              "morsure": { "type": "boolean" }
+            },
+            "not": { "anyOf": [{ "required": ["effetOfficiel"] }, { "required": ["officiel"] }] }
+          }
+        },
+        {
+          "if": { "properties": { "origine": { "const": "officielle modifiée" } } },
+          "then": {
+            "required": ["signatureDe", "effetOfficiel", "officiel"],
+            "properties": {
+              "nomAnglais": { "type": "string" },
+              "pp": { "type": "integer" },
+              "contact": { "type": "boolean" },
+              "morsure": { "type": "boolean" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "origine": { "const": "signature créée" } } },
+          "then": {
+            "required": ["signatureDe"],
+            "properties": { "nomAnglais": { "type": "null" } },
+            "not": { "anyOf": [{ "required": ["effetOfficiel"] }, { "required": ["officiel"] }] }
+          }
+        }
+      ]
+    }
+  }
+}
