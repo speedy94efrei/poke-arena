@@ -92,6 +92,23 @@ def load_pokeapi():
     return ps_to_api, names, {k: v[1] for k, v in texts.items()}
 
 
+def load_french_ids(table, names_table, key):
+    identifiers = {row["id"]: row["identifier"] for row in csv.DictReader(open(f"{pokeapi_dir}/{table}.csv", encoding="utf-8"))}
+    return {fold(row["name"]): to_id(identifiers[row[key]])
+            for row in csv.DictReader(open(f"{pokeapi_dir}/{names_table}.csv", encoding="utf-8"))
+            if row["local_language_id"] == FRENCH and row[key] in identifiers}
+
+
+def with_after(entry, anchor, key, value):
+    result = {}
+    for k, v in entry.items():
+        if k != key:
+            result[k] = v
+        if k == anchor:
+            result[key] = value
+    return result
+
+
 def movepool_for(pid, natdex, learnsets, prevos, ps_moves):
     pool, species = set(), pid
     while species:
@@ -126,6 +143,11 @@ def build():
     ps_moves, learnsets, prevos = load_ps_moves(), load_learnsets(), load_prevos()
     ps_to_api, names, texts = load_pokeapi()
     fr_to_id = {fold(names[api]): mid for mid, api in ps_to_api.items() if api in names and mid in ps_moves}
+    ps_abilities = set(ts_entries(f"{ps_dir}/abilities.ts"))
+    ps_items = set(ts_entries(f"{ps_dir}/items.ts"))
+    fr_abilities = load_french_ids("abilities", "ability_names", "ability_id")
+    fr_items = load_french_ids("items", "item_names", "item_id")
+    fr_natures = load_french_ids("natures", "nature_names", "nature_id")
     dictionary, problems, to_define = {}, [], []
 
     def official(mid):
@@ -206,9 +228,30 @@ def build():
         for mid in pool:
             if mid in ps_moves:
                 official(mid)
+        talent = p["talent"]
+        if talent["origine"].startswith("officiel"):
+            talent_id = fr_abilities.get(fold(talent["nom"]))
+            if talent_id not in ps_abilities:
+                problems.append(f"{p['nom']}: talent officiel introuvable '{talent['nom']}'")
+        else:
+            talent_id = to_id(fold(talent["nom"]))
+            if talent_id in ps_abilities:
+                problems.append(f"{p['nom']}: id de talent créé en conflit avec Showdown ({talent_id})")
+        p["talent"] = {"id": talent_id, **{k: v for k, v in talent.items() if k != "id"}}
+
+        default_set = p["setParDefaut"]
+        item_id = fr_items.get(fold(default_set["objet"]))
+        if item_id not in ps_items:
+            problems.append(f"{p['nom']}: objet introuvable '{default_set['objet']}'")
+        nature_id = fr_natures.get(fold(default_set["nature"]))
+        if not nature_id:
+            problems.append(f"{p['nom']}: nature introuvable '{default_set['nature']}'")
+        default_set = with_after(default_set, "objet", "objetId", item_id)
+        default_set = with_after(default_set, "nature", "natureId", nature_id)
+        default_set["attaquesIds"] = set_ids
+        default_set["horsMovepool"] = outside
+        p["setParDefaut"] = default_set
         p["signatureId"], p["ajoutsMovepoolIds"] = sig_id, added_ids
-        p["setParDefaut"]["attaquesIds"] = set_ids
-        p["setParDefaut"]["horsMovepool"] = outside
         p["movepool"] = sorted(pool, key=lambda m: fold(dictionary[m]["nom"]))
 
     for entry in dictionary.values():

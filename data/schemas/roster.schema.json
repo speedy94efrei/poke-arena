@@ -84,8 +84,12 @@
     "talent": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["nom", "origine", "aValider", "effet", "lore"],
+      "required": ["id", "nom", "origine", "aValider", "effet", "lore"],
       "properties": {
+        "id": {
+          "description": "Identifiant du talent dans Showdown : celui du talent officiel, ou celui créé par le mod.",
+          "$ref": "#/$defs/id"
+        },
         "nom": { "$ref": "#/$defs/texte" },
         "origine": { "$ref": "#/$defs/texte" },
         "aValider": { "type": "boolean" },
@@ -119,10 +123,12 @@
     "setParDefaut": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["objet", "nature", "attaques", "note", "attaquesIds", "horsMovepool"],
+      "required": ["objet", "objetId", "nature", "natureId", "attaques", "note", "attaquesIds", "horsMovepool"],
       "properties": {
         "objet": { "$ref": "#/$defs/texte" },
+        "objetId": { "$ref": "#/$defs/id" },
         "nature": { "$ref": "#/$defs/nature" },
+        "natureId": { "$ref": "#/$defs/id" },
         "attaques": {
           "description": "Noms tels qu'écrits dans la fiche.",
           "type": "array",

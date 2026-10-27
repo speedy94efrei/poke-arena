@@ -202,6 +202,10 @@ export interface Stats {
   total: number;
 }
 export interface Talent {
+  /**
+   * Identifiant Showdown : minuscules et chiffres.
+   */
+  id: string;
   nom: Texte;
   origine: Texte;
   aValider: boolean;
@@ -227,7 +231,9 @@ export interface Signature {
 }
 export interface SetParDefaut {
   objet: Texte;
+  objetId: Id;
   nature: Nature;
+  natureId: Id;
   /**
    * Noms tels qu'écrits dans la fiche.
    *

@@ -43,6 +43,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "couchepolaire",
         "nom": "Couche Polaire",
         "origine": "créé",
         "aValider": false,
@@ -66,7 +67,9 @@
       "ajoutsMovepool": "Tour Rapide (Repos est officiel)",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Malin",
+        "natureId": "impish",
         "attaques": [
           "Glisse-Banquise",
           "Tour Rapide",
@@ -247,6 +250,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "rocmillenaire",
         "nom": "Roc Millénaire",
         "origine": "créé",
         "aValider": false,
@@ -270,7 +274,9 @@
       "ajoutsMovepool": "Big Splash (dégâts calculés avec sa Défense), Demi-Tour",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Malin",
+        "natureId": "impish",
         "attaques": [
           "Éboulis Sismique",
           "Big Splash",
@@ -445,6 +451,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "deuilvengeur",
         "nom": "Deuil Vengeur",
         "origine": "créé",
         "aValider": false,
@@ -468,7 +475,9 @@
       "ajoutsMovepool": "Boutefeu",
       "setParDefaut": {
         "objet": "Masse Os",
+        "objetId": "thickclub",
         "nature": "Rigide",
+        "natureId": "adamant",
         "attaques": [
           "Osmerang",
           "Lame de Roc",
@@ -663,6 +672,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "motifterrifiant",
         "nom": "Motif Terrifiant",
         "origine": "créé",
         "aValider": false,
@@ -686,7 +696,9 @@
       "ajoutsMovepool": "Demi-Tour",
       "setParDefaut": {
         "objet": "Grosses Bottes",
+        "objetId": "heavydutyboots",
         "nature": "Jovial",
+        "natureId": "jolly",
         "attaques": [
           "Étreinte Venimeuse",
           "Demi-Tour",
@@ -873,6 +885,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "poireaufidele",
         "nom": "Poireau Fidèle",
         "origine": "créé",
         "aValider": false,
@@ -896,7 +909,9 @@
       "ajoutsMovepool": "Coup Bas",
       "setParDefaut": {
         "objet": "Orbe Vie",
+        "objetId": "lifeorb",
         "nature": "Jovial",
+        "natureId": "jolly",
         "attaques": [
           "Coup de Poireau",
           "Rapace",
@@ -1070,6 +1085,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "pendule",
         "nom": "Pendule",
         "origine": "créé",
         "aValider": false,
@@ -1093,7 +1109,9 @@
       "ajoutsMovepool": "aucun (Dévorêve est officiel)",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Calme",
+        "natureId": "calm",
         "attaques": [
           "Transe",
           "Psyko",
@@ -1296,6 +1314,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "laitnourricier",
         "nom": "Lait Nourricier",
         "origine": "créé",
         "aValider": false,
@@ -1319,7 +1338,9 @@
       "ajoutsMovepool": "Feu Follet",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Malin",
+        "natureId": "impish",
         "attaques": [
           "Bol de Lait",
           "Plaquage",
@@ -1496,6 +1517,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "mareeabyssale",
         "nom": "Marée Abyssale",
         "origine": "créé",
         "aValider": false,
@@ -1519,7 +1541,9 @@
       "ajoutsMovepool": "aucun (Glas de Soin est officiel)",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Calme",
+        "natureId": "calm",
         "attaques": [
           "Phare Abyssal",
           "Surf",
@@ -1687,6 +1711,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "colleretteardente",
         "nom": "Collerette Ardente",
         "origine": "créé",
         "aValider": false,
@@ -1710,7 +1735,9 @@
       "ajoutsMovepool": "Demi-Tour",
       "setParDefaut": {
         "objet": "Grosses Bottes",
+        "objetId": "heavydutyboots",
         "nature": "Timide",
+        "natureId": "timid",
         "attaques": [
           "Brasier Purifiant",
           "Lance-Flammes",
@@ -1904,6 +1931,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "gonflement",
         "nom": "Gonflement",
         "origine": "créé",
         "aValider": false,
@@ -1927,7 +1955,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Grosses Bottes",
+        "objetId": "heavydutyboots",
         "nature": "Malin",
+        "natureId": "impish",
         "attaques": [
           "Multitoxik",
           "Picots",
@@ -2098,6 +2128,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "chiendesenfers",
         "nom": "Chien des Enfers",
         "origine": "créé",
         "aValider": false,
@@ -2121,7 +2152,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Orbe Vie",
+        "objetId": "lifeorb",
         "nature": "Timide",
+        "natureId": "timid",
         "attaques": [
           "Souffle des Enfers",
           "Vibrobscur",
@@ -2327,6 +2360,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "cornelevier",
         "nom": "Corne Levier",
         "origine": "créé",
         "aValider": false,
@@ -2350,7 +2384,9 @@
       "ajoutsMovepool": "Demi-Tour",
       "setParDefaut": {
         "objet": "Mouchoir Choix",
+        "objetId": "choicescarf",
         "nature": "Jovial",
+        "natureId": "jolly",
         "attaques": [
           "Corne Catapulte",
           "Close Combat",
@@ -2536,6 +2572,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "fossilevivant",
         "nom": "Fossile Vivant",
         "origine": "créé",
         "aValider": true,
@@ -2559,7 +2596,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Orbe Vie",
+        "objetId": "lifeorb",
         "nature": "Rigide",
+        "natureId": "adamant",
         "attaques": [
           "Choc Primitif",
           "Cascade",
@@ -2719,6 +2758,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "mueeclair",
         "nom": "Mue Éclair",
         "origine": "créé",
         "aValider": false,
@@ -2742,7 +2782,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Grosses Bottes",
+        "objetId": "heavydutyboots",
         "nature": "Jovial",
+        "natureId": "jolly",
         "attaques": [
           "Envol Éclair",
           "Aéropiqué",
@@ -2893,6 +2935,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "regimedebananes",
         "nom": "Régime de Bananes",
         "origine": "créé",
         "aValider": false,
@@ -2916,7 +2959,9 @@
       "ajoutsMovepool": "aucun (Synthèse soigne 66 % au soleil)",
       "setParDefaut": {
         "objet": "Grosses Bottes",
+        "objetId": "heavydutyboots",
         "nature": "Assuré",
+        "natureId": "bold",
         "attaques": [
           "Ventilo-Feuilles",
           "Lame d'Air",
@@ -3095,6 +3140,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "espritdudesert",
         "nom": "Esprit du Désert",
         "origine": "créé",
         "aValider": false,
@@ -3118,7 +3164,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Grosses Bottes",
+        "objetId": "heavydutyboots",
         "nature": "Jovial",
+        "natureId": "jolly",
         "attaques": [
           "Chant des Dunes",
           "Draco-Griffe",
@@ -3316,6 +3364,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "odeurdusang",
         "nom": "Odeur du Sang",
         "origine": "créé",
         "aValider": false,
@@ -3339,7 +3388,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Orbe Vie",
+        "objetId": "lifeorb",
         "nature": "Jovial",
+        "natureId": "jolly",
         "attaques": [
           "Marque du Prédateur",
           "Cascade",
@@ -3513,6 +3564,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "nuagedecoton",
         "nom": "Nuage de Coton",
         "origine": "créé",
         "aValider": false,
@@ -3536,7 +3588,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Jovial",
+        "natureId": "jolly",
         "attaques": [
           "Danse Draco",
           "Ailes de Coton",
@@ -3721,6 +3775,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "bouclierfrontal",
         "nom": "Bouclier Frontal",
         "origine": "créé",
         "aValider": false,
@@ -3744,7 +3799,9 @@
       "ajoutsMovepool": "Big Splash (dégâts calculés avec sa Défense). Pas de Soin, par cohérence avec le lore Roche.",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Malin",
+        "natureId": "impish",
         "attaques": [
           "Mur Fossile",
           "Big Splash",
@@ -3914,6 +3971,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "roidesneiges",
         "nom": "Roi des Neiges",
         "origine": "créé",
         "aValider": false,
@@ -3937,7 +3995,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Discret",
+        "natureId": "quiet",
         "attaques": [
           "Blizzard",
           "Giga-Sangsue",
@@ -4119,6 +4179,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "poupeedeneige",
         "nom": "Poupée de Neige",
         "origine": "créé",
         "aValider": false,
@@ -4142,7 +4203,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Grosses Bottes",
+        "objetId": "heavydutyboots",
         "nature": "Timide",
+        "natureId": "timid",
         "attaques": [
           "Linceul de Givre",
           "Ball'Ombre",
@@ -4320,6 +4383,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "lecturedaura",
         "nom": "Lecture d'Aura",
         "origine": "créé",
         "aValider": false,
@@ -4343,7 +4407,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Orbe Vie",
+        "objetId": "lifeorb",
         "nature": "Naïf",
+        "natureId": "naive",
         "attaques": [
           "Paume d'Aura",
           "Luminocanon",
@@ -4555,6 +4621,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "signesgraves",
         "nom": "Signes Gravés",
         "origine": "créé",
         "aValider": false,
@@ -4578,7 +4645,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Orbe Vie",
+        "objetId": "lifeorb",
         "nature": "Jovial",
+        "natureId": "jolly",
         "attaques": [
           "Griffe Glacée",
           "Sabotage",
@@ -4797,6 +4866,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "joueselectriques",
         "nom": "Joues Électriques",
         "origine": "créé",
         "aValider": false,
@@ -4820,7 +4890,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Baie Sitrus",
+        "objetId": "sitrusberry",
         "nature": "Assuré",
+        "natureId": "bold",
         "attaques": [
           "Étincelle Partagée",
           "Frotte-Frimousse",
@@ -4987,6 +5059,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "visionx",
         "nom": "Vision X",
         "origine": "créé",
         "aValider": false,
@@ -5010,7 +5083,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Orbe Vie",
+        "objetId": "lifeorb",
         "nature": "Jovial",
+        "natureId": "jolly",
         "attaques": [
           "Éclair Perçant",
           "Danse-Lames",
@@ -5176,6 +5251,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "mummy",
         "nom": "Momie",
         "origine": "officiel, amélioré",
         "aValider": true,
@@ -5199,7 +5275,9 @@
       "ajoutsMovepool": "aucun (Balance est officielle)",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Assuré",
+        "natureId": "bold",
         "attaques": [
           "Souffle du Tombeau",
           "Feu Follet",
@@ -5357,6 +5435,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "chefdemeute",
         "nom": "Chef de Meute",
         "origine": "créé",
         "aValider": false,
@@ -5380,7 +5459,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Orbe Vie",
+        "objetId": "lifeorb",
         "nature": "Rigide",
+        "natureId": "adamant",
         "attaques": [
           "Lame du Chef",
           "Tête de Fer",
@@ -5558,6 +5639,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "couturiere",
         "nom": "Couturière",
         "origine": "créé",
         "aValider": false,
@@ -5581,7 +5663,9 @@
       "ajoutsMovepool": "Demi-Tour",
       "setParDefaut": {
         "objet": "Ceinture Force",
+        "objetId": "focussash",
         "nature": "Jovial",
+        "natureId": "jolly",
         "attaques": [
           "Linceul de Feuilles",
           "Toile Gluante",
@@ -5761,6 +5845,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "maisondepierre",
         "nom": "Maison de Pierre",
         "origine": "créé",
         "aValider": false,
@@ -5784,7 +5869,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Malin",
+        "natureId": "impish",
         "attaques": [
           "Coup de Carapace",
           "Piège de Roc",
@@ -5933,6 +6020,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "brumeonirique",
         "nom": "Brume Onirique",
         "origine": "créé",
         "aValider": false,
@@ -5956,7 +6044,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Assuré",
+        "natureId": "bold",
         "attaques": [
           "Rêve Partagé",
           "Psyko",
@@ -6124,6 +6214,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "rubansapaisants",
         "nom": "Rubans Apaisants",
         "origine": "créé",
         "aValider": false,
@@ -6147,7 +6238,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Grosses Bottes",
+        "objetId": "heavydutyboots",
         "nature": "Calme",
+        "natureId": "calm",
         "attaques": [
           "Ruban Retour",
           "Pouvoir Lunaire",
@@ -6329,6 +6422,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "machoireroyale",
         "nom": "Mâchoire Royale",
         "origine": "créé",
         "aValider": false,
@@ -6352,7 +6446,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Bandeau Choix",
+        "objetId": "choiceband",
         "nature": "Rigide",
+        "natureId": "adamant",
         "attaques": [
           "Croc Tyrannique",
           "Draco-Griffe",
@@ -6508,6 +6604,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "entreeenscene",
         "nom": "Entrée en Scène",
         "origine": "créé",
         "aValider": false,
@@ -6531,7 +6628,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Orbe Vie",
+        "objetId": "lifeorb",
         "nature": "Jovial",
+        "natureId": "jolly",
         "attaques": [
           "Flying Press",
           "Acrobatie",
@@ -6725,6 +6824,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "antennesbrumeuses",
         "nom": "Antennes Brumeuses",
         "origine": "créé",
         "aValider": false,
@@ -6748,7 +6848,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Baie Sitrus",
+        "objetId": "sitrusberry",
         "nature": "Timide",
+        "natureId": "timid",
         "attaques": [
           "Recharge Électrique",
           "Frotte-Frimousse",
@@ -6906,6 +7008,7 @@
       },
       "statsOfficiellesNote": "taille Normale",
       "talent": {
+        "id": "potagerhante",
         "nom": "Potager Hanté",
         "origine": "créé",
         "aValider": false,
@@ -6929,7 +7032,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Malin",
+        "natureId": "impish",
         "attaques": [
           "Halloween",
           "Hantise",
@@ -7088,6 +7193,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "boueprotectrice",
         "nom": "Boue Protectrice",
         "origine": "créé",
         "aValider": false,
@@ -7111,7 +7217,9 @@
       "ajoutsMovepool": "aucun (il a Repos officiellement)",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Malin",
+        "natureId": "impish",
         "attaques": [
           "Ruade de Boue",
           "Piège de Roc",
@@ -7260,6 +7368,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "watercompaction",
         "nom": "Sable Humide",
         "origine": "officiel, amélioré",
         "aValider": true,
@@ -7283,7 +7392,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Calme",
+        "natureId": "calm",
         "attaques": [
           "Amass'Sable",
           "Ball'Ombre",
@@ -7443,6 +7554,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "souffledivin",
         "nom": "Souffle Divin",
         "origine": "créé",
         "aValider": false,
@@ -7466,7 +7578,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Lunettes Choix",
+        "objetId": "choicespecs",
         "nature": "Timide",
+        "natureId": "timid",
         "attaques": [
           "Blizzard Sacré",
           "Pouvoir Lunaire",
@@ -7643,6 +7757,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "pheromonestoxiques",
         "nom": "Phéromones Toxiques",
         "origine": "créé",
         "aValider": false,
@@ -7666,7 +7781,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Orbe Vie",
+        "objetId": "lifeorb",
         "nature": "Timide",
+        "natureId": "timid",
         "attaques": [
           "Gaz Ardent",
           "Lance-Flammes",
@@ -7843,6 +7960,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "sagedelaforet",
         "nom": "Sage de la Forêt",
         "origine": "créé",
         "aValider": false,
@@ -7866,7 +7984,9 @@
       "ajoutsMovepool": "Soin, Ball'Ombre",
       "setParDefaut": {
         "objet": "Baie Sitrus",
+        "objetId": "sitrusberry",
         "nature": "Discret",
+        "natureId": "quiet",
         "attaques": [
           "Sommation",
           "Distorsion",
@@ -8039,6 +8159,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "stalwart",
         "nom": "Nerfs d'Acier",
         "origine": "officiel, amélioré",
         "aValider": false,
@@ -8062,7 +8183,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Évoluroc",
+        "objetId": "eviolite",
         "nature": "Modeste",
+        "natureId": "modest",
         "attaques": [
           "Riposte Kaiju",
           "Luminocanon",
@@ -8207,6 +8330,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "mirrorarmor",
         "nom": "Armure Miroir",
         "origine": "officiel, amélioré",
         "aValider": false,
@@ -8230,7 +8354,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Malin",
+        "natureId": "impish",
         "attaques": [
           "Charge Blindée",
           "Mur de Fer",
@@ -8385,6 +8511,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "sandspit",
         "nom": "Expul'Sable",
         "origine": "officiel, amélioré",
         "aValider": false,
@@ -8408,7 +8535,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Malin",
+        "natureId": "impish",
         "attaques": [
           "Crachat de Gravier",
           "Piège de Roc",
@@ -8546,6 +8675,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "punkrock",
         "nom": "Punk Rock",
         "origine": "officiel, amélioré",
         "aValider": false,
@@ -8569,7 +8699,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Lunettes Choix",
+        "objetId": "choicespecs",
         "nature": "Timide",
+        "natureId": "timid",
         "attaques": [
           "Overdrive",
           "Bang Sonique",
@@ -8737,6 +8869,7 @@
       },
       "statsOfficiellesNote": "mâle",
       "talent": {
+        "id": "majordome",
         "nom": "Majordome",
         "origine": "créé",
         "aValider": false,
@@ -8760,7 +8893,9 @@
       "ajoutsMovepool": "aucun (Vœu Soin est officiel)",
       "setParDefaut": {
         "objet": "Baie Sitrus",
+        "objetId": "sitrusberry",
         "nature": "Calme",
+        "natureId": "calm",
         "attaques": [
           "Au Service",
           "Psyko",
@@ -8897,6 +9032,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "moteurvivant",
         "nom": "Moteur Vivant",
         "origine": "créé",
         "aValider": false,
@@ -8920,7 +9056,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Grosses Bottes",
+        "objetId": "heavydutyboots",
         "nature": "Jovial",
+        "natureId": "jolly",
         "attaques": [
           "Plein Gaz",
           "Demi-Tour",
@@ -9059,6 +9197,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "ferronniere",
         "nom": "Ferronnière",
         "origine": "créé",
         "aValider": false,
@@ -9082,7 +9221,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Orbe Vie",
+        "objetId": "lifeorb",
         "nature": "Rigide",
+        "natureId": "adamant",
         "attaques": [
           "Marteau Mastoc",
           "Câlinerie",
@@ -9226,6 +9367,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "doublepiment",
         "nom": "Double Piment",
         "origine": "créé",
         "aValider": false,
@@ -9249,7 +9391,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Orbe Vie",
+        "objetId": "lifeorb",
         "nature": "Rigide",
+        "natureId": "adamant",
         "attaques": [
           "Habanerage",
           "Boutefeu",
@@ -9383,6 +9527,7 @@
       },
       "statsOfficiellesNote": null,
       "talent": {
+        "id": "danseducarnaval",
         "nom": "Danse du Carnaval",
         "origine": "créé",
         "aValider": false,
@@ -9406,7 +9551,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Ceinture Force",
+        "objetId": "focussash",
         "nature": "Jovial",
+        "natureId": "jolly",
         "attaques": [
           "Danse Aquatique",
           "Close Combat",
@@ -9562,6 +9709,7 @@
       },
       "statsOfficiellesNote": "mâle",
       "talent": {
+        "id": "lingeringaroma",
         "nom": "Odeur Tenace",
         "origine": "officiel, amélioré",
         "aValider": false,
@@ -9585,7 +9733,9 @@
       "ajoutsMovepool": "aucun",
       "setParDefaut": {
         "objet": "Restes",
+        "objetId": "leftovers",
         "nature": "Assuré",
+        "natureId": "bold",
         "attaques": [
           "Nuage Parfumé",
           "Vœu",
