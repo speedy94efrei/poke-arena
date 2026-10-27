@@ -6,3 +6,6 @@ node_modules/
 __pycache__/
 
 data/cache/
+
+# Décors de combat découpés depuis des planches tierces (voir data/README.md) : non versionnés.
+web/public/combat/
