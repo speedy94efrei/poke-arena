@@ -54,6 +54,19 @@ Tous les effets du combat simple sont codés. Trois fichiers écrits à la main 
 
 Restent les parties propres au combat double : l'amélioration d'Armure Miroir, la redirection d'Étincelle Partagée, et les versions en double de Sommation et d'Au Service.
 
+### Draft classé
+
+Le draft tourne dans le serveur de combat, dans le plugin `server/server/chat-plugins/pokedraft.ts`, sans autre service. Deux joueurs s'affrontent en quatre temps :
+
+1. **Bans** (30 s) : chacun bannit jusqu'à 3 Pokémon en secret. Les bans sont révélés ensemble, et un ban non choisi à la fin du chrono est perdu.
+2. **Picks** (30 s par tour) : 6 Pokémon chacun, en serpent 1-2-2-2-2-2-1. Si le chrono expire, la présélection est verrouillée, sinon le pick est tiré au hasard.
+3. **Préparation** (90 s) : chacun envoie ses 6 sets, tirés de l'Atelier ou modifiés pour le match. Sans envoi, ce sont les sets par défaut.
+4. **Combat** : le serveur crée le combat au format `[Gen 9] PokeDraft` avec les deux équipes validées.
+
+Le site envoie des commandes `/pokedraft …` (`search`, `challenge`, `accept`, `bans`, `lockbans`, `preselect`, `pick`, `team`, `quit`) et reçoit l'état du draft par des lignes `|pokedraft|<json>`. Chaque joueur ne reçoit que ce qu'il a le droit de voir : les bans adverses restent vides jusqu'à la révélation. La logique du draft est testée à part dans `server/test/sim/pokedraft/draft.js`.
+
+Le draft n'est pas encore « classé » au sens propre : sans comptes, il n'y a ni points ni rangs, et quitter annule simplement le draft pour les deux joueurs.
+
 ### API
 
 ```bash
@@ -82,14 +95,23 @@ Pages disponibles :
 
 - `/pokedraft/codex` : le Codex, les 50 fiches de la saison lues dans `data/rosters/roster-saison-1.json`. Vue par génération ou par archétype, filtres, comparaison de deux fiches, movepool complet et infobulle sur chaque attaque. « Copier dans l'Atelier » y crée une variante à partir du set par défaut ;
 - `/pokedraft/atelier` : l'Atelier, jusqu'à 3 variantes par Pokémon. Le talent est fixe ; on choisit les 4 attaques dans le movepool (les attaques refusées par le format sont grisées) et l'objet parmi 96, avec une recherche sur le nom et l'effet, des filtres par usage et les objets recommandés par Smogon en tête. Un tableau règle la nature (▲ et ▼ sur les stats), les EV (curseur ou saisie, 510 au plus) et l'IV de chaque stat (31 ou 0), avec les stats finales au niveau 100. Les variantes sont gardées dans le navigateur (`localStorage`) en attendant les comptes ;
+- `/pokedraft/draft` : le salon du draft (recherche d'adversaire, défis), puis `/pokedraft/draft/<id>` pour le draft lui-même : bans, picks avec aide (archétypes, menaces, lanceurs indisponibles), préparation des sets, puis lancement du combat ;
 - `/pokedraft/combat` : le combat libre contre le serveur local (voir plus bas). Chaque Pokémon de l'équipe part avec sa variante favorite, ou le set par défaut s'il n'en a pas ; un menu par Pokémon permet d'en choisir une autre.
 
-### Tester un combat
+### Tester un combat ou un draft
 
 1. Lance le serveur de combat et le site.
-2. Ouvre `/pokedraft/combat` dans deux fenêtres, dont une en navigation privée.
-3. Dans chacune, choisis un pseudo et une équipe de 6 parmi le roster (variantes de l'Atelier ou sets par défaut des fiches).
+2. Ouvre `/pokedraft/combat` (combat libre) ou `/pokedraft/draft` (draft) dans deux fenêtres, dont une en navigation privée.
+3. Dans chacune, choisis un pseudo. En combat libre, choisis aussi une équipe de 6 parmi le roster (variantes de l'Atelier ou sets par défaut des fiches).
 4. Défie l'autre pseudo, ou lance la recherche dans les deux fenêtres.
+
+Pour tester seul, lance le bot depuis `web/` puis défie **Bot Test** :
+
+```bash
+npm run bot
+```
+
+Le bot accepte les défis de combat libre et de draft, bannit et picke au hasard, envoie ses sets par défaut et joue des attaques au hasard. `npm run bot -- <url du websocket> <pseudo>` change le serveur ou le pseudo.
 
 Recharger la page pendant un combat coupe la connexion : le combat est perdu pour cette fenêtre.
 

@@ -8,7 +8,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "nuxt typecheck",
+    "bot": "node scripts/bot.mjs"
   },
   "dependencies": {
     "nuxt": "^4.6.2",

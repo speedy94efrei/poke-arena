@@ -21,6 +21,7 @@ const store = reactive<ShowdownStore>({
 })
 const queues = new Map<string, string[]>()
 const playing = new Set<string>()
+const globalHandlers = new Map<string, (payload: string) => void>()
 let socket: WebSocket | null = null
 let wantedName = ''
 let noticeCounter = 0
@@ -137,6 +138,8 @@ function handleGlobal(line: string) {
       }
       break
     }
+    default:
+      globalHandlers.get(command)?.(args.join('|'))
   }
 }
 
@@ -177,6 +180,12 @@ export function useShowdown() {
     store,
     serverUrl: url,
     connect,
+    command(text: string) {
+      send(`|${text}`)
+    },
+    onGlobal(command: string, handler: (payload: string) => void) {
+      globalHandlers.set(command, handler)
+    },
     challenge(to: string, team: TeamSet[]) {
       sendTeam(team)
       send(`|/challenge ${to}, ${POKEDRAFT_FORMAT}`)
