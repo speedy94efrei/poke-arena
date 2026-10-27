@@ -271,6 +271,86 @@ describe('PokéDraft · signatures', () => {
 		assert.statStage(battle.p2.active[0], 'def', -2);
 	});
 
+	describe('Marque du Prédateur', () => {
+		const SHARPEDO = { species: 'Sharpedo', ability: 'runaway', moves: ['marquedupredateur', 'sleeptalk'] };
+
+		it('empêche la cible de sortir tant que Sharpedo reste', () => {
+			battle = combat([SHARPEDO, RESERVE], [CIBLE, RESERVE]);
+			battle.makeChoices('move marquedupredateur', 'move sleeptalk');
+			assert.trapped(() => battle.makeChoices('move sleeptalk', 'switch 2'));
+			battle.makeChoices('switch 2', 'move sleeptalk');
+			battle.makeChoices('move sleeptalk', 'switch 2');
+			assert.species(battle.p2.active[0], 'Chansey');
+		});
+
+		it('passe à 70 de puissance et +1 priorité une fois la marque posée, une seule marque par combat', () => {
+			battle = combat([SHARPEDO, RESERVE], [{ species: 'Ninjask', ability: 'runaway', moves: ['growl'] }, RESERVE]);
+			const [sharpedo, ninjask] = [battle.p1.active[0], battle.p2.active[0]];
+			const move = battle.dex.getActiveMove('marquedupredateur');
+			assert.equal(move.basePowerCallback.call(battle, sharpedo, ninjask, move), 50);
+			battle.makeChoices('move marquedupredateur', 'move growl');
+			assert.equal(premierAAgir(battle), 'p2');
+			assert.equal(move.basePowerCallback.call(battle, sharpedo, ninjask, move), 70);
+			battle.makeChoices('move marquedupredateur', 'move growl');
+			assert.equal(premierAAgir(battle), 'p1');
+			battle.makeChoices('switch 2', 'move growl');
+			battle.makeChoices('switch 2', 'move growl');
+			battle.makeChoices('move marquedupredateur', 'move growl');
+			assert.false(battle.p2.active[0].volatiles['marquedupredateur']);
+		});
+	});
+
+	it('Au Service fait sortir le lanceur, et le remplaçant a +1 priorité sur sa première attaque au tour suivant', () => {
+		battle = combat([lanceur('auservice', 'Indeedee'), { species: 'Snorlax', ability: 'runaway', moves: ['tackle'] }],
+			[{ species: 'Ninjask', ability: 'runaway', moves: ['growl'] }]);
+		battle.makeChoices('move auservice', 'move growl');
+		battle.makeChoices('switch 2', '');
+		battle.makeChoices('move tackle', 'move growl');
+		assert.equal(premierAAgir(battle), 'p1');
+		battle.makeChoices('move tackle', 'move growl');
+		assert.equal(premierAAgir(battle), 'p2');
+	});
+
+	it('Halloween amélioré : la cible devient Spectre et perd 1/16 de ses PV par tour au profit de Banshitrouye', () => {
+		battle = combat([lanceur('trickortreat', 'Gourgeist')], [CIBLE]);
+		const [banshitrouye, ronflex] = [battle.p1.active[0], battle.p2.active[0]];
+		banshitrouye.sethp(50);
+		battle.makeChoices('move trickortreat', 'move sleeptalk');
+		assert(ronflex.hasType('Ghost'));
+		const perte = Math.floor(ronflex.baseMaxhp / 16);
+		assert.equal(ronflex.hp, ronflex.maxhp - perte);
+		assert.equal(banshitrouye.hp, 50 + perte);
+	});
+
+	it('Sommation modifiée : le prochain Pokémon qui entre gagne +1 Déf Spé', () => {
+		battle = combat([lanceur('instruct', 'Oranguru'), RESERVE], [CIBLE]);
+		battle.makeChoices('move instruct', 'move sleeptalk');
+		assert(battle.p1.sideConditions['instruct']);
+		battle.makeChoices('switch 2', 'move sleeptalk');
+		assert.statStage(battle.p1.active[0], 'spd', 1);
+		assert.false(battle.p1.sideConditions['instruct']);
+	});
+
+	describe('Marteau Mastoc', () => {
+		const FORGELINA = { species: 'Tinkaton', ability: 'runaway', moves: ['gigatonhammer', 'sleeptalk'] };
+
+		it('ne peut pas être utilisé deux tours de suite contre un Pokémon non Acier', () => {
+			battle = combat([FORGELINA], [CIBLE]);
+			battle.makeChoices('move gigatonhammer', 'move sleeptalk');
+			assert.cantMove(() => battle.makeChoices('move gigatonhammer', 'move sleeptalk'), 'Tinkaton', 'Gigaton Hammer', true);
+		});
+
+		it('peut être utilisé tous les tours contre un Acier, sans être résisté', () => {
+			battle = combat([FORGELINA], [{ species: 'Corviknight', ability: 'runaway', moves: ['sleeptalk'] }]);
+			const corvaillus = battle.p2.active[0];
+			assert.equal(corvaillus.runEffectiveness(battle.dex.getActiveMove('gigatonhammer')), 0);
+			battle.makeChoices('move gigatonhammer', 'move sleeptalk');
+			const pv = corvaillus.hp;
+			battle.makeChoices('move gigatonhammer', 'move sleeptalk');
+			assert(corvaillus.hp < pv);
+		});
+	});
+
 	it('Mur Fossile réduit les dégâts physiques d\'un tiers pendant 4 tours, puis le lanceur ressort', () => {
 		const coup = avecMur => degats({ species: 'Snorlax', ability: 'runaway', moves: ['bodyslam'] }, { species: 'Bastiodon', ability: 'runaway', moves: ['sleeptalk'] }, 'bodyslam',
 			avecMur ? b => b.p2.addSideCondition('murfossile', b.p2.active[0]) : null);

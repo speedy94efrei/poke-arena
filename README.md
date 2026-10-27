@@ -46,10 +46,13 @@ npx mocha --no-config --ui bdd --exit --timeout 60000 test/main.js test/sim/poke
 
 `--no-config` évite de lancer toute la suite de tests de Showdown.
 
-Restent à coder :
+Tous les effets du combat simple sont codés. Trois fichiers écrits à la main complètent le mod :
 
-- **Talents** : Chien des Enfers, Mue Éclair, Lecture d'Aura, Rubans Apaisants, Mâchoire Royale, Sage de la Forêt, Majordome, Danse du Carnaval. L'amélioration d'Armure Miroir ne concerne que le combat double.
-- **Signatures** : Marque du Prédateur, Au Service, Halloween, Sommation, Marteau Mastoc. La redirection d'Étincelle Partagée ne concerne que le combat double.
+- `conditions.ts` adapte le sommeil, la paralysie et la confusion pour Danse du Carnaval ;
+- `rulesets.ts` définit la règle « PokeDraft Mod », qui pose au début du combat les effets d'équipe de Sage de la Forêt et de Majordome (actifs même depuis le banc) ;
+- `outils.ts` fusionne les effets avec les données générées.
+
+Restent les parties propres au combat double : l'amélioration d'Armure Miroir, la redirection d'Étincelle Partagée, et les versions en double de Sommation et d'Au Service.
 
 ### API
 

@@ -7,6 +7,7 @@ let battle;
 
 const TAPE = { species: 'Snorlax', ability: 'runaway', moves: ['bodyslam'] };
 const MORSURE = { species: 'Snorlax', ability: 'runaway', moves: ['crunch'] };
+const CHANSEY = { species: 'Chansey', ability: 'runaway', moves: ['sleeptalk'] };
 const NEUTRE = 'runaway';
 
 function rapport(talent, autre, attaquant, defenseur, attaque, avant) {
@@ -342,6 +343,150 @@ describe('PokéDraft · talents', () => {
 		battle = combat([{ species: 'Toxtricity', ability: 'punkrock', moves: ['boomburst'] }], [{ species: 'Snorlax', moves: ['sleeptalk'] }], { forceRandomChance: true });
 		battle.makeChoices('move boomburst', 'move sleeptalk');
 		assert.equal(battle.p2.active[0].status, 'psn');
+	});
+
+	describe('Chien des Enfers', () => {
+		const DEMOLOSSE = { species: 'Houndoom', ability: 'chiendesenfers', moves: ['darkpulse', 'sleeptalk'] };
+		const NINJASK = { species: 'Ninjask', ability: NEUTRE, moves: ['sleeptalk', 'uturn'] };
+
+		it('empêche un Pokémon faible au Feu ou aux Ténèbres de changer pendant 2 tours', () => {
+			battle = combat([DEMOLOSSE], [NINJASK, CHANSEY]);
+			assert.trapped(() => battle.makeChoices('move sleeptalk', 'switch 2'));
+			battle.makeChoices('move sleeptalk', 'move sleeptalk');
+			assert.trapped(() => battle.makeChoices('move sleeptalk', 'switch 2'));
+			battle.makeChoices('move sleeptalk', 'move sleeptalk');
+			battle.makeChoices('move sleeptalk', 'switch 2');
+			assert.species(battle.p2.active[0], 'Chansey');
+		});
+
+		it('ne piège pas un Pokémon qui n\'est faible ni au Feu ni aux Ténèbres', () => {
+			battle = combat([DEMOLOSSE], [{ species: 'Snorlax', ability: NEUTRE, moves: ['sleeptalk'] }, CHANSEY]);
+			battle.makeChoices('move sleeptalk', 'switch 2');
+			assert.species(battle.p2.active[0], 'Chansey');
+		});
+
+		it('empêche aussi de sortir avec une attaque pivot', () => {
+			battle = combat([DEMOLOSSE], [NINJASK, CHANSEY]);
+			battle.makeChoices('move sleeptalk', 'move uturn');
+			assert.species(battle.p2.active[0], 'Ninjask');
+			assert.notEqual(battle.p2.requestState, 'switch');
+		});
+
+		it('attaque un Spectre avant qu\'il parte', () => {
+			battle = combat([{ ...DEMOLOSSE, level: 50 }], [{ species: 'Gengar', ability: NEUTRE, moves: ['sleeptalk'] }, CHANSEY]);
+			battle.makeChoices('move darkpulse', 'switch 2');
+			const coup = battle.log.findIndex(line => line.startsWith('|move|p1a: Houndoom|Dark Pulse|p2a: Gengar'));
+			const sortie = battle.log.findIndex(line => line.startsWith('|switch|p2a: Chansey'));
+			assert(coup >= 0 && coup < sortie);
+		});
+
+		it('s\'arrête quand Démolosse sort', () => {
+			battle = combat([DEMOLOSSE, CHANSEY], [NINJASK, CHANSEY]);
+			battle.makeChoices('switch 2', 'move sleeptalk');
+			battle.makeChoices('move sleeptalk', 'switch 2');
+			assert.species(battle.p2.active[0], 'Chansey');
+		});
+	});
+
+	it('Mue Éclair laisse un leurre qui encaisse jusqu\'à 25 % des PV de Ninjask', () => {
+		const degatsSurRemplacant = ability => {
+			const b = combat([{ species: 'Ninjask', ability, moves: ['sleeptalk'] }, { species: 'Snorlax', ability: NEUTRE, moves: ['sleeptalk'] }],
+				[{ species: 'Machamp', ability: NEUTRE, moves: ['seismictoss'] }]);
+			const leurre = Math.floor(b.p1.active[0].maxhp / 4);
+			b.makeChoices('switch 2', 'move seismictoss');
+			const ronflex = b.p1.active[0];
+			const resultat = { degats: ronflex.maxhp - ronflex.hp, leurre };
+			b.destroy();
+			return resultat;
+		};
+		const avec = degatsSurRemplacant('mueeclair');
+		const sans = degatsSurRemplacant(NEUTRE);
+		assert.equal(sans.degats - avec.degats, avec.leurre);
+	});
+
+	it('Lecture d\'Aura révèle l\'objet et les 4 attaques du Pokémon en face', () => {
+		battle = combat([{ species: 'Lucario', ability: 'lecturedaura', moves: ['sleeptalk'] }],
+			[{ species: 'Snorlax', ability: NEUTRE, item: 'leftovers', moves: ['bodyslam', 'curse', 'rest', 'sleeptalk'] }]);
+		assert(battle.log.some(line => line.startsWith('|-item|p2a: Snorlax|Leftovers')));
+		assert.equal(battle.log.filter(line => line.startsWith('|-activate|p1a: Lucario') && line.includes('|move: ')).length, 4);
+	});
+
+	it('Rubans Apaisants bloque les attaques de boost ce tour-ci et le suivant', () => {
+		battle = combat([CHANSEY, { species: 'Sylveon', ability: 'rubansapaisants', moves: ['sleeptalk'] }],
+			[{ species: 'Snorlax', ability: NEUTRE, moves: ['swordsdance', 'sleeptalk'] }]);
+		const ronflex = battle.p2.active[0];
+		battle.makeChoices('switch 2', 'move swordsdance');
+		assert.statStage(ronflex, 'atk', 0);
+		assert.cantMove(() => battle.makeChoices('move sleeptalk', 'move swordsdance'), 'Snorlax', 'Swords Dance', true);
+		battle.makeChoices('move sleeptalk', 'move sleeptalk');
+		battle.makeChoices('move sleeptalk', 'move swordsdance');
+		assert.statStage(ronflex, 'atk', 2);
+	});
+
+	it('Mâchoire Royale : les morsures passent à travers Abri et brisent les écrans', () => {
+		battle = combat([{ species: 'Tyrantrum', ability: 'machoireroyale', moves: ['crunch'] }], [{ species: 'Snorlax', ability: NEUTRE, moves: ['protect'] }]);
+		battle.p2.addSideCondition('reflect', battle.p2.active[0]);
+		battle.p2.addSideCondition('lightscreen', battle.p2.active[0]);
+		battle.makeChoices('move crunch', 'move protect');
+		assert.false.fullHP(battle.p2.active[0]);
+		assert.false(battle.p2.sideConditions['reflect']);
+		assert.false(battle.p2.sideConditions['lightscreen']);
+	});
+
+	it('Sage de la Forêt : +20 % Atq et Atq Spé pour l\'équipe sous Distorsion, même depuis le banc', () => {
+		const coup = (talent, gouroutanKo) => {
+			const b = combat([TAPE, { species: 'Oranguru', ability: talent, moves: ['sleeptalk'] }], [{ species: 'Snorlax', ability: NEUTRE, moves: ['sleeptalk'] }]);
+			b.field.addPseudoWeather('trickroom', b.p1.active[0]);
+			if (gouroutanKo) {
+				b.p1.pokemon[1].hp = 0;
+				b.p1.pokemon[1].fainted = true;
+			}
+			const cible = b.p2.active[0];
+			b.makeChoices('move bodyslam', 'move sleeptalk');
+			const resultat = cible.maxhp - cible.hp;
+			b.destroy();
+			return resultat;
+		};
+		assert.bounded(coup('sagedelaforet', false) / coup(NEUTRE, false), [1.17, 1.23]);
+		assert.bounded(coup('sagedelaforet', true) / coup(NEUTRE, false), [0.98, 1.02]);
+	});
+
+	it('Majordome : -20 % de dégâts prioritaires et immunité à Bluff pour l\'équipe, même depuis le banc', () => {
+		const coup = (talent, attaque) => {
+			const b = combat([{ species: 'Snorlax', ability: NEUTRE, moves: ['sleeptalk'] }, { species: 'Indeedee', ability: talent, moves: ['sleeptalk'] }],
+				[{ species: 'Mew', ability: NEUTRE, moves: [attaque] }]);
+			const cible = b.p1.active[0];
+			b.makeChoices('move sleeptalk', `move ${attaque}`);
+			const resultat = cible.maxhp - cible.hp;
+			b.destroy();
+			return resultat;
+		};
+		assert.bounded(coup('majordome', 'quickattack') / coup(NEUTRE, 'quickattack'), [0.77, 0.83]);
+		assert.equal(coup('majordome', 'fakeout'), 0);
+	});
+
+	it('Danse du Carnaval : les attaques de danse passent le sommeil, la paralysie et la confusion', () => {
+		const danse = (talent, entrave) => {
+			const b = combat([{ species: 'Quaquaval', ability: talent, moves: ['aquastep'] }], [{ species: 'Snorlax', ability: NEUTRE, moves: ['sleeptalk'] }], { forceRandomChance: true });
+			const palmaval = b.p1.active[0];
+			if (entrave === 'slp') {
+				palmaval.setStatus('slp');
+				palmaval.statusState.time = 3;
+			} else if (entrave === 'par') {
+				palmaval.setStatus('par');
+			} else {
+				palmaval.addVolatile('confusion');
+				palmaval.volatiles['confusion'].time = 3;
+			}
+			b.makeChoices('move aquastep', 'move sleeptalk');
+			const touche = b.p2.active[0].hp < b.p2.active[0].maxhp;
+			b.destroy();
+			return touche;
+		};
+		for (const entrave of ['slp', 'par', 'confusion']) {
+			assert.equal(danse('danseducarnaval', entrave), true, `danse sous ${entrave}`);
+			assert.equal(danse(NEUTRE, entrave), false, `sans le talent sous ${entrave}`);
+		}
 	});
 
 	it('Odeur Tenace amélioré : Fragroin transmet son talent quand il touche au contact', () => {

@@ -7,6 +7,21 @@ function annoncer(battle: Battle, pokemon: Pokemon) {
 	battle.add('-ability', pokemon, pokemon.getAbility().name);
 }
 
+function estAttaqueDeBoost(move: Move) {
+	if (move.category !== 'Status') return false;
+	const boosts = move.target === 'self' || move.target === 'adjacentAllyOrSelf' ? move.boosts : move.self?.boosts;
+	return Object.values(boosts ?? {}).some(stage => stage > 0);
+}
+
+/** Dernier tour où l'effet compte : celui de la prochaine décision, plus `tours - 1`. */
+function jusquAuTour(battle: Battle, tours: number) {
+	return battle.turn + tours;
+}
+
+function equipeProtegee(side: Side, talent: string) {
+	return side.pokemon.some(pokemon => pokemon.baseAbility === talent && !pokemon.fainted);
+}
+
 function passeSousLaMoitie(target: Pokemon, move: ActiveMove) {
 	const last = target.getLastAttackedBy();
 	if (!last || !move.totalDamage) return false;
@@ -316,6 +331,157 @@ export const EffetsTalents: { [id: string]: EffetTalent } = {
 		},
 		onModifyDamage(damage, source, target, move) {
 			if (move.type === 'Grass' && SOLEIL.includes(source.effectiveWeather())) return this.chainModify(1.5);
+		},
+	},
+
+	chiendesenfers: {
+		onStart(pokemon) {
+			let activated = false;
+			for (const foe of pokemon.adjacentFoes()) {
+				const types = foe.getTypes();
+				if (this.dex.getEffectiveness('Fire', types) <= 0 && this.dex.getEffectiveness('Dark', types) <= 0) continue;
+				if (!activated) {
+					annoncer(this, pokemon);
+					activated = true;
+				}
+				foe.addVolatile('chiendesenfers', pokemon);
+			}
+		},
+		onFoeBeforeSwitchOut(pokemon) {
+			const holder = this.effectState.target as Pokemon;
+			if (!pokemon.volatiles['chiendesenfers'] || !holder.hp || !holder.isAdjacent(pokemon)) return;
+			const action = this.queue.willMove(holder);
+			if (!action || action.move.category === 'Status' || !this.queue.cancelMove(holder)) return;
+			this.add('-activate', holder, `ability: ${holder.getAbility().name}`);
+			pokemon.removeVolatile('destinybond');
+			this.actions.runMove(action.move.id, holder, holder.getLocOf(pokemon));
+		},
+		condition: {
+			onStart(target) {
+				this.effectState.jusquAuTour = jusquAuTour(this, 2);
+				this.add('-start', target, 'ability: Chien des Enfers');
+			},
+			onTrapPokemon(pokemon) {
+				if (this.turn > this.effectState.jusquAuTour || !this.effectState.source?.isActive) {
+					pokemon.removeVolatile('chiendesenfers');
+					return;
+				}
+				pokemon.tryTrap();
+			},
+			onModifyMove(move, pokemon) {
+				if (!move.selfSwitch || !this.effectState.source?.isActive) return;
+				move.selfSwitch = false;
+				this.add('-message', `${pokemon.name} est cloué sur place par le Chien des Enfers !`);
+			},
+			onResidualOrder: 28,
+			onResidual(pokemon) {
+				if (this.turn >= this.effectState.jusquAuTour || !this.effectState.source?.isActive) pokemon.removeVolatile('chiendesenfers');
+			},
+			onEnd(pokemon) {
+				this.add('-end', pokemon, 'ability: Chien des Enfers');
+			},
+		},
+	},
+	mueeclair: {
+		onSwitchOut(pokemon) {
+			if (!pokemon.hp) return;
+			pokemon.side.addSlotCondition(pokemon, 'mueeclair', pokemon);
+			const leurre = pokemon.side.slotConditions[pokemon.position]['mueeclair'];
+			if (leurre) leurre.pv = Math.floor(pokemon.maxhp / 4);
+		},
+		condition: {
+			onSwitchIn(pokemon) {
+				this.add('-activate', pokemon, 'ability: Mue Éclair');
+			},
+			onDamagePriority: -20,
+			onDamage(damage, target, source, effect) {
+				if (effect?.effectType !== 'Move' || !source || source.side === target.side) return;
+				const absorbe = Math.min(damage, this.effectState.pv);
+				target.side.removeSlotCondition(target, 'mueeclair');
+				this.add('-activate', target, 'ability: Mue Éclair', '[leurre]');
+				return damage - absorbe;
+			},
+		},
+	},
+	lecturedaura: {
+		onStart(pokemon) {
+			for (const foe of pokemon.adjacentFoes()) {
+				if (foe.item) this.add('-item', foe, foe.getItem().name, `[from] ability: ${pokemon.getAbility().name}`, `[of] ${pokemon}`);
+				for (const moveSlot of foe.moveSlots) {
+					this.add('-activate', pokemon, `ability: ${pokemon.getAbility().name}`, `move: ${moveSlot.move}`, `[of] ${foe}`);
+				}
+			}
+		},
+	},
+	rubansapaisants: {
+		onStart(pokemon) {
+			for (const foe of pokemon.adjacentFoes()) foe.addVolatile('rubansapaisants', pokemon);
+		},
+		condition: {
+			onStart(target) {
+				this.effectState.jusquAuTour = this.midTurn ? this.turn + 1 : this.turn + 2;
+				this.add('-start', target, 'ability: Rubans Apaisants');
+			},
+			onDisableMove(pokemon) {
+				if (this.turn > this.effectState.jusquAuTour) return;
+				for (const moveSlot of pokemon.moveSlots) {
+					if (estAttaqueDeBoost(this.dex.moves.get(moveSlot.id))) pokemon.disableMove(moveSlot.id);
+				}
+			},
+			onBeforeMovePriority: 5,
+			onBeforeMove(pokemon, target, move) {
+				if (this.turn > this.effectState.jusquAuTour || !estAttaqueDeBoost(move)) return;
+				this.add('cant', pokemon, 'ability: Rubans Apaisants', move);
+				return false;
+			},
+			onResidualOrder: 28,
+			onResidual(pokemon) {
+				if (this.turn >= this.effectState.jusquAuTour) pokemon.removeVolatile('rubansapaisants');
+			},
+			onEnd(pokemon) {
+				this.add('-end', pokemon, 'ability: Rubans Apaisants');
+			},
+		},
+	},
+	machoireroyale: {
+		onModifyMove(move) {
+			if (!move.flags['bite']) return;
+			const { protect, ...flags } = move.flags;
+			move.flags = flags;
+			move.breaksProtect = true;
+		},
+		onSourceTryHit(target, source, move) {
+			if (!move.flags['bite']) return;
+			for (const ecran of ['reflect', 'lightscreen']) {
+				if (target.side.removeSideCondition(ecran)) {
+					this.add('-sideend', target.side, this.dex.conditions.get(ecran).name, `[from] ability: ${source.getAbility().name}`, `[of] ${source}`);
+				}
+			}
+		},
+	},
+	sagedelaforet: {
+		condition: {
+			onModifyAtkPriority: 5,
+			onModifyAtk(atk, pokemon) {
+				if (this.field.getPseudoWeather('trickroom') && equipeProtegee(pokemon.side, 'sagedelaforet')) return this.chainModify([4915, 4096]);
+			},
+			onModifySpAPriority: 5,
+			onModifySpA(spa, pokemon) {
+				if (this.field.getPseudoWeather('trickroom') && equipeProtegee(pokemon.side, 'sagedelaforet')) return this.chainModify([4915, 4096]);
+			},
+		},
+	},
+	majordome: {
+		condition: {
+			onAnyModifyDamage(damage, source, target, move) {
+				if (target.side !== this.effectState.target || move.priority <= 0.1 || !equipeProtegee(target.side, 'majordome')) return;
+				return this.chainModify([3277, 4096]);
+			},
+			onTryHit(target, source, move) {
+				if (move.id !== 'fakeout' || !equipeProtegee(target.side, 'majordome')) return;
+				this.add('-activate', target, 'ability: Majordome');
+				return null;
+			},
 		},
 	},
 

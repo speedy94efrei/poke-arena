@@ -222,6 +222,102 @@ export const EffetsAttaques: { [id: string]: EffetAttaque } = {
 	},
 	spicyextract: { boosts: { atk: 1, def: -2 } },
 
+	marquedupredateur: {
+		basePowerCallback(pokemon, target, move) {
+			return pokemon.m.marquePosee ? 70 : move.basePower;
+		},
+		onModifyPriority(priority, source) {
+			if (source.m.marquePosee) return priority + 1;
+		},
+		onHit(target, source) {
+			if (source.m.marquePosee) return;
+			source.m.marquePosee = true;
+			target.addVolatile('marquedupredateur', source);
+		},
+		condition: {
+			onStart(target) {
+				this.add('-start', target, 'move: Marque du Prédateur');
+			},
+			onTrapPokemon(pokemon) {
+				if (!this.effectState.source?.isActive) {
+					pokemon.removeVolatile('marquedupredateur');
+					return;
+				}
+				pokemon.tryTrap();
+			},
+			onResidualOrder: 28,
+			onResidual(pokemon) {
+				if (!this.effectState.source?.isActive) pokemon.removeVolatile('marquedupredateur');
+			},
+			onEnd(pokemon) {
+				this.add('-end', pokemon, 'move: Marque du Prédateur');
+			},
+		},
+	},
+	auservice: {
+		selfSwitch: true,
+		flags: { metronome: 1 },
+		onHit(pokemon) {
+			pokemon.side.addSlotCondition(pokemon, 'auservice', pokemon);
+		},
+		condition: {
+			duration: 2,
+			onModifyPriority(priority, pokemon, target, move) {
+				if (move.category !== 'Status' && this.effectState.duration === 1) return priority + 1;
+			},
+			onBeforeMove(pokemon, target, move) {
+				if (move.category !== 'Status') pokemon.side.removeSlotCondition(pokemon, 'auservice');
+			},
+		},
+	},
+	trickortreat: {
+		onHit(target, source) {
+			if (target.hasType('Ghost') || !target.addType('Ghost')) return false;
+			this.add('-start', target, 'typeadd', 'Ghost', '[from] move: Trick-or-Treat');
+			target.addVolatile('trickortreat', source);
+		},
+		condition: {
+			onResidualOrder: 8,
+			onResidual(pokemon) {
+				if (pokemon.addedType !== 'Ghost') {
+					pokemon.removeVolatile('trickortreat');
+					return;
+				}
+				const source = this.effectState.source as Pokemon | undefined;
+				const damage = this.damage(pokemon.baseMaxhp / 16, pokemon, source);
+				if (damage && source?.isActive && source.hp) this.heal(damage, source, pokemon);
+			},
+		},
+	},
+	instruct: {
+		target: 'allySide',
+		sideCondition: 'instruct',
+		flags: { snatch: 1, metronome: 1 },
+		onHit() {},
+		condition: {
+			onSideStart(side) {
+				this.add('-sidestart', side, 'move: Sommation');
+			},
+			onSwitchIn(pokemon) {
+				this.boost({ spd: 1 }, pokemon, pokemon);
+				pokemon.side.removeSideCondition('instruct');
+			},
+			onSideEnd(side) {
+				this.add('-sideend', side, 'move: Sommation');
+			},
+		},
+	},
+	gigatonhammer: {
+		flags: { protect: 1, mirror: 1 },
+		onDisableMove(pokemon) {
+			if (pokemon.lastMove?.id !== 'gigatonhammer') return;
+			if (!pokemon.adjacentFoes().some(foe => foe.hasType('Steel'))) pokemon.disableMove('gigatonhammer');
+		},
+		onEffectiveness(typeMod, target, type) {
+			if (type === 'Steel') return 0;
+		},
+	},
+
 	murfossile: {
 		target: 'allySide',
 		sideCondition: 'murfossile',

@@ -385,6 +385,19 @@ export function applyLine(state: BattleState, line: string) {
     case '-start':
     case '-end': {
       if (!args[0]?.includes(': ') || !args[1]) break
+      const of = tags.find(tag => tag.startsWith('[of] '))
+      if (command === '-activate' && args[2]?.startsWith('move: ') && of) {
+        const revealed = pokemonFrom(state, of.slice(5))
+        const moveId = toId(args[2].slice(6))
+        if (!revealed.pokemon.moves.includes(moveId)) revealed.pokemon.moves.push(moveId)
+        addLine(state, 'info', `${effectName(args[1])} révèle ${moveName(args[2].slice(6))} chez ${displayName(state, revealed.side, revealed.pokemon)}.`)
+        break
+      }
+      if (tags.includes('[leurre]')) {
+        const holder = pokemonFrom(state, args[0])
+        addLine(state, 'info', `Le leurre encaisse l'attaque à la place de ${displayName(state, holder.side, holder.pokemon)} !`)
+        break
+      }
       const { side, pokemon } = pokemonFrom(state, args[0])
       const verb = command === '-end' ? 'fin de' : ''
       addLine(state, 'info', `${displayName(state, side, pokemon)} : ${verb ? `${verb} ` : ''}${effectName(args[1])}.`)
