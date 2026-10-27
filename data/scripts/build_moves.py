@@ -12,6 +12,7 @@ CATEGORIES = {"Physical": "physique", "Special": "spécial", "Status": "statut"}
 EXCLUDED_NONSTANDARD = {"Unobtainable", "LGPE", "CAP", "Custom", "Gigantamax", "Future"}
 OLD_FRENCH_NAMES = {"vitextreme": "extremespeed", "dracopulse": "dragonpulse"}
 FRENCH = "5"
+NO_EFFECT = "Aucun effet supplémentaire."
 
 
 def to_id(text):
@@ -115,7 +116,8 @@ def official_entry(mid, ps, api_id, names, texts):
 
 def signature_effect(sig):
     head = re.search(r"[A-ZÉ][\wéèêïë]+ · (physique|spécial|statut)[^.]*\.", sig["description"])
-    return sig["description"][head.end():].strip() if head else sig["description"]
+    effect = sig["description"][head.end():].strip() if head else sig["description"]
+    return effect or NO_EFFECT
 
 
 def build():
