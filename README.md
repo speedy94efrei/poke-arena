@@ -58,7 +58,7 @@ npm install
 npm run dev
 ```
 
-Le site répond sur http://localhost:3000.
+Le site répond sur http://localhost:3000. `npm run typecheck` vérifie les types, y compris ceux du roster.
 
 ### Données
 

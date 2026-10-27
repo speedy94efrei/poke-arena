@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Roster PokéDraft",
+  "title": "Roster",
   "description": "Roster d'une saison PokéDraft : les fiches des Pokémon et le dictionnaire des attaques. Une valeur null dans une attaque veut dire « à définir ».",
   "type": "object",
   "additionalProperties": false,
@@ -36,6 +36,7 @@
     "texte": { "type": "string", "minLength": 1 },
     "texteOuNull": { "type": ["string", "null"], "minLength": 1 },
     "type": {
+      "title": "TypePokemon",
       "enum": [
         "Acier", "Combat", "Dragon", "Eau", "Électrik", "Fée", "Feu", "Glace", "Insecte",
         "Normal", "Plante", "Poison", "Psy", "Roche", "Sol", "Spectre", "Ténèbres", "Vol"
@@ -66,6 +67,7 @@
     "priorite": { "type": "integer", "minimum": -7, "maximum": 5 },
     "stat": { "type": "integer", "minimum": 1, "maximum": 255 },
     "stats": {
+      "description": "Stats de base et leur total. Dans stats, le total officiel est réparti autrement.",
       "type": "object",
       "additionalProperties": false,
       "required": ["pv", "atq", "def", "atqSpe", "defSpe", "vit", "total"],
@@ -138,7 +140,9 @@
         },
         "horsMovepool": {
           "description": "Attaques du set que le Pokémon ne peut pas apprendre : à corriger dans la fiche.",
-          "$ref": "#/$defs/ids"
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
         }
       }
     },
@@ -177,10 +181,7 @@
         },
         "tierSmogonFiche": { "$ref": "#/$defs/texte" },
         "tierShowdownActuel": { "$ref": "#/$defs/texte" },
-        "stats": {
-          "description": "Stats PokéDraft : le total officiel, réparti autrement.",
-          "$ref": "#/$defs/stats"
-        },
+        "stats": { "$ref": "#/$defs/stats" },
         "statsOfficielles": { "$ref": "#/$defs/stats" },
         "statsOfficiellesNote": { "$ref": "#/$defs/texteOuNull" },
         "talent": { "$ref": "#/$defs/talent" },
@@ -208,11 +209,15 @@
         "sprite": { "type": "string", "pattern": "^https://" },
         "contresIds": {
           "description": "Pokémon du roster qui le contrent.",
-          "$ref": "#/$defs/ids"
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
         },
         "ilContre": {
           "description": "Pokémon du roster qu'il contre (inverse de contresIds).",
-          "$ref": "#/$defs/ids"
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
         },
         "signatureId": { "$ref": "#/$defs/id" },
         "ajoutsMovepoolIds": { "$ref": "#/$defs/ids" },

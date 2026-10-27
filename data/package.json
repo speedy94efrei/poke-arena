@@ -1,0 +1,11 @@
+{
+  "name": "arene-data",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "types": "json2ts -i schemas/roster.schema.json -o types/roster.d.ts --ignoreMinAndMaxItems --no-additionalProperties --bannerComment \"/* Généré depuis schemas/roster.schema.json par « npm run types ». Ne pas modifier à la main. */\""
+  },
+  "devDependencies": {
+    "json-schema-to-typescript": "^16.0.0"
+  }
+}
