@@ -19,6 +19,7 @@ python data/scripts/fetch_pokeapi.py data/cache/pokeapi
 python data/scripts/build_roster.py data/cache/fiches-saison-1.txt server/data/formats-data.ts data/cache/roster-fiches.json data/sources/saison-1/corrections.md
 python data/scripts/build_moves.py data/cache/roster-fiches.json server/data data/cache/pokeapi data/rosters/roster-saison-1.json
 python data/scripts/validate_roster.py data/rosters/roster-saison-1.json
+python data/scripts/build_mod.py data/rosters/roster-saison-1.json server/data server/data/mods/pokedraft
 ```
 
 1. `pdf_to_text.py` extrait le texte des fiches.
