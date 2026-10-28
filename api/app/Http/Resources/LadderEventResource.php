@@ -21,6 +21,7 @@ class LadderEventResource extends JsonResource
             'points_delta' => $this->points_delta,
             'points_after' => $this->points_after,
             'opponent' => $this->opponent?->name,
+            'opponent_id' => $this->opponent?->showdown_id,
             'note' => $this->note,
             'at' => $this->created_at->toIso8601String(),
         ];

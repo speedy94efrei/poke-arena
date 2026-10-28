@@ -18,7 +18,7 @@
           <div role="progressbar" aria-label="Points de ligue" :aria-valuenow="profile.rank.points" aria-valuemin="0" aria-valuemax="100" class="me__bar">
             <div class="me__fill" :style="{ width: `${profile.rank.division ? profile.rank.points : 100}%` }"><span class="me__sweep" /></div>
           </div>
-          <span class="me__position">#<b>{{ profile.position }}</b> sur {{ profile.players }} joueur{{ profile.players > 1 ? 's' : '' }}<template v-if="profile.top_percent !== null"> · top {{ percent(profile.top_percent) }}</template></span>
+          <span class="me__position">#<b>{{ profile.position }}</b> sur {{ profile.players }} joueur{{ profile.players > 1 ? 's' : '' }}<template v-if="profile.top_percent !== null"> · top {{ percent(profile.top_percent) }}</template> · <NuxtLink :to="playerPath(profile.showdown_id)" class="me__public">ma fiche publique</NuxtLink></span>
         </template>
         <span v-else class="me__points">Encore <b>{{ profile.placement.needed - profile.placement.played }}</b> draft{{ profile.placement.needed - profile.placement.played > 1 ? 's' : '' }} classé{{ profile.placement.needed - profile.placement.played > 1 ? 's' : '' }} avant ton premier rang.</span>
       </div>
@@ -83,11 +83,12 @@
             class="ladder__row"
             :class="{ 'ladder__row--me': row.showdown_id === profile?.showdown_id, 'ladder__row--champion': row.rank.tier === 'champion' }"
             :style="{ background: BANNER_BACKGROUNDS[row.banner] ?? BANNER_BACKGROUNDS.depart }"
+            @click="navigateTo(playerPath(row.showdown_id))"
           >
             <span class="ladder__veil" />
             <span class="ladder__position">{{ row.position }}</span>
             <span class="ladder__crest"><RankCrest :tier="row.rank.tier" :size="30" /></span>
-            <span class="ladder__name">{{ row.name }}</span>
+            <NuxtLink :to="playerPath(row.showdown_id)" class="ladder__name">{{ row.name }}</NuxtLink>
             <span class="ladder__tier" :style="{ color: tierStyle(row.rank.tier).ink }">{{ row.rank.label }}</span>
             <span class="ladder__points">{{ row.rank.points }}</span>
             <span class="ladder__record">{{ row.wins }} / {{ row.losses }}</span>
@@ -101,7 +102,7 @@
             <div v-for="(event, index) in profile.history" :key="index" class="event" :style="{ boxShadow: `inset 3px 0 0 ${eventColor(event.points_delta)}` }">
               <span class="event__delta" :style="{ color: eventColor(event.points_delta) }">{{ signed(event.points_delta) }}</span>
               <span class="event__text">
-                <b>{{ eventLabel(event.type) }}<template v-if="event.opponent"> contre {{ event.opponent }}</template></b>
+                <b>{{ eventLabel(event.type) }}<template v-if="event.opponent"> contre <NuxtLink :to="playerPath(event.opponent_id!)" class="event__opponent">{{ event.opponent }}</NuxtLink></template></b>
                 <span>{{ relativeDate(event.at) }}<template v-if="event.note"> · {{ event.note }}</template></span>
               </span>
             </div>
@@ -184,7 +185,6 @@ const historySummary = computed(() => {
   return `${count('victoire')} V · ${count('defaite')} D · ${count('abandon')} abandon${count('abandon') > 1 ? 's' : ''} · ${signed(total)} PL`
 })
 
-const signed = (value: number) => value > 0 ? `+${value}` : value < 0 ? `−${-value}` : '0'
 const eventColor = (delta: number) => delta > 0 ? '#58d080' : delta < 0 ? '#ff8a7a' : 'var(--mu)'
 
 const loadLadder = async () => {
@@ -268,6 +268,7 @@ onMounted(async () => {
 .me__sweep { position: absolute; top: 0; bottom: 0; width: 30%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .55), transparent); animation: sweep 2.6s 1s ease-in-out infinite; }
 .me__position { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: #d8e0f0; }
 .me__position b { font: 600 14px 'Pixelify Sans', sans-serif; }
+.me__public { color: #ffd23a; }
 .status { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
 
 .status__card {
@@ -380,6 +381,7 @@ onMounted(async () => {
   height: 48px;
   padding: 0 10px;
   border-radius: 8px;
+  cursor: pointer;
 }
 
 .ladder__row--me { box-shadow: inset 0 0 0 2px var(--uA); }
@@ -389,7 +391,9 @@ onMounted(async () => {
 .ladder__position { font: 600 16px 'Pixelify Sans', sans-serif; color: var(--mu); }
 .ladder__row--champion .ladder__position { color: #ffd970; }
 .ladder__crest { display: flex; justify-content: center; }
-.ladder__name { font: 700 14px 'Atkinson Hyperlegible', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ladder__name { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--tx); text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ladder__row:hover .ladder__veil { background: linear-gradient(90deg, rgba(10, 12, 18, .35), rgba(10, 12, 18, .78) 45%); }
+.ladder__row:hover .ladder__name { text-decoration: underline; }
 .ladder__tier { font: 700 12px 'Atkinson Hyperlegible', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ladder__points { font: 600 15px 'Pixelify Sans', sans-serif; text-align: right; }
 .ladder__record { font: 600 13px 'Pixelify Sans', sans-serif; text-align: right; color: var(--mu); }
@@ -408,6 +412,7 @@ onMounted(async () => {
 .event__delta { font: 600 17px 'Pixelify Sans', sans-serif; }
 .event__text { display: flex; flex-direction: column; min-width: 0; font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
 .event__text b { font: 700 13px 'Atkinson Hyperlegible', sans-serif; color: var(--tx); }
+.event__opponent { color: inherit; }
 .empty { padding: 14px 12px; font: 700 13px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
 
 @keyframes grow { from { width: 0; } }

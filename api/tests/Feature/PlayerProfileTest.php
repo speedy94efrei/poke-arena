@@ -98,8 +98,9 @@ class PlayerProfileTest extends TestCase
         $entry->events()->create(['type' => 'victoire', 'points_delta' => 20, 'points_after' => 470]);
         $this->travel(1)->minutes();
         $entry->events()->create(['type' => 'abandon', 'points_delta' => -5, 'points_after' => 465]);
+        Sanctum::actingAs($user);
 
-        $this->getJson("/api/players/{$user->showdown_id}")
+        $this->getJson('/api/me')
             ->assertJsonPath('data.history.0.type', 'abandon')
             ->assertJsonPath('data.history.1.type', 'victoire');
     }

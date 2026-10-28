@@ -14,6 +14,7 @@ export interface LadderEventInfo {
   points_delta: number
   points_after: number
   opponent: string | null
+  opponent_id: string | null
   note: string | null
   at: string
 }
@@ -26,7 +27,7 @@ export interface BannerInfo {
   equipped: boolean
 }
 
-export interface Profile {
+export interface PlayerCard {
   name: string
   showdown_id: string
   banner: string
@@ -39,12 +40,33 @@ export interface Profile {
   top_percent: number | null
   record: { wins: number, losses: number, ties: number }
   streak: number
+  banners: BannerInfo[]
+  past_seasons: { number: number, name: string, rank: string, wins: number, losses: number }[]
+}
+
+export interface Profile extends PlayerCard {
   shield_games: number
   abandons: { abandons: number, wait_seconds: number }
   decay: { concerned: boolean, idle_days: number | null }
   history: LadderEventInfo[]
-  banners: BannerInfo[]
-  past_seasons: { number: number, name: string, rank: string, wins: number, losses: number }[]
+}
+
+export interface PlayerDraft {
+  result: 'victoire' | 'defaite' | 'egalite'
+  points_delta: number | null
+  note: string | null
+  turns: number
+  opponent: { name: string, showdown_id: string }
+  team: string[]
+  opponent_team: string[]
+  at: string
+}
+
+export interface PublicProfile extends PlayerCard {
+  peak: string | null
+  signature: { pokemon: string, picks: number, win_rate: number | null }[]
+  bans: { pokemon: string, bans: number }[]
+  drafts: PlayerDraft[]
 }
 
 export interface SeasonInfo {
@@ -124,6 +146,14 @@ export function percent(value: number, digits = 0): string {
 
 export function eventLabel(type: LadderEventInfo['type']): string {
   return { victoire: 'Victoire', defaite: 'Défaite', egalite: 'Égalité', abandon: 'Abandon du draft', inactivite: 'Inactivité' }[type]
+}
+
+export function signed(value: number): string {
+  return value > 0 ? `+${value}` : value < 0 ? `−${-value}` : '0'
+}
+
+export function playerPath(showdownId: string): string {
+  return `/pokedraft/joueur/${showdownId}`
 }
 
 export function relativeDate(iso: string): string {

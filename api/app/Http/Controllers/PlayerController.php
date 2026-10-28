@@ -11,6 +11,6 @@ class PlayerController extends Controller
 {
     public function show(User $user, Profiles $profiles): PlayerResource
     {
-        return PlayerResource::make($profiles->profile($user, Season::currentOrFail()));
+        return PlayerResource::make($profiles->publicProfile($user, Season::currentOrFail()));
     }
 }
