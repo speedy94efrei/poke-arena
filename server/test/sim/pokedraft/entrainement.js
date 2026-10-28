@@ -204,4 +204,60 @@ describe('PokéDraft · bots d\'entraînement', () => {
 		const simulated = [await play(1, true), await play(2, true)];
 		assert.deepEqual(simulated, ['Expert', 'Expert'], `le moteur a perdu contre le niveau 1 (${simulated.join(', ')})`);
 	});
+
+	it('en OU, les bots jouent avec les sets Smogon et le moteur bat le niveau 1', async function () {
+		this.timeout(180000);
+		const { BattleStream, BattlePlayer, getPlayerStreams } = require('./../../../dist/sim/battle-stream');
+		const { TeamValidator } = require('./../../../dist/sim/team-validator');
+		const packer = require('./../../../dist/sim/teams').Teams;
+		const { smogonSets } = require('./../../../dist/server/chat-plugins/entrainement/smogon');
+		const sets = smogonSets('gen9ou');
+		const team = ['greattusk', 'kingambit', 'gholdengo', 'dragonite', 'ironvaliant', 'corviknight'].map(sets);
+
+		assert(team.every(set => set && set.moves.length === 4), 'chaque Pokémon a un set Smogon complet');
+		assert.equal(TeamValidator.get('gen9ou').validateTeam(team), null);
+
+		class Player extends BattlePlayer {
+			constructor(stream, ai) {
+				super(stream);
+				this.ai = ai;
+			}
+
+			receiveLine(line) {
+				if (!line.startsWith('|request|') && !line.startsWith('|error|')) this.ai.receiveLine(line);
+				super.receiveLine(line);
+			}
+
+			receiveRequest(request) {
+				const choice = this.ai.decide(request);
+				if (choice) this.choose(choice);
+			}
+
+			receiveError() {
+				this.choose('default');
+			}
+		}
+
+		const streams = getPlayerStreams(new BattleStream());
+		const expert = new Ai.TrainingAI(5, roster, seeded(11), { engine: true, format: 'gen9ou', sets });
+		expert.setTeam(team);
+		void new Player(streams.p1, expert).start();
+		void new Player(streams.p2, new Ai.TrainingAI(1, roster, seeded(12), { format: 'gen9ou', sets })).start();
+		const packed = packer.pack(team);
+		void streams.omniscient.write([
+			`>start ${JSON.stringify({ formatid: 'gen9ou', seed: [3, 4, 5, 6] })}`,
+			`>player p1 ${JSON.stringify({ name: 'Expert', team: packed })}`,
+			`>player p2 ${JSON.stringify({ name: 'Debutant', team: packed })}`,
+		].join('\n'));
+		let winner = 'tie';
+		for await (const chunk of streams.omniscient) {
+			const line = chunk.split('\n').find(entry => entry.startsWith('|win|'));
+			if (line) {
+				winner = line.slice(5);
+				break;
+			}
+		}
+		assert.equal(winner, 'Expert');
+		assert.deepEqual(expert.engineErrors, []);
+	});
 });

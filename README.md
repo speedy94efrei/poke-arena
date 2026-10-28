@@ -46,7 +46,9 @@ Sans ces variables, tout fonctionne mais aucun draft n'est compté.
 
 ### Bots d'entraînement
 
-Le mode Entraînement appartiendra à l'univers Classique, organisé par style d'équipe (hyper offense, pluie, stall…) : apprendre à jouer un style, puis à l'affronter. Son écran n'existe pas encore ; le serveur de combat embarque déjà les bots et leur IA, testés pour l'instant avec le roster PokéDraft.
+Le mode Entraînement est dans l'univers Classique (`/classique/entrainement`), organisé par style d'équipe officiel de Smogon : apprendre à jouer un style (tu pilotes une équipe du style, le bot joue une équipe du méta), puis à l'affronter (le bot joue le style, tu prends une de tes équipes). Les équipes viennent des statistiques Smogon du format, construites par l'assistant de l'Atelier ; le site les fait valider par le serveur, prépare le combat (`/entrainement preparer`) puis défie le bot du niveau choisi. Hors PokéDraft, l'IA suppose que tes Pokémon jouent leur set le plus fréquent du format (`entrainement/smogon.ts`), ou leur set de Random Battle.
+
+Pendant un combat d'entraînement, un coach suit tes décisions : une IA de niveau 5 avec le moteur de simulation, de ton côté, avec tes vrais sets. À chaque tour, il rejoue tes options dans le simulateur ; le site te laisse choisir d'abord, puis montre son option préférée, le classement des options et la comparaison avec ton choix (`/entrainement coach`).
 
 Le serveur de combat lance lui-même ses bots, quelques secondes après son démarrage : des joueurs connectés en local, comme n'importe quel client, qui acceptent les défis de combat libre et de draft. Leurs pseudos sont réservés (personne d'autre ne peut les prendre), et `ARENE_TRAINING_BOTS=0` les désactive. Rien n'est classé.
 
@@ -72,7 +74,7 @@ node tools/banc-entrainement.js --voir 5:4 --graine 3
 
 Le premier affiche le taux de victoire avec son intervalle de confiance, la durée des combats, le temps de décision et trois erreurs typiques ; le second déroule un combat avec, à chaque tour, les options simulées et leur note. Mesures actuelles (30 combats par duel) : le moteur bat le niveau 1 à 90 %, mais seulement 52 % contre le niveau 4 et 53 % contre le niveau 5 par règles. Son évaluation reste à régler. Entre niveaux par règles : niveau 2 contre 1, 83 % ; 3 contre 2, 87 % ; 4 contre 3, 53 %.
 
-Les tests (`server/test/sim/pokedraft/entrainement.js`) vérifient les choix de chaque niveau dans des situations précises, la reconstruction du combat par le moteur, et font jouer de vrais combats au simulateur : le niveau 5, par règles comme par simulation, doit battre le niveau 1.
+Les tests (`server/test/sim/pokedraft/entrainement.js`) vérifient les choix de chaque niveau dans des situations précises, la reconstruction du combat par le moteur, et font jouer de vrais combats au simulateur : le niveau 5, par règles comme par simulation, doit battre le niveau 1, en PokéDraft comme en OU avec les sets Smogon.
 
 En production, avec un vrai serveur de connexion, ces pseudos devront correspondre à des comptes enregistrés.
 
@@ -193,6 +195,7 @@ Univers Classique (Smogon, tous les formats du serveur de combat) :
 - `/classique/pokedex` : le Pokédex. La liste des Pokémon du format par usage (ou tout le Pokédex en cherchant, en français ou en anglais), et pour chacun la fiche (stats, faiblesses, talents), ce que joue la communauté (attaques, objets, types Téra, répartitions, coéquipiers et contres, d'après Smogon) et toutes les attaques qu'il apprend ; un bouton l'ajoute à l'équipe ouverte dans l'Atelier ;
 - `/classique/meta` : la méta d'un format. Les Pokémon les plus utilisés avec leur objet, type Téra et attaque n°1, la répartition des styles d'équipe, l'équipe type (le n°1 et ses coéquipiers les plus fréquents, à copier dans l'Atelier) et les duos les plus joués ;
 - `/classique/guide` : le guide. Les objets et talents incontournables (avec leur part dans la méta du format), le tableau des natures, les IV et EV expliqués avec un calculateur de statistiques ;
+- `/classique/entrainement` : l'entraînement par style contre les bots (format, objectif jouer ou affronter, style avec sa part dans le format, niveau du bot), les deux équipes, la leçon du style (comment le jouer, comment le contrer) et le coach pendant le combat ;
 - `/classique/tournois` : les tournois et événements. Le calendrier de deux semaines (réguliers et proposés par les joueurs), le tableau du tournoi choisi (arbre d'élimination ou tableau des toutes rondes, en direct), sa fiche avec l'inscription, puis le bouton « Je suis prêt » avec ton équipe quand ton match arrive, et les derniers vainqueurs ;
 - `/classique/tournois/creer` : créer un tournoi, avec l'aperçu de son annonce ;
 - `/classique/chat` : le chat. Les salons publics du serveur, les messages privés, les joueurs présents dans le salon (écrire, défier) ;

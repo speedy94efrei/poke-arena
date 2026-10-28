@@ -1,6 +1,8 @@
 /**
  * Bots d'entraînement : des joueurs du serveur, connectés en local comme n'importe quel client, qui acceptent
  * les défis de combat libre et de draft puis jouent avec l'IA de leur niveau. Rien n'est classé.
+ * En Classique, le site prépare d'abord l'entraînement (/entrainement preparer : format, équipe du bot, la tienne)
+ * puis défie le bot ; un coach suit le combat de ton côté et donne, à la demande, l'option que le moteur préfère.
  * Le site demande leur état par /entrainement et reçoit une ligne |entrainement|<json>.
  * `ARENE_TRAINING_BOTS=0` les désactive.
  */
@@ -11,14 +13,33 @@ import type { Pokemon as RosterPokemon, Roster } from '../../../../data/types/ro
 import { Drafts, FORMAT, loadRoster } from '../pokedraft';
 import { TrainingAI } from './ia';
 import { BOTS, bansFor, pickFor, setsFor, teamFor, type BotProfile } from './equipes';
+import { smogonSets } from './smogon';
 
 const START_DELAY = 3_000;
 const RECONNECT_DELAY = 5_000;
 const CHOICE_DELAY = 600;
 const DRAFT_DELAY = 1_200;
 const MAX_BATTLES = 10;
+const PREPARATION_TTL = 10 * 60_000;
+const MAX_TEAM_LENGTH = 6000;
 /** Prouve au filtre de pseudos qu'une connexion est bien un bot : lui seul peut prendre un nom de bot. */
 const SECRET = crypto.randomBytes(24).toString('hex');
+
+/** Entraînement Classique préparé par le site avant de défier un bot. */
+interface Preparation {
+	format: ID;
+	/** Équipe du bot au format compact, vide pour un format à équipes générées. */
+	team: string;
+	/** Ton équipe, pour que le coach rejoue tes options avec tes vrais sets. */
+	mine: string;
+	coach: boolean;
+	expires: number;
+}
+
+interface Coach {
+	ai: TrainingAI;
+	user: ID;
+}
 
 interface DraftView {
 	id: string;
@@ -33,6 +54,7 @@ interface DraftView {
 class TrainingBot {
 	socket: WebSocket | null = null;
 	battles = new Map<string, TrainingAI>();
+	coaches = new Map<string, Coach>();
 	draftSteps = new Set<string>();
 	timer: NodeJS.Timeout | null = null;
 	stopped = false;
@@ -96,21 +118,36 @@ class TrainingBot {
 	}
 
 	challenged(from: string, text: string) {
-		const format = text.slice('/challenge'.length).trim().split('|')[0];
+		const format = toID(text.slice('/challenge'.length).trim().split('|')[0]);
 		if (!format) return;
-		if (toID(format) !== FORMAT || this.battles.size >= MAX_BATTLES) {
+		if (this.battles.size >= MAX_BATTLES) {
 			this.send(`|/reject ${from}`);
 			return;
 		}
-		this.send(`|/utm ${Teams.pack(teamFor(this.profile, this.roster))}`);
+		if (format === FORMAT) {
+			this.send(`|/utm ${Teams.pack(teamFor(this.profile, this.roster))}`);
+			this.send(`|/accept ${from}`);
+			return;
+		}
+		const rules = Dex.formats.get(format);
+		const preparation = Training.preparation(toID(from), this.id);
+		const generated = Boolean(rules.team);
+		if (!rules.exists || rules.gameType !== 'singles' || (!generated && preparation?.format !== format)) {
+			this.send(`|/reject ${from}`);
+			return;
+		}
+		this.send(`|/utm ${generated ? 'null' : preparation!.team}`);
 		this.send(`|/accept ${from}`);
 	}
 
 	battle(room: string, lines: string[]) {
 		let ai = this.battles.get(room);
+		const format = room.split('-')[1] ?? FORMAT;
 		if (!ai) {
 			if (!lines.includes('|init|battle')) return;
-			ai = new TrainingAI(this.profile.level, this.roster);
+			ai = format === FORMAT ?
+				new TrainingAI(this.profile.level, this.roster) :
+				new TrainingAI(this.profile.level, this.roster, Math.random, { format, sets: smogonSets(format) });
 			this.battles.set(room, ai);
 		}
 		for (const line of lines) {
@@ -118,13 +155,27 @@ class TrainingBot {
 				if (line.length > 9) this.answer(room, ai, JSON.parse(line.slice(9)));
 			} else if (line.startsWith('|win|') || line === '|tie') {
 				this.battles.delete(room);
+				this.coaches.delete(room);
 				setTimeout(() => this.send(`${room}|/leave`), 2_000);
 			} else if (line.startsWith('|error|[Invalid choice]') || line.startsWith('|error|[Unavailable choice]')) {
 				this.send(`${room}|/choose default`);
 			} else {
+				if (line.startsWith('|player|') && format !== FORMAT) this.followPlayer(room, format, line);
 				ai.receiveLine(line);
+				this.coaches.get(room)?.ai.receiveLine(line);
 			}
 		}
+	}
+
+	/** Joueur humain d'un combat Classique : s'il a demandé le coach, une IA de niveau 5 suit le combat de son côté. */
+	followPlayer(room: string, format: string, line: string) {
+		const user = toID(line.split('|')[3] ?? '');
+		if (!user || user === this.id || this.coaches.has(room)) return;
+		const preparation = Training.preparation(user, this.id);
+		if (!preparation?.coach) return;
+		const ai = new TrainingAI(5, this.roster, Math.random, { engine: true, format, sets: smogonSets(format) });
+		if (preparation.mine) ai.setTeam(Teams.unpack(preparation.mine) ?? []);
+		this.coaches.set(room, { ai, user });
 	}
 
 	answer(room: string, ai: TrainingAI, request: ChoiceRequest & { rqid?: number }) {
@@ -179,6 +230,51 @@ class TrainingBot {
 export const Training = new class {
 	bots: TrainingBot[] = [];
 	botUsers = new WeakSet<User>();
+	prepared = new Map<string, Preparation>();
+
+	/** Garde l'entraînement que le joueur va lancer contre ce bot, le temps de le défier. */
+	prepare(user: User, data: { bot?: unknown, format?: unknown, team?: unknown, mine?: unknown, coach?: unknown }) {
+		const bot = this.bots.find(entry => entry.id === toID(String(data.bot ?? '')));
+		const format = Dex.formats.get(String(data.format ?? ''));
+		const team = typeof data.team === 'string' ? data.team : '';
+		const mine = typeof data.mine === 'string' ? data.mine : '';
+		if (!bot) return "Ce bot n'est pas connecté.";
+		if (!format.exists || format.gameType !== 'singles') return 'Les bots ne jouent que les formats en simple.';
+		if (!format.team && !team) return 'Il faut une équipe pour le bot dans ce format.';
+		if (team.length > MAX_TEAM_LENGTH || mine.length > MAX_TEAM_LENGTH) return 'Équipe trop longue.';
+		this.prepared.set(`${user.id}>${bot.id}`, {
+			format: format.id, team, mine, coach: data.coach !== false, expires: Date.now() + PREPARATION_TTL,
+		});
+		return null;
+	}
+
+	preparation(user: ID, bot: ID) {
+		const preparation = this.prepared.get(`${user}>${bot}`);
+		return preparation && preparation.expires > Date.now() ? preparation : null;
+	}
+
+	/** Conseil du coach pour la décision en cours du joueur : le choix du moteur et la note de chaque option. */
+	coach(user: User, roomid: string) {
+		const room = Rooms.get(roomid);
+		const coach = this.bots.map(bot => bot.coaches.get(roomid)).find(entry => entry?.user === user.id);
+		const raw = room?.battle?.playerTable[user.id]?.request.request;
+		if (!coach || !raw) return { type: 'coach', room: roomid, error: "Pas de conseil possible pour l'instant." };
+		const request = JSON.parse(raw) as ChoiceRequest;
+		if (request.wait || request.teamPreview) return { type: 'coach', room: roomid, error: 'Rien à décider pour le moment.' };
+		if (!coach.ai.team.length) coach.ai.setTeam(setsFromRequest(request));
+		let choice = '';
+		try {
+			choice = coach.ai.decide(request);
+		} catch (error) {
+			return { type: 'coach', room: roomid, error: `Le coach n'a pas pu analyser ce tour (${(error as Error).message}).` };
+		}
+		const analysis = coach.ai.lastAnalysis;
+		return {
+			type: 'coach', room: roomid, turn: coach.ai.turnNumber, choice,
+			options: analysis?.options.map(option => ({ kind: option.kind, id: option.id, tera: option.tera, score: option.score })) ?? [],
+			simulations: analysis?.simulations ?? 0,
+		};
+	}
 
 	start() {
 		if (this.bots.length) return;
@@ -219,8 +315,34 @@ export const commands: Chat.ChatCommands = {
 		bot(target, room, user) {
 			if (target.trim() === SECRET) Training.botUsers.add(user);
 		},
+		preparer(target, room, user) {
+			let data = {};
+			try {
+				data = JSON.parse(target);
+			} catch {
+				data = {};
+			}
+			const error = Training.prepare(user, data);
+			user.send(`|entrainement|${JSON.stringify(error ? { type: 'erreur', message: error } : { type: 'pret' })}`);
+		},
+		coach(target, room, user) {
+			user.send(`|entrainement|${JSON.stringify(Training.coach(user, target.trim()))}`);
+		},
 	},
 };
+
+/** Sets du joueur d'après sa requête, quand son équipe est générée par le serveur (Random Battle). */
+function setsFromRequest(request: ChoiceRequest): PokemonSet[] {
+	return request.side.pokemon.map((pokemon) => {
+		const [species = '', ...details] = pokemon.details.split(', ');
+		const level = Number(details.find(part => part.startsWith('L'))?.slice(1)) || 100;
+		return {
+			name: species, species, item: pokemon.item, ability: pokemon.baseAbility, moves: pokemon.moves, nature: 'serious',
+			gender: '', evs: { hp: 84, atk: 84, def: 84, spa: 84, spd: 84, spe: 84 },
+			ivs: { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 }, level,
+		};
+	});
+}
 
 export const namefilter: Chat.NameFilter = (name, user) => (
 	Training.isReserved(name) && !Training.botUsers.has(user) ? '' : name

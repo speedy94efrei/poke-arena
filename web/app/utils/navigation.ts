@@ -20,7 +20,7 @@ export const NAVIGATION: Record<Universe, NavItem[]> = {
         { label: 'Accueil', to: '/classique' },
         { label: 'Combat classé', to: '/classique/classe' },
         { label: 'Combat en ligne', to: '/classique/en-ligne' },
-        { label: 'Entraînement' },
+        { label: 'Entraînement', to: '/classique/entrainement' },
       ],
     },
     {

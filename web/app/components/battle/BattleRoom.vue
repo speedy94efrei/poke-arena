@@ -15,6 +15,7 @@
         </div>
       </div>
       <div class="battle__side">
+        <BattleCoach v-if="coached" :battle="battle" />
         <BattleOpponentTeam :battle="battle" :side="oppSide" />
         <BattleLog :battle="battle" />
       </div>
@@ -40,6 +41,8 @@ const { store, choose, forfeit, leave } = useShowdown()
 const roomid = computed(() => props.roomid)
 const battle = computed(() => store.battles[roomid.value])
 const oppSide = computed<SideId>(() => battle.value?.mySide === 'p2' ? 'p1' : 'p2')
+/** Combat d'entraînement Classique contre un bot : le coach suit tes décisions. */
+const coached = computed(() => Boolean(battle.value?.mySide) && !isPokedraft(battle.value!) && toId(battle.value!.sides[oppSide.value].name).startsWith('botniveau'))
 const { stage } = useBattleStage(roomid)
 
 useHead({ title: () => battle.value ? `Combat · ${battle.value.sides.p1.name} contre ${battle.value.sides.p2.name}` : 'Combat' })

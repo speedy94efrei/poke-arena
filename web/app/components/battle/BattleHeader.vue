@@ -30,7 +30,9 @@ const { store: draftStore } = useDraft()
 const mode = computed(() => {
   const roomid = props.battle.roomid
   if (draftStore.rankedBattles.includes(roomid)) return 'Classé · Draft'
-  return draftStore.battles.includes(roomid) ? 'Draft amical' : 'Combat libre'
+  if (draftStore.battles.includes(roomid)) return 'Draft amical'
+  const opponent = props.battle.sides[props.battle.mySide === 'p2' ? 'p1' : 'p2'].name
+  return toId(opponent).startsWith('botniveau') ? 'Entraînement' : 'Combat libre'
 })
 const emit = defineEmits<{ forfeit: [], leave: [] }>()
 const { choice, options } = useBattleStage(() => props.battle.roomid)

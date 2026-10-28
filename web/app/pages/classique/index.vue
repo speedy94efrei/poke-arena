@@ -85,7 +85,7 @@ useHead({ title: 'Accueil · Classique' })
 
 const MODES = [
   { title: 'Combat classé', text: "Gagne de l'Elo sur le ladder", color: '#d84838', sprite: 'greattusk', to: '/classique/classe' },
-  { title: "S'entraîner", text: 'Apprendre un style, puis à le contrer', color: '#48a860', sprite: 'garganacl', to: undefined },
+  { title: "S'entraîner", text: 'Apprendre un style, puis à le contrer', color: '#48a860', sprite: 'garganacl', to: '/classique/entrainement' },
   { title: 'Défier un ami', text: 'Dans le format de ton choix', color: '#3a8fd6', sprite: 'dragapult', to: '/classique/en-ligne' },
 ]
 const RESULTS = { victoire: 'Victoire', defaite: 'Défaite', egalite: 'Égalité' }

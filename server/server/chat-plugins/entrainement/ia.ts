@@ -16,6 +16,8 @@ const GENERIC_EVS = { hp: 84, atk: 84, def: 84, spa: 84, spd: 84, spe: 84 };
 const MAX_IVS = { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 };
 
 export type Level = 1 | 2 | 3 | 4 | 5;
+/** Set supposé d'une espèce dans le format du combat, ou `null` si on n'en sait rien. */
+export type SetSource = (species: string) => PokemonSet | null;
 
 const KO_BONUS = 0.5;
 /** Changer de Pokémon laisse un tour gratuit à l'adversaire. */
@@ -26,6 +28,11 @@ const HAZARDS = ['stealthrock', 'spikes', 'toxicspikes', 'stickyweb'];
 const SPIKES_DAMAGE = [0, 1 / 8, 1 / 6, 1 / 4];
 const WEATHER_TYPES: { [weather: string]: string } = {
 	raindance: 'Water', sunnyday: 'Fire', sandstorm: 'Rock', snowscape: 'Ice',
+};
+/** Hors PokéDraft, les talents qui profitent d'une météo. */
+const WEATHER_ABILITIES: { [weather: string]: string[] } = {
+	raindance: ['swiftswim', 'raindish', 'dryskin', 'hydration'], sunnyday: ['chlorophyll', 'solarpower', 'protosynthesis'],
+	sandstorm: ['sandrush', 'sandforce'], snowscape: ['slushrush', 'icebody'],
 };
 /** Attaque de terrain : l'archétype du roster qui en profite. */
 const FIELD_MOVES: { [move: string]: Archetype } = {
@@ -128,12 +135,26 @@ export class TrainingAI {
 	/** Les sets que le bot a lui-même envoyés : le moteur en a besoin pour rejouer ses options. */
 	team: PokemonSet[] = [];
 
+	readonly format: string;
+
+	/**
+	 * Hors PokéDraft, `options.format` donne le format du combat et `options.sets` le set supposé de chaque espèce
+	 * (statistiques Smogon) : le roster n'est alors plus consulté.
+	 */
 	constructor(
 		readonly level: Level, roster: Roster, readonly random: () => number = Math.random,
-		readonly options: { engine?: boolean } = {}
+		readonly options: { engine?: boolean, format?: string, sets?: SetSource } = {}
 	) {
-		this.dex = Dex.forFormat(FORMAT);
-		this.byId = new Map(roster.pokemon.map(pokemon => [pokemon.id, pokemon]));
+		this.format = options.format ?? FORMAT;
+		this.dex = Dex.forFormat(this.format);
+		this.byId = options.sets ? new Map() : new Map(roster.pokemon.map(pokemon => [pokemon.id, pokemon]));
+	}
+
+	/** Set de référence d'une espèce : celui du format s'il y a une source, sinon le set par défaut de sa fiche. */
+	referenceSet(species: string): PokemonSet | null {
+		if (this.options.sets) return this.options.sets(species);
+		const rosterMon = this.byId.get(species);
+		return rosterMon ? defaultSet(rosterMon) : null;
 	}
 
 	setTeam(team: PokemonSet[]) {
@@ -296,8 +317,7 @@ export class TrainingAI {
 		const cached = this.statsCache.get(species);
 		if (cached) return cached;
 		const data = this.dex.species.get(species);
-		const rosterMon = this.byId.get(species) ?? this.byId.get(toID(data.baseSpecies));
-		const set = rosterMon ? defaultSet(rosterMon) : null;
+		const set = this.referenceSet(species) ?? this.referenceSet(toID(data.baseSpecies));
 		const nature = this.dex.natures.get(set?.nature ?? 'serious');
 		const stats = {} as StatsTable;
 		for (const stat of Object.keys(data.baseStats) as StatID[]) {
@@ -335,8 +355,8 @@ export class TrainingAI {
 
 	theirFighter(mon: Tracked, active: boolean): Fighter {
 		const types = [...this.dex.species.get(mon.species).types];
-		const rosterMon = this.byId.get(mon.species);
-		const probable = rosterMon ? defaultSet(rosterMon).moves.map(toID) : [];
+		const reference = this.referenceSet(mon.species);
+		const probable = reference ? reference.moves.map(toID) : [];
 		const moves = mon.moves.size >= 4 ? [...mon.moves] : [...new Set([...mon.moves, ...probable])];
 		return {
 			species: mon.species,
@@ -346,8 +366,8 @@ export class TrainingAI {
 			hp: mon.hp,
 			status: mon.status,
 			boosts: active ? this.side(this.foe).boosts : {},
-			item: rosterMon?.setParDefaut.objetId ?? '',
-			ability: rosterMon?.talent.id ?? '',
+			item: mon.item ?? toID(reference?.item ?? ''),
+			ability: toID(reference?.ability ?? ''),
 			tera: mon.tera,
 			moves: moves.length ? moves : types.map(type => `stab:${type}`),
 		};
@@ -541,7 +561,7 @@ export class TrainingAI {
 		const remaining = (since: number) => Math.max(1, 5 - (this.turnNumber - since));
 		const theirTeam = [...theirs.team.values()];
 		return {
-			format: FORMAT,
+			format: this.format,
 			me: this.me as SideID,
 			turn: this.turnNumber,
 			ourSets: this.team,
@@ -582,10 +602,10 @@ export class TrainingAI {
 		};
 	}
 
-	/** Set supposé d'un Pokémon adverse : le set par défaut de sa fiche PokéDraft. */
+	/** Set supposé d'un Pokémon adverse : le plus joué du format, ou le set par défaut de sa fiche PokéDraft. */
 	probableSet(species: string): PokemonSet {
-		const rosterMon = this.byId.get(species);
-		if (rosterMon) return defaultSet(rosterMon);
+		const reference = this.referenceSet(species);
+		if (reference) return reference;
 		return {
 			name: species, species, item: '', ability: '', moves: [], nature: 'serious', gender: '',
 			evs: GENERIC_EVS, ivs: MAX_IVS, level: 100,
@@ -681,6 +701,10 @@ export class TrainingAI {
 		if (this.weather === fieldMove) return false;
 		const archetype = FIELD_MOVES[fieldMove];
 		const team = [situation.ours, ...situation.switches.map(option => option.fighter)];
+		if (this.options.sets) {
+			return team.filter(fighter => WEATHER_ABILITIES[fieldMove]?.includes(toID(fighter.ability)) ||
+				fighter.types.includes(WEATHER_TYPES[fieldMove])).length >= 2;
+		}
 		return team.filter(fighter => this.byId.get(fighter.species)?.archetypes.includes(archetype)).length >= 2;
 	}
 
