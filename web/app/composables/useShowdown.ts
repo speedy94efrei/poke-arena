@@ -29,6 +29,7 @@ const queues = new Map<string, string[]>()
 const playing = new Set<string>()
 const globalHandlers = new Map<string, (payload: string) => void>()
 const queryWaiters = new Map<string, ((data: unknown) => void)[]>()
+let validationWaiter: ((text: string) => void) | null = null
 const QUERY_TIMEOUT = 6000
 let socket: WebSocket | null = null
 let wantedName = ''
@@ -126,6 +127,11 @@ function handleGlobal(line: string) {
       notify(args[1] || `Le pseudo ${args[0]} est déjà pris.`)
       break
     case 'popup':
+      if (validationWaiter && /team (is valid|was rejected)/i.test(args.join('|'))) {
+        validationWaiter(args.join('|'))
+        validationWaiter = null
+        break
+      }
       notify(args.join('|'))
       break
     case 'updatesearch': {
@@ -261,6 +267,22 @@ export function useShowdown() {
           resolve(data as T)
         }])
         send(`|/cmd ${type} ${target}`.trimEnd())
+      })
+    },
+    /** Fait valider l'équipe par le serveur pour un format : liste des problèmes, vide si elle est valide, `null` sans réponse. */
+    validateTeam(packed: string, format: string): Promise<string[] | null> {
+      if (store.status !== 'connecte') return Promise.resolve(null)
+      return new Promise((resolve) => {
+        const timer = setTimeout(() => {
+          validationWaiter = null
+          resolve(null)
+        }, QUERY_TIMEOUT)
+        validationWaiter = (text) => {
+          clearTimeout(timer)
+          resolve(/team is valid/i.test(text) ? [] : text.split('||').map(line => line.replace(/^-\s*/, '').trim()).filter(line => line && !/rejected/i.test(line)))
+        }
+        send(`|/utm ${packed || 'null'}`)
+        send(`|/vtm ${format}`)
       })
     },
     join(roomid: string) {

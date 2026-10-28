@@ -11,6 +11,8 @@ const [outDir] = process.argv.slice(2);
 const SOURCE = 'https://pkmn.github.io/smogon/data/stats';
 const CACHE = path.resolve(__dirname, '../cache/usage');
 const TOP = { pokemon: 40, items: 4, abilities: 3, moves: 8, tera: 3, spreads: 2, teammates: 6, counters: 4, styles: 14 };
+// Au-delà du top, les Pokémon joués dans au moins 0,5 % des équipes gardent un set plus court : assez pour l'Atelier.
+const RARE = { pokemon: 160, minUsage: 0.005, items: 3, abilities: 3, moves: 6, tera: 2, spreads: 1, teammates: 4, counters: 0 };
 const CONCURRENCY = 4;
 
 const toID = text => String(text).toLowerCase().replace(/[^a-z0-9]+/g, '');
@@ -34,18 +36,21 @@ async function source(file) {
 function compact(format, stats) {
 	const pokemon = Object.entries(stats.pokemon)
 		.sort((a, b) => b[1].usage.weighted - a[1].usage.weighted)
-		.slice(0, TOP.pokemon)
-		.map(([name, entry]) => ({
-			id: toID(name),
-			usage: round(entry.usage.weighted),
-			items: top(entry.items, TOP.items),
-			abilities: top(entry.abilities, TOP.abilities),
-			moves: top(entry.moves, TOP.moves),
-			tera: top(entry.teraTypes, TOP.tera, name => name),
-			spreads: top(entry.spreads, TOP.spreads, name => name),
-			teammates: top(entry.teammates, TOP.teammates),
-			counters: top(entry.counters, TOP.counters),
-		}));
+		.filter(([, entry], index) => index < TOP.pokemon || (index < RARE.pokemon && entry.usage.weighted >= RARE.minUsage))
+		.map(([name, entry], index) => {
+			const limits = index < TOP.pokemon ? TOP : RARE;
+			return {
+				id: toID(name),
+				usage: round(entry.usage.weighted),
+				items: top(entry.items, limits.items),
+				abilities: top(entry.abilities, limits.abilities),
+				moves: top(entry.moves, limits.moves),
+				tera: top(entry.teraTypes, limits.tera, name => name),
+				spreads: top(entry.spreads, limits.spreads, name => name),
+				teammates: top(entry.teammates, limits.teammates),
+				counters: top(entry.counters, limits.counters),
+			};
+		});
 	const styles = Object.entries(stats.metagame?.tags ?? {}).sort((a, b) => b[1] - a[1]).slice(0, TOP.styles).map(([tag, share]) => [tag, round(share)]);
 	return { format, battles: stats.battles, pokemon, styles };
 }

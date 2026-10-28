@@ -26,9 +26,11 @@ export function useClassicTeams() {
     }
   }
 
+  /** Une équipe modifiée garde sa place dans la liste ; une nouvelle arrive en tête. */
   const save = (team: Omit<ClassicTeam, 'id' | 'updatedAt'> & { id?: string }) => {
     const entry: ClassicTeam = { ...team, id: team.id ?? crypto.randomUUID(), updatedAt: new Date().toISOString() }
-    persist([entry, ...teams.value.filter(other => other.id !== entry.id)])
+    const exists = teams.value.some(other => other.id === entry.id)
+    persist(exists ? teams.value.map(other => other.id === entry.id ? entry : other) : [entry, ...teams.value])
     return entry
   }
 

@@ -22,6 +22,11 @@ export interface UsageData {
 const files = import.meta.glob<UsageData>('../../../data/references/usage/gen*.json', { import: 'default' })
 const byFormat = new Map(Object.entries(files).map(([path, load]) => [path.split('/').pop()!.replace(/\.json$/, ''), load]))
 
+/** Identifiants des formats dont on a les statistiques Smogon. */
+export function usageFormatIds(): string[] {
+  return [...byFormat.keys()]
+}
+
 /** Format dont on a les statistiques : le même, ou le plus proche par préfixe (`gen9vgc2026regf` donne `gen9vgc2026`). */
 export function usageFormat(format: string): string | null {
   if (byFormat.has(format)) return format

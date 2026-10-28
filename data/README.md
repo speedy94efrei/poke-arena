@@ -52,12 +52,12 @@ Le test `server/test/sim/pokedraft/atelier.js` vérifie que ces listes collent a
 ## Pokédex et statistiques du Classique
 
 ```bash
-node data/scripts/build_dex.cjs server data/references/dex.json
+node data/scripts/build_dex.cjs server data/references/dex.json data/references/learnsets.json
 node data/scripts/build_usage.cjs data/references/usage
 ```
 
-1. `build_dex.cjs` écrit le Pokédex complet de l'univers Classique à partir du simulateur (construire d'abord le serveur) : Pokémon (types, stats, talents, tiers, sprite), attaques, talents et objets, avec les noms et descriptions français des fichiers CSV de [PokéAPI](https://github.com/PokeAPI/pokeapi), gardés dans `data/cache/pokeapi`. Les noms restés en anglais sont pour la plupart identiques en français (Pikachu, Close Combat, Blizzard…).
-2. `build_usage.cjs` compacte les statistiques d'usage mensuelles de Smogon (publiées par [pkmn](https://pkmn.github.io/smogon/data/stats/index.json), gardées dans `data/cache/usage`) : un fichier par format, avec les 40 Pokémon les plus joués, leurs objets, talents, attaques, types Téra, répartitions d'EV, coéquipiers et contres, et la part de chaque style d'équipe (tags « metagame » : stall, balance, offense, pluie, Distorsion…). À relancer chaque mois pour suivre la méta.
+1. `build_dex.cjs` écrit le Pokédex complet de l'univers Classique à partir du simulateur (construire d'abord le serveur) : Pokémon (types, stats, talents, tiers, sprite), attaques, talents et objets, avec les noms et descriptions français des fichiers CSV de [PokéAPI](https://github.com/PokeAPI/pokeapi), gardés dans `data/cache/pokeapi`. Les formes prennent le nom français de PokéAPI (Ogerpon du Puits, Démétéros Totémique). Les noms restés en anglais sont pour la plupart identiques en français (Pikachu, Close Combat, Blizzard…). Le second fichier, `learnsets.json`, donne les attaques que chaque Pokémon peut apprendre en 9e génération, puis celles qu'il n'apprend que dans le Pokédex national ou les anciennes générations : l'Atelier Classique y cherche les attaques proposées.
+2. `build_usage.cjs` compacte les statistiques d'usage mensuelles de Smogon (publiées par [pkmn](https://pkmn.github.io/smogon/data/stats/index.json), gardées dans `data/cache/usage`) : un fichier par format, avec les 40 Pokémon les plus joués, leurs objets, talents, attaques, types Téra, répartitions d'EV, coéquipiers et contres, et la part de chaque style d'équipe (tags « metagame » : stall, balance, offense, pluie, Distorsion…). Au-delà de ces 40, les Pokémon présents dans au moins 0,5 % des équipes gardent un set plus court (jusqu'à 160 par format), pour que l'Atelier et son assistant connaissent aussi les Pokémon de niche (Bekipan, le poseur de pluie d'OU). À relancer chaque mois pour suivre la méta.
 
 ## Types TypeScript
 

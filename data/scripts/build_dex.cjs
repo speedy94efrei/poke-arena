@@ -1,14 +1,16 @@
 'use strict';
 // Pokédex complet de l'univers Classique : Pokémon, attaques, talents et objets du simulateur Showdown,
 // avec les noms et descriptions en français de PokéAPI (fichiers CSV gardés dans data/cache/pokeapi).
+// Écrit aussi les attaques que chaque Pokémon peut apprendre (Écarlate et Violet, puis le surplus du Dex national).
 // Construire d'abord le serveur (`node build` dans server/).
-//   node data/scripts/build_dex.cjs server data/references/dex.json
+//   node data/scripts/build_dex.cjs server data/references/dex.json data/references/learnsets.json
 
 const fs = require('fs');
 const path = require('path');
 
-const [serverDir, outPath] = process.argv.slice(2);
+const [serverDir, outPath, learnsetsPath] = process.argv.slice(2);
 const { Dex } = require(path.resolve(serverDir, 'dist/sim/dex'));
+Dex.includeData();
 const toID = Dex.toID;
 
 const CSV_URL = 'https://raw.githubusercontent.com/PokeAPI/pokeapi/master/data/v2/csv';
@@ -92,7 +94,7 @@ function latestFlavor(rows, key) {
 		if (row.language_id !== FRENCH) continue;
 		const current = result.get(row[key]);
 		const version = Number(row.version_group_id);
-		if (!current || version > current.version) result.set(row[key], { version, text: row.flavor_text.replace(/\s+/g, ' ').trim() });
+		if (!current || version > current.version) result.set(row[key], { version, text: row.flavor_text.replace(/\\n|\s+/g, ' ').replace(/ {2,}/g, ' ').trim() });
 	}
 	return new Map([...result].map(([id, value]) => [id, value.text]));
 }
@@ -106,19 +108,29 @@ const kept = entry => entry.exists && !EXCLUDED.has(entry.isNonstandard);
 	]);
 
 	const speciesFr = new Map(speciesNames.filter(row => row.local_language_id === FRENCH).map(row => [Number(row.pokemon_species_id), row.name]));
-	const formFrById = new Map(formNames.filter(row => row.local_language_id === FRENCH && row.pokemon_name).map(row => [row.pokemon_form_id, row.pokemon_name]));
+	const formFrById = new Map(formNames.filter(row => row.local_language_id === FRENCH && (row.pokemon_name || row.form_name)).map(row => [row.pokemon_form_id, row]));
 	const formFr = new Map();
 	for (const form of forms) {
-		const name = formFrById.get(form.id);
-		if (name) formFr.set(toID(form.identifier), name);
+		const row = formFrById.get(form.id);
+		if (row) formFr.set(toID(form.identifier), { full: row.pokemon_name, form: row.form_name });
 	}
+	// Les identifiants de forme de PokéAPI sont parfois plus longs que ceux de Showdown (« ogerpon-wellspring-mask »).
+	const formOf = species => formFr.get(species.id) ?? [...formFr].find(([id]) => id.startsWith(species.id))?.[1];
+	const frenchName = (species) => {
+		const base = speciesFr.get(species.num);
+		if (!species.forme) return formFr.get(species.id)?.full || base || species.name;
+		const form = formOf(species);
+		if (form?.full) return form.full;
+		if (base) return `${base} (${form?.form || species.forme})`;
+		return species.name;
+	};
 
 	const pokemon = {};
 	for (const species of Dex.species.all()) {
 		if (!kept(species) || species.num <= 0) continue;
 		pokemon[species.id] = {
 			name: species.name,
-			nom: formFr.get(species.id) ?? (species.forme ? null : speciesFr.get(species.num)) ?? (speciesFr.get(species.num) ? `${speciesFr.get(species.num)} (${species.forme})` : species.name),
+			nom: frenchName(species),
 			num: species.num,
 			sprite: species.spriteid,
 			types: species.types.map(type => TYPES[type]),
@@ -183,6 +195,15 @@ const kept = entry => entry.exists && !EXCLUDED.has(entry.isNonstandard);
 
 	const dex = { pokemon, moves, abilities, items };
 	fs.writeFileSync(outPath, JSON.stringify(dex));
+
+	const learnsets = {};
+	for (const id of Object.keys(pokemon)) {
+		const current = [...Dex.species.getMovePool(id)].filter(move => moves[move]).sort();
+		const extra = [...Dex.species.getMovePool(id, true)].filter(move => moves[move] && !current.includes(move)).sort();
+		learnsets[id] = [current, extra];
+	}
+	fs.writeFileSync(learnsetsPath, JSON.stringify(learnsets));
+	console.log(`attaques apprises : ${(fs.statSync(learnsetsPath).size / 1024).toFixed(0)} Ko`);
 	const missing = kind => Object.values(dex[kind]).filter(entry => entry.nom === entry.name).length;
 	console.log(`${Object.keys(pokemon).length} Pokémon, ${Object.keys(moves).length} attaques, ${Object.keys(abilities).length} talents, ${Object.keys(items).length} objets`);
 	console.log(`sans nom français : ${missing('pokemon')} Pokémon, ${missing('moves')} attaques, ${missing('abilities')} talents, ${missing('items')} objets`);

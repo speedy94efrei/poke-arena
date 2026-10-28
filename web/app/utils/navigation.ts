@@ -23,7 +23,10 @@ export const NAVIGATION: Record<Universe, NavItem[]> = {
         { label: 'Entraînement' },
       ],
     },
-    { icon: '✎', label: 'Équipes', color: '#6a52c0' },
+    {
+      icon: '✎', label: 'Équipes', color: '#6a52c0', to: '/classique/equipes',
+      children: [{ label: 'Mes équipes', to: '/classique/equipes' }],
+    },
     {
       icon: '✉', label: 'Communauté', color: '#8a4ac8',
       children: [{ label: 'Tournois et événements' }, { label: 'Créer un tournoi' }, { label: 'Chat et social' }],

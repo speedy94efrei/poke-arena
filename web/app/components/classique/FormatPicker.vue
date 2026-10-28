@@ -30,9 +30,9 @@
 </template>
 
 <script setup lang="ts">
-import type { BattleFormat } from '~/utils/formats'
+import type { BattleFormat, FormatSection } from '~/utils/formats'
 
-const props = defineProps<{ modelValue: string, usage: 'ladder' | 'challenge' }>()
+const props = defineProps<{ modelValue: string, usage: 'ladder' | 'challenge' | 'team' }>()
 const emit = defineEmits<{ 'update:modelValue': [format: string] }>()
 
 /** Formats proposés en raccourci, s'ils existent sur le serveur ; le VGC prend le règlement en cours. */
@@ -40,8 +40,29 @@ const POPULAR = ['gen9randombattle', 'gen9ou', 'gen9ubers', 'gen9uu', 'gen9doubl
 
 const { store } = useShowdown()
 
-const usable = (format: BattleFormat) => props.usage === 'ladder' ? format.ladder : format.challenge
-const sections = computed(() => store.formats
+/** Formats jouables selon l'usage ; pour préparer une équipe, ceux où elle n'est pas fournie par le serveur. */
+const usable = (format: BattleFormat) => {
+  if (props.usage === 'team') return format.challenge && !format.generatedTeam
+  return props.usage === 'ladder' ? format.ladder : format.challenge
+}
+
+/** Sans serveur de combat, l'Atelier propose les formats dont on a les statistiques Smogon, rangés par génération. */
+const offline = computed<FormatSection[]>(() => {
+  if (props.usage !== 'team' || store.formats.length) return []
+  const byGen = new Map<string, BattleFormat[]>()
+  for (const id of usageFormatIds()) {
+    const section = `Gen ${/^gen(\d)/.exec(id)?.[1] ?? '?'}`
+    const doubles = /doubles|vgc|battlestadium/.test(id)
+    const format: BattleFormat = {
+      id, name: formatIdLabel(id), section, generatedTeam: false, ladder: false, challenge: true, tournament: false,
+      level50: /vgc|battlestadium/.test(id), bestOf: false, gameType: doubles ? 'doubles' : 'singles',
+    }
+    byGen.set(section, [...(byGen.get(section) ?? []), format])
+  }
+  return [...byGen].sort(([a], [b]) => b.localeCompare(a)).map(([name, formats]) => ({ name, column: 1, formats }))
+})
+
+const sections = computed(() => (store.formats.length ? store.formats : offline.value)
   .map(section => ({ ...section, formats: section.formats.filter(usable) }))
   .filter(section => section.formats.length))
 const all = computed(() => sections.value.flatMap(section => section.formats))
