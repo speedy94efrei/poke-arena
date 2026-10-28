@@ -54,10 +54,10 @@ const add = async () => {
 .dex__head { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
 .dex__heading { flex: 1 1 260px; display: flex; flex-direction: column; gap: 2px; }
 .dex__title { margin: 0; font: 700 30px/1 'Pixelify Sans', sans-serif; text-shadow: var(--sh); }
-.dex__subtitle { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.dex__subtitle { font: 700 14px 'Nunito', sans-serif; color: var(--mu); }
 .dex__body { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 12px; align-items: start; }
 .dex__main { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-.dex__loading { margin: 0; padding: 20px; font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.dex__loading { margin: 0; padding: 20px; font: 700 14px 'Nunito', sans-serif; color: var(--mu); }
 
 @media (max-width: 980px) {
   .dex__body { grid-template-columns: minmax(0, 1fr); }

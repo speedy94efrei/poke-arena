@@ -39,7 +39,7 @@ defineProps<{ title?: string }>()
   font: 700 16px 'Pixelify Sans', sans-serif;
 }
 
-.panel__aside { font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
+.panel__aside { font: 700 12px 'Nunito', sans-serif; }
 
 .panel__body {
   padding: 12px;

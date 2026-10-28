@@ -105,14 +105,14 @@ const pick = (id: string) => emit('update', { objetId: id })
 }
 
 .held__name {
-  font: 700 15px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 15px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   gap: 6px;
   flex-wrap: wrap;
 }
 
-.held__description { font: 400 13px/1.4 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.held__description { font: 400 13px/1.4 'Nunito', sans-serif; color: var(--mu); }
 
 .smogon {
   height: 18px;
@@ -120,7 +120,7 @@ const pick = (id: string) => emit('update', { objetId: id })
   border-radius: 3px;
   background: #2f74a3;
   color: #fff;
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
@@ -131,7 +131,7 @@ const pick = (id: string) => emit('update', { objetId: id })
   border: 0;
   border-radius: 7px;
   padding: 0 10px;
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   background: #fff;
   color: #22252b;
   outline: none;
@@ -149,7 +149,7 @@ const pick = (id: string) => emit('update', { objetId: id })
   border-radius: 6px;
   background: var(--chip);
   color: var(--tx);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   padding: 4px 8px;
 }
 
@@ -167,16 +167,16 @@ const pick = (id: string) => emit('update', { objetId: id })
 
 .list__title {
   padding: 4px 2px 2px;
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   color: var(--mu);
 }
 
 .list__title + .list__title, .list > :not(.list__title) + .list__title { margin-top: 4px; border-top: 2px solid var(--chip); }
-.list__title--smogon { color: #9fd8ff; }
+.list__title--smogon { color: var(--info); }
 
 .none, .note {
   margin: 0;
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   color: var(--mu);
 }
 

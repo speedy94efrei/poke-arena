@@ -67,10 +67,10 @@ const cellClass = (value: number) => {
   gap: 4px 10px;
 }
 
-.weak__aside { margin-left: auto; font: 700 12px 'Atkinson Hyperlegible', sans-serif; text-shadow: none; }
+.weak__aside { margin-left: auto; font: 700 12px 'Nunito', sans-serif; text-shadow: none; }
 .weak__body { padding: 10px 12px 12px; overflow-x: auto; }
-.weak__empty { margin: 0; font: 700 13px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.table { width: 100%; border-collapse: separate; border-spacing: 3px; font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
+.weak__empty { margin: 0; font: 700 13px 'Nunito', sans-serif; color: var(--mu); }
+.table { width: 100%; border-collapse: separate; border-spacing: 3px; font: 700 12px 'Nunito', sans-serif; }
 .table th { font-weight: 700; }
 .table__mon { display: block; width: 44px; height: 34px; margin: 0 auto; background: center / 40px no-repeat; image-rendering: pixelated; }
 

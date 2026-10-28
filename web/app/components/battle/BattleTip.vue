@@ -23,7 +23,7 @@ withDefaults(defineProps<{ placement?: 'above' | 'right' | 'below', align?: 'sta
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font: 700 12px/1.4 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px/1.4 'Nunito', sans-serif;
   text-align: left;
   white-space: normal;
   animation: pop .15s both;

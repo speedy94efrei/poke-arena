@@ -1,6 +1,6 @@
 <template>
   <div class="slots" role="tablist" aria-label="Pokémon de l'équipe">
-    <div v-for="(entry, index) in cards" :key="index" class="slot" :class="{ 'slot--on': index === current, 'slot--empty': !entry }" :style="entry ? { '--type': TYPE_COLORS[entry.types[0]!] } : undefined">
+    <div v-for="(entry, index) in cards" :key="index" class="slot" :class="{ 'slot--on': index === current, 'slot--empty': !entry }" :style="entry ? { '--type': TYPE_COLORS[entry.types[0]!], '--habitat': habitatBackground(entry.types[0]) } : undefined">
       <button type="button" role="tab" class="slot__pick" :aria-selected="index === current" @click="emit('select', index)">
         <template v-if="entry">
           <span class="slot__item">
@@ -57,8 +57,8 @@ const cards = computed(() => Array.from({ length: props.size }, (_, index) => {
   border-radius: var(--r);
   color: #fff;
   background:
-    repeating-linear-gradient(135deg, rgba(255, 255, 255, .07) 0 10px, transparent 10px 20px),
-    linear-gradient(160deg, var(--type, var(--chip)), color-mix(in srgb, var(--type, var(--chip)) 45%, #0b0f16));
+    linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .6)),
+    var(--habitat, linear-gradient(160deg, var(--chip), color-mix(in srgb, var(--chip) 45%, #0b0f16)));
   box-shadow: var(--pnS);
   display: flex;
   flex-direction: column;
@@ -95,17 +95,17 @@ const cards = computed(() => Array.from({ length: props.size }, (_, index) => {
   height: 16px;
   padding: 0 5px;
   border-radius: 3px;
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .6);
   display: flex;
   align-items: center;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, .35);
 }
 
-.slot__moves { margin-left: auto; font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: #b8f0c8; }
+.slot__moves { margin-left: auto; font: 700 11px 'Nunito', sans-serif; color: #b8f0c8; }
 .slot__moves--short { color: #ffd0a0; }
 .slot__add { margin: auto; display: flex; flex-direction: column; align-items: center; font: 600 28px/1 'Pixelify Sans', sans-serif; }
-.slot__add span { font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
+.slot__add span { font: 700 12px 'Nunito', sans-serif; }
 
 .slot__remove {
   position: absolute;
@@ -118,7 +118,7 @@ const cards = computed(() => Array.from({ length: props.size }, (_, index) => {
   cursor: pointer;
   background: rgba(0, 0, 0, .45);
   color: #fff;
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
 }
 
 @media (max-width: 1100px) {

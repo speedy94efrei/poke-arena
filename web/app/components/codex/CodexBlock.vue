@@ -45,7 +45,7 @@ defineProps<{ title: string }>()
   display: flex;
   align-items: center;
   gap: 6px;
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
 }
 
 .block__aside :deep(.tag) {
@@ -53,7 +53,7 @@ defineProps<{ title: string }>()
   padding: 0 7px;
   border-radius: 4px;
   background: rgba(0, 0, 0, .3);
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }

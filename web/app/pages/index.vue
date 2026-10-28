@@ -68,6 +68,27 @@
       </NuxtLink>
     </div>
 
+    <section class="extras" aria-label="Modes à part">
+      <h2 class="extras__title">Modes à part</h2>
+      <div class="extras__list">
+        <NuxtLink
+          v-for="mode in EXTRA_MODES"
+          :key="mode.id"
+          :to="mode.to"
+          class="extra"
+          :style="{ '--light': mode.light, '--dark': mode.dark, '--dot': mode.dot }"
+          :aria-label="`Entrer dans ${mode.name}`"
+        >
+          <span class="extra__name">{{ mode.name }}</span>
+          <span class="extra__tagline">{{ mode.tagline }}</span>
+          <span class="extra__foot">
+            <span class="extra__state">{{ mode.soon ? 'Bientôt' : 'Ladder dédié' }}</span>
+            <span class="extra__enter">{{ mode.soon ? 'Découvrir ▸' : 'Entrer ▸' }}</span>
+          </span>
+        </NuxtLink>
+      </div>
+    </section>
+
     <div class="common">
       <div class="common__card">
         <span class="common__kicker">Commun · Événements</span>
@@ -90,23 +111,24 @@
 
 <script setup lang="ts">
 import type { SeasonInfo } from '~/utils/ranked'
-import type { Universe } from '~/utils/navigation'
+import type { MainUniverse } from '~/composables/useLastUniverse'
 
 definePageMeta({ layout: 'hub' })
 useHead({ title: 'Arène' })
 
-const UNIVERSES: Record<Universe, { name: string, to: string }> = {
+const UNIVERSES: Record<MainUniverse, { name: string, to: string }> = {
   classique: { name: 'Classique', to: '/classique' },
   pokedraft: { name: 'PokéDraft', to: '/pokedraft' },
 }
 const CLASSIC_SPRITES = ['greattusk', 'gholdengo', 'kingambit']
+const EXTRA_MODES = MODES.filter(mode => mode.id !== 'classique' && mode.id !== 'pokedraft')
 const AUTO_ENTER_SECONDS = 3
 
 const { request, profile, session, loggedIn } = useAccount()
 const { store: showdown } = useShowdown()
 
 const season = ref<SeasonInfo | null>(null)
-const last = ref<Universe | null>(null)
+const last = ref<MainUniverse | null>(null)
 const countdown = ref<number | null>(null)
 const autoEnter = useState('hub-auto-enter', () => true)
 
@@ -166,7 +188,7 @@ onBeforeUnmount(() => clearInterval(timer))
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-  font: 700 15px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 15px 'Nunito', sans-serif;
 }
 
 .auto--pokedraft { box-shadow: inset 0 0 0 2px #f0b93a, var(--pnS); }
@@ -175,7 +197,7 @@ onBeforeUnmount(() => clearInterval(timer))
 .auto__spacer { flex: 1; }
 .hub__head { display: flex; flex-direction: column; gap: 2px; padding: 4px 4px 0; }
 .hub__title { margin: 0; font: 700 30px/1.1 'Pixelify Sans', sans-serif; text-shadow: var(--sh); }
-.hub__subtitle { font: 700 15px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.hub__subtitle { font: 700 15px 'Nunito', sans-serif; color: var(--mu); }
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr)); gap: 14px; }
 
 .card {
@@ -208,7 +230,7 @@ onBeforeUnmount(() => clearInterval(timer))
   border-radius: 5px;
   background: #4a9ad8;
   color: #06182a;
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
@@ -216,7 +238,7 @@ onBeforeUnmount(() => clearInterval(timer))
 .card--pokedraft .card__badge { background: #f0b93a; color: #2a1d00; }
 .card__name { font: 700 46px/1 'Pixelify Sans', sans-serif; text-shadow: 3px 3px 0 #06182a; }
 .card--pokedraft .card__name { text-shadow: 3px 3px 0 #2a1d00; }
-.card__pitch { font: 700 15px/1.45 'Atkinson Hyperlegible', sans-serif; color: #d4e8f8; max-width: 420px; }
+.card__pitch { font: 700 15px/1.45 'Nunito', sans-serif; color: #d4e8f8; max-width: 420px; }
 .card--pokedraft .card__pitch { color: #f4e2b8; }
 
 .card__season {
@@ -248,10 +270,10 @@ onBeforeUnmount(() => clearInterval(timer))
 .card--pokedraft .card__foot { background: rgba(32, 20, 0, .72); box-shadow: inset 0 0 0 2px rgba(240, 185, 58, .35); }
 .card__foot--rank { grid-template-columns: auto minmax(0, 1fr) auto; }
 .card__stat, .card__rank { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.card__key { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: #a8cce8; }
+.card__key { font: 700 12px 'Nunito', sans-serif; color: #a8cce8; }
 .card--pokedraft .card__key { color: #e8cf98; }
 .card__big { font: 700 32px/1 'Pixelify Sans', sans-serif; }
-.card__mid { font: 700 18px/1.1 'Atkinson Hyperlegible', sans-serif; }
+.card__mid { font: 700 18px/1.1 'Nunito', sans-serif; }
 .card__bar { height: 8px; border-radius: 4px; background: rgba(0, 0, 0, .45); overflow: hidden; }
 .card__fill { display: block; height: 100%; background: linear-gradient(90deg, #b88a10, #ffd23a); }
 
@@ -262,13 +284,36 @@ onBeforeUnmount(() => clearInterval(timer))
   border-radius: 10px;
   background: #4a9ad8;
   color: #06182a;
-  font: 700 17px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 17px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .2);
 }
 
 .card--pokedraft .card__enter { background: #f0b93a; color: #2a1d00; }
+.extras { display: flex; flex-direction: column; gap: 8px; }
+.extras__title { margin: 0; padding: 0 4px; font: 600 18px 'Pixelify Sans', sans-serif; text-shadow: var(--sh); }
+.extras__list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 12px; }
+
+.extra {
+  min-height: 120px;
+  padding: 14px 16px;
+  border-radius: var(--r);
+  background: linear-gradient(140deg, var(--light), var(--dark));
+  box-shadow: inset 0 0 0 3px var(--dot), 0 0 0 2px var(--bd);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: pop .35s both;
+}
+
+.extra:hover { filter: brightness(1.1); text-decoration: none; }
+.extra__name { font: 700 24px/1 'Pixelify Sans', sans-serif; text-shadow: 2px 2px 0 rgba(0, 0, 0, .45); }
+.extra__tagline { font: 700 13px 'Nunito', sans-serif; opacity: .9; }
+.extra__foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.extra__state { height: 24px; padding: 0 8px; border-radius: 6px; background: rgba(0, 0, 0, .35); font: 700 12px 'Nunito', sans-serif; display: flex; align-items: center; }
+.extra__enter { height: 30px; padding: 0 12px; border-radius: 7px; background: var(--dot); color: #0a0e14; font: 700 13px 'Nunito', sans-serif; display: flex; align-items: center; }
 .common { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
 
 .common__card {
@@ -282,9 +327,9 @@ onBeforeUnmount(() => clearInterval(timer))
   color: var(--tx);
 }
 
-.common__kicker { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.common__kicker { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .common__title { font: 600 18px 'Pixelify Sans', sans-serif; }
-.common__text { font: 700 13px/1.4 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.common__text { font: 700 13px/1.4 'Nunito', sans-serif; color: var(--mu); }
 
 @media (max-width: 600px) {
   .card { min-height: 0; }

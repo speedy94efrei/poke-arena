@@ -59,14 +59,14 @@ const toValidate = computed(() => props.comite && (props.pokemon.talent.aValider
   height: 20px;
   padding: 0 6px;
   border-radius: 4px;
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
 
 .card__badge--corrige { background: #e8704a; color: #1a0a00; }
 .card__badge--pret { background: #48c070; color: #062010; }
-.card__badge--valider { color: var(--uA); box-shadow: inset 0 0 0 2px var(--uA); }
+.card__badge--valider { color: var(--uT); box-shadow: inset 0 0 0 2px var(--uA); }
 
 .card__stage {
   position: relative;
@@ -101,11 +101,11 @@ const toValidate = computed(() => props.comite && (props.pokemon.talent.aValider
   bottom: 4px;
   font: 600 18px 'Pixelify Sans', sans-serif;
   text-shadow: var(--sh);
-  color: var(--uA);
+  color: var(--uT);
 }
 
 .card__name {
-  font: 700 15px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 15px 'Nunito', sans-serif;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -118,7 +118,7 @@ const toValidate = computed(() => props.comite && (props.pokemon.talent.aValider
 }
 
 .card__roles {
-  font: 700 12px/1.3 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px/1.3 'Nunito', sans-serif;
   color: var(--mu);
 }
 </style>

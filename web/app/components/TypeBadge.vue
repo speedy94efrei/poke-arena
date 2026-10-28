@@ -17,7 +17,7 @@ defineProps<{ type: TypePokemon, small?: boolean }>()
   border-radius: 4px;
   display: inline-flex;
   align-items: center;
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
   white-space: nowrap;
 }
 

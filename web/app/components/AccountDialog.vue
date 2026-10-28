@@ -83,6 +83,10 @@ const submit = async () => {
   padding: 4px;
   border-radius: 10px;
   background: var(--dk);
+  --tx: var(--dkTx);
+  --mu: var(--dkMu);
+  --chip: var(--dkChip);
+  color: var(--tx);
 }
 
 .tab {
@@ -93,13 +97,13 @@ const submit = async () => {
   border-radius: 7px;
   background: transparent;
   color: var(--mu);
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
 }
 
 .tab--on { background: var(--uA); color: var(--uAtx); }
-.intro { font: 400 13px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.intro { font: 400 13px/1.45 'Nunito', sans-serif; color: var(--mu); }
 .field-row { display: flex; flex-direction: column; gap: 4px; }
-.field-row__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.error { font: 700 13px/1.4 'Atkinson Hyperlegible', sans-serif; color: #ff8a7a; }
+.field-row__label { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
+.error { font: 700 13px/1.4 'Nunito', sans-serif; color: var(--bad); }
 .actions { display: flex; gap: 8px; justify-content: flex-end; }
 </style>

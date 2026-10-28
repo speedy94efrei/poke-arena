@@ -99,7 +99,7 @@ onBeforeUnmount(() => clearTimeout(timer))
   gap: 8px;
 }
 
-.panel__aside { margin-left: auto; font: 700 12px 'Atkinson Hyperlegible', sans-serif; text-shadow: none; }
+.panel__aside { margin-left: auto; font: 700 12px 'Nunito', sans-serif; text-shadow: none; }
 
 .panel__copy {
   margin-left: auto;
@@ -110,14 +110,14 @@ onBeforeUnmount(() => clearTimeout(timer))
   border-radius: 5px;
   background: #fff;
   color: #22252b;
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   text-shadow: none;
 }
 
 .panel__body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 8px; }
-.panel__empty, .panel__note { margin: 0; font: 700 12px/1.4 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.panel__empty, .panel__note { margin: 0; font: 700 12px/1.4 'Nunito', sans-serif; color: var(--mu); }
 .bar { display: flex; flex-direction: column; gap: 3px; }
-.bar__labels { display: flex; justify-content: space-between; font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.bar__labels { display: flex; justify-content: space-between; font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
 .bar__track { position: relative; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #3d6fc8, var(--chip) 50%, #c8362a); }
 
 .bar__dot {
@@ -132,7 +132,7 @@ onBeforeUnmount(() => clearTimeout(timer))
   transition: left .3s;
 }
 
-.check { display: flex; align-items: center; gap: 8px; font: 700 13px 'Atkinson Hyperlegible', sans-serif; }
+.check { display: flex; align-items: center; gap: 8px; font: 700 13px 'Nunito', sans-serif; }
 
 .check__mark {
   flex: none;
@@ -158,7 +158,7 @@ onBeforeUnmount(() => clearTimeout(timer))
   border-radius: 7px;
   background: #3a2216;
   color: #ffd9c8;
-  font: 400 12px/1.45 'Atkinson Hyperlegible', sans-serif;
+  font: 400 12px/1.45 'Nunito', sans-serif;
   display: flex;
   flex-direction: column;
   gap: 3px;
@@ -171,6 +171,9 @@ onBeforeUnmount(() => clearTimeout(timer))
   border-radius: 7px;
   padding: 8px 10px;
   background: var(--dk);
+  --tx: var(--dkTx);
+  --mu: var(--dkMu);
+  --chip: var(--dkChip);
   color: var(--tx);
   box-shadow: inset 0 0 0 2px var(--chip);
   font: 400 12px/1.45 ui-monospace, monospace;

@@ -94,14 +94,14 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
 .editor__sprite { width: 56px; height: 56px; object-fit: contain; image-rendering: pixelated; }
 .editor__title { display: flex; flex-direction: column; }
 .editor__name { font: 700 22px 'Pixelify Sans', sans-serif; color: #fff; text-shadow: 2px 2px 0 rgba(0, 0, 0, .6); }
-.editor__talent { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: #fff; text-shadow: 1px 1px 0 #000; }
+.editor__talent { font: 700 12px 'Nunito', sans-serif; color: #fff; text-shadow: 1px 1px 0 #000; }
 .editor__spacer { flex: 1; }
 
 .editor__timer {
   padding: 4px 10px;
   border-radius: 8px;
   background: rgba(0, 0, 0, .45);
-  color: var(--uA);
+  color: var(--uT);
   font: 600 20px 'Pixelify Sans', sans-serif;
 }
 
@@ -143,7 +143,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  font: 700 12px/1.35 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px/1.35 'Nunito', sans-serif;
 }
 
 .editor__save input { accent-color: var(--uA); }

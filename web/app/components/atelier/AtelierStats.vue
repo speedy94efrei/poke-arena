@@ -21,7 +21,7 @@
       <span class="summary__nature">{{ natureText }}</span>
       <span v-if="!draft.plus || !draft.moins" class="summary__hint">· choisis un ▲ et un ▼</span>
       <span class="summary__spacer" />
-      <span class="summary__label">EV <b class="num" :style="{ color: total === MAX_EV_TOTAL ? '#58d080' : 'var(--uA)' }">{{ total }}/{{ MAX_EV_TOTAL }}</b></span>
+      <span class="summary__label">EV <b class="num" :style="{ color: total === MAX_EV_TOTAL ? 'var(--good)' : 'var(--uT)' }">{{ total }}/{{ MAX_EV_TOTAL }}</b></span>
     </div>
     <div class="row row--head">
       <span>Stat</span><span>Nature</span><span>EV</span><span /><span>IV</span><span class="row__final">Finale</span>
@@ -130,7 +130,7 @@ const setIv = (stat: StatId, value: number) => {
   align-items: center;
 }
 
-.presets__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); margin-right: 2px; }
+.presets__label { font: 700 12px 'Nunito', sans-serif; color: var(--mu); margin-right: 2px; }
 
 .chip {
   border: 0;
@@ -138,7 +138,7 @@ const setIv = (stat: StatId, value: number) => {
   border-radius: 6px;
   background: var(--chip);
   color: var(--tx);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   padding: 4px 8px;
 }
 
@@ -153,8 +153,8 @@ const setIv = (stat: StatId, value: number) => {
   border-top: 2px solid var(--chip);
 }
 
-.summary__label, .summary__hint { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.summary__nature { font: 700 15px 'Atkinson Hyperlegible', sans-serif; }
+.summary__label, .summary__hint { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
+.summary__nature { font: 700 15px 'Nunito', sans-serif; }
 .summary__spacer { flex: 1; }
 
 .row {
@@ -164,11 +164,11 @@ const setIv = (stat: StatId, value: number) => {
   align-items: center;
 }
 
-.row--head { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.row__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.row--head { font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
+.row__label { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .row__nature, .row__ivs { display: flex; gap: 3px; }
 .row__nature .chip, .row__ivs .chip { padding: 4px 7px; }
-.row__none { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); padding-left: 6px; }
+.row__none { font: 700 12px 'Nunito', sans-serif; color: var(--mu); padding-left: 6px; }
 .row__range { width: 100%; accent-color: var(--uA); }
 
 .row__ev {
@@ -187,9 +187,9 @@ const setIv = (stat: StatId, value: number) => {
 
 .row__final { font: 600 17px 'Pixelify Sans', sans-serif; text-align: right; }
 .row--head .row__final { font: inherit; }
-.up { color: #58d080; }
-.down { color: #ff8a7a; }
-.hint { font: 700 11px/1.4 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.up { color: var(--good); }
+.down { color: var(--bad); }
+.hint { font: 700 11px/1.4 'Nunito', sans-serif; color: var(--mu); }
 
 @media (max-width: 640px) {
   .row { grid-template-columns: 52px 54px minmax(0, 1fr) 44px 60px 38px; gap: 4px; }

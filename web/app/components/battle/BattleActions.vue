@@ -81,7 +81,7 @@
         :tabindex="canSwitch && !member.fainted && !member.taken ? 0 : -1"
         class="member"
         :class="{ 'member--off': !canSwitch || member.fainted || member.taken }"
-        :style="{ '--type': member.color }"
+        :style="{ '--type': member.color, '--habitat': member.habitat }"
         :aria-label="member.fainted ? `${member.name} est K.O.` : `Envoyer ${member.name}`"
         @click="switchTo(member)"
         @keydown.enter="switchTo(member)"
@@ -299,6 +299,7 @@ const bench = computed(() => (request.value?.side.pokemon ?? []).map((member, in
     level: pokemon?.level ?? 100,
     types,
     color: TYPE_COLORS[types[0] ?? 'Normal'] ?? '#555',
+    habitat: habitatBackground(types[0]),
     teraType: member.teraType ?? '',
     fainted,
     taken: choices.value.includes(`switch ${index + 1}`),
@@ -390,8 +391,8 @@ const pickMove = (index: number, disabled: boolean) => {
 
 .actions__head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-height: 36px; }
 .actions__title { font: 600 19px 'Pixelify Sans', sans-serif; text-shadow: var(--sh); }
-.actions__hint { flex: 1; min-width: 160px; font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.actions__error { flex: 1; padding: 6px 8px; border-radius: 6px; background: rgba(255, 210, 58, .14); color: #ffd23a; font: 700 12px/1.35 'Atkinson Hyperlegible', sans-serif; }
+.actions__hint { flex: 1; min-width: 160px; font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
+.actions__error { flex: 1; padding: 6px 8px; border-radius: 6px; background: rgba(255, 210, 58, .14); color: #ffd23a; font: 700 12px/1.35 'Nunito', sans-serif; }
 
 .mechanic {
   border: 0;
@@ -446,7 +447,7 @@ const pickMove = (index: number, disabled: boolean) => {
 .move__name { font: 600 18px/1.1 'Pixelify Sans', sans-serif; text-shadow: 2px 2px 0 #d8d8c8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .move__meta { display: flex; align-items: center; gap: 5px; font: 600 12px 'Pixelify Sans', sans-serif; color: #6a6a6a; white-space: nowrap; }
 .move__type { height: 16px; padding: 0 6px; border-radius: 3px; background: var(--type); color: #fff; text-shadow: 1px 1px 0 rgba(0, 0, 0, .45); font-size: 11px; display: flex; align-items: center; }
-.move__warn { font: 800 11px 'Atkinson Hyperlegible', sans-serif; color: #a04030; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.move__warn { font: 800 11px 'Nunito', sans-serif; color: #a04030; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .move__side { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 3px; }
 .move__dmg { font: 700 20px/1 'Pixelify Sans', sans-serif; white-space: nowrap; }
 .move__eff { height: 18px; padding: 0 6px; border-radius: 4px; font: 600 11px 'Pixelify Sans', sans-serif; display: flex; align-items: center; white-space: nowrap; }
@@ -466,7 +467,7 @@ const pickMove = (index: number, disabled: boolean) => {
   height: 70px;
   border-radius: 10px;
   cursor: pointer;
-  background: linear-gradient(90deg, rgba(0, 0, 0, .55), rgba(0, 0, 0, .1) 70%), linear-gradient(160deg, var(--type), color-mix(in srgb, var(--type) 45%, #0b0f16));
+  background: linear-gradient(90deg, rgba(0, 0, 0, .6), rgba(0, 0, 0, .12) 70%), var(--habitat, var(--type));
   box-shadow: 0 0 0 2px var(--bd);
   transition: transform .12s;
   outline: none;
@@ -492,9 +493,9 @@ const pickMove = (index: number, disabled: boolean) => {
 .poke__move-type { width: 8px; height: 14px; border-radius: 2px; flex: none; }
 .poke__pp { margin-left: auto; font: 600 12px 'Pixelify Sans', sans-serif; color: var(--mu); }
 .slots { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.slots__item { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.slots__item { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .slots__item--now { color: var(--tx); }
-.slots__item--done { color: #58d080; }
+.slots__item--done { color: var(--good); }
 .targets { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .targets__title { font: 600 15px 'Pixelify Sans', sans-serif; }
 .targets__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
@@ -507,7 +508,7 @@ const pickMove = (index: number, disabled: boolean) => {
   border-radius: 8px;
   background: #3a2a2a;
   color: #fff;
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   gap: 8px;

@@ -25,7 +25,7 @@ const emit = defineEmits<{ open: [id: string] }>()
   border-radius: 6px;
   background: var(--chip);
   color: var(--tx);
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
 }
 
 .mini--cadre { background: var(--in); box-shadow: inset 0 0 0 2px var(--chip); }

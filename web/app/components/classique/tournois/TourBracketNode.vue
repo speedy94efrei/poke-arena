@@ -54,11 +54,11 @@ const sides = computed(() => (props.node.children ?? []).map((child, index) => {
 
 .match--live { box-shadow: inset 0 0 0 2px #58d080; }
 .match--ready { box-shadow: inset 0 0 0 2px var(--hd); }
-.side { display: flex; align-items: center; gap: 6px; height: 26px; padding: 0 8px; font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.side { display: flex; align-items: center; gap: 6px; height: 26px; padding: 0 8px; font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .side + .side { border-top: 1px solid var(--chip); }
 .side--winner { background: var(--sel); color: var(--selTx); }
 .side--me .side__name { text-decoration: underline; }
 .side__name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .side__score { font: 600 13px 'Pixelify Sans', sans-serif; }
-.match__watch { display: block; padding: 2px 8px; background: #2f9a58; color: #fff; font: 700 10px 'Atkinson Hyperlegible', sans-serif; text-align: center; }
+.match__watch { display: block; padding: 2px 8px; background: #2f9a58; color: #fff; font: 700 10px 'Nunito', sans-serif; text-align: center; }
 </style>

@@ -90,14 +90,14 @@ const leaveBattle = async () => {
   border-radius: var(--r);
   background: var(--pn);
   box-shadow: var(--pnS);
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
   color: var(--mu);
   text-align: center;
 }
 
 .missing { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
 .missing__title { font: 700 32px 'Pixelify Sans', sans-serif; }
-.missing__text { font: 400 15px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.missing__text { font: 400 15px 'Nunito', sans-serif; color: var(--mu); }
 
 @media (max-width: 1500px) {
   .battle__main { grid-template-columns: 262px minmax(0, 1fr) 290px; }

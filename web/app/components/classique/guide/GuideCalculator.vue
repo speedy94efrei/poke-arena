@@ -81,7 +81,7 @@ const maximum = computed(() => compute(MAX_EV, MAX_IV, stat.value === 'hp' ? 1 :
 }
 
 .calc__body { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-.calc__row { display: grid; grid-template-columns: 70px minmax(0, 1fr) 40px; gap: 8px; align-items: center; font: 700 13px 'Atkinson Hyperlegible', sans-serif; }
+.calc__row { display: grid; grid-template-columns: 70px minmax(0, 1fr) 40px; gap: 8px; align-items: center; font: 700 13px 'Nunito', sans-serif; }
 .calc__row b { font: 600 15px 'Pixelify Sans', sans-serif; text-align: right; }
 .calc__select { grid-column: span 2; height: 32px; font-size: 13px; }
 .calc__range { width: 100%; accent-color: var(--uA); }
@@ -95,12 +95,12 @@ const maximum = computed(() => compute(MAX_EV, MAX_IV, stat.value === 'hp' ? 1 :
   border-radius: 6px;
   background: var(--chip);
   color: var(--tx);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
 }
 
 .tab--on { background: var(--hd); color: var(--hdTx); }
-.result { display: flex; align-items: center; gap: 14px; padding: 10px 12px; border-radius: 8px; background: var(--dk); flex-wrap: wrap; }
-.result__value { display: flex; flex-direction: column; font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); text-transform: uppercase; }
-.result__value b { font: 700 34px/1 'Pixelify Sans', sans-serif; color: var(--uA); }
-.result__detail { flex: 1; min-width: 180px; font: 700 12px/1.5 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.result { display: flex; align-items: center; gap: 14px; padding: 10px 12px; border-radius: 8px; background: var(--dk); --tx: var(--dkTx); --mu: var(--dkMu); --chip: var(--dkChip); color: var(--tx); flex-wrap: wrap; }
+.result__value { display: flex; flex-direction: column; font: 700 11px 'Nunito', sans-serif; color: var(--mu); text-transform: uppercase; }
+.result__value b { font: 700 34px/1 'Pixelify Sans', sans-serif; color: var(--uT); }
+.result__detail { flex: 1; min-width: 180px; font: 700 12px/1.5 'Nunito', sans-serif; color: var(--mu); }
 </style>

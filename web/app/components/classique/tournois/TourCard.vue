@@ -97,22 +97,22 @@ const opponent = (name: string) => name === '(next available player)' ? 'le proc
 
 .card__hero--regular { background: repeating-linear-gradient(135deg, rgba(255, 255, 255, .05) 0 12px, transparent 12px 24px), linear-gradient(160deg, #3d6fc8, #10203a); }
 .card__hero--community { background: repeating-linear-gradient(135deg, rgba(255, 255, 255, .05) 0 12px, transparent 12px 24px), linear-gradient(160deg, #8a4ac8, #24103a); }
-.card__badge { position: absolute; top: 10px; left: 12px; padding: 2px 7px; border-radius: 4px; background: rgba(0, 0, 0, .4); font: 700 11px 'Atkinson Hyperlegible', sans-serif; }
+.card__badge { position: absolute; top: 10px; left: 12px; padding: 2px 7px; border-radius: 4px; background: rgba(0, 0, 0, .4); font: 700 11px 'Nunito', sans-serif; }
 .card__sprite { position: absolute; right: 8px; bottom: 4px; width: 110px; height: 110px; background: center bottom / contain no-repeat; image-rendering: pixelated; }
 .card__name { position: relative; margin: 0; font: 700 22px 'Pixelify Sans', sans-serif; text-shadow: 2px 2px 0 rgba(0, 0, 0, .6); max-width: 70%; }
-.card__status { position: relative; align-self: flex-start; padding: 2px 7px; border-radius: 4px; background: rgba(0, 0, 0, .4); font: 700 11px 'Atkinson Hyperlegible', sans-serif; }
+.card__status { position: relative; align-self: flex-start; padding: 2px 7px; border-radius: 4px; background: rgba(0, 0, 0, .4); font: 700 11px 'Nunito', sans-serif; }
 .card__status--open { background: #2f9a58; }
 .card__status--started { background: #c8362a; }
-.facts { margin: 0; padding: 10px 12px 0; display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 6px 10px; font: 700 12px/1.4 'Atkinson Hyperlegible', sans-serif; }
+.facts { margin: 0; padding: 10px 12px 0; display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 6px 10px; font: 700 12px/1.4 'Nunito', sans-serif; }
 .facts dt { color: var(--mu); }
 .facts dd { margin: 0; }
 .places { padding: 10px 12px 0; display: flex; flex-direction: column; gap: 4px; }
-.places__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.places__label { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .places__label b { color: var(--tx); }
 .places__track { height: 8px; border-radius: 4px; background: var(--in); overflow: hidden; }
 .places__fill { display: block; height: 100%; background: #58d080; }
 .card__actions { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
 .card__actions .btn { width: 100%; }
-.card__hint { font: 700 12px/1.4 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.card__hint { font: 700 12px/1.4 'Nunito', sans-serif; color: var(--mu); }
 .card__hint--strong { color: var(--tx); font-size: 13px; }
 </style>

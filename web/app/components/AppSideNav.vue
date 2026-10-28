@@ -40,6 +40,30 @@
           Gen {{ value }}
         </button>
       </div>
+      <span class="sidenav__gen-title">Couleur des menus</span>
+      <div class="sidenav__swatches">
+        <button
+          type="button"
+          class="sidenav__swatch sidenav__swatch--auto"
+          :class="{ 'sidenav__swatch--active': !menuColor }"
+          :aria-pressed="!menuColor"
+          aria-label="Couleur du style"
+          title="Couleur du style"
+          @click="setMenuColor('')"
+        />
+        <button
+          v-for="menu in MENU_COLORS"
+          :key="menu.id"
+          type="button"
+          class="sidenav__swatch"
+          :class="{ 'sidenav__swatch--active': menuColor === menu.id }"
+          :style="{ background: menu.color }"
+          :aria-pressed="menuColor === menu.id"
+          :aria-label="`Menus ${menu.label}`"
+          :title="menu.label"
+          @click="setMenuColor(menu.id)"
+        />
+      </div>
     </div>
   </nav>
 </template>
@@ -50,6 +74,7 @@ import type { NavItem } from '~/utils/navigation'
 
 const route = useRoute()
 const { gen, setGen } = useGenStyle()
+const { menuColor, setMenuColor } = useMenuColor()
 
 const universe = computed(() => universeOf(route.path) ?? 'pokedraft')
 const items = computed(() => NAVIGATION[universe.value])
@@ -80,7 +105,7 @@ const isOpen = (item: NavItem) => Boolean(item.children?.some(child => isActive(
   padding: 0 10px;
   border-radius: 8px;
   color: var(--tx);
-  font: 700 15px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 15px 'Nunito', sans-serif;
   white-space: nowrap;
 }
 
@@ -111,7 +136,7 @@ const isOpen = (item: NavItem) => Boolean(item.children?.some(child => isActive(
   align-items: center;
   gap: 8px;
   color: var(--tx);
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
 }
 
 .sidenav__child--active { background: var(--uA); color: var(--uAtx); }
@@ -135,7 +160,7 @@ const isOpen = (item: NavItem) => Boolean(item.children?.some(child => isActive(
 }
 
 .sidenav__soon {
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   color: var(--mu);
   text-transform: uppercase;
 }
@@ -150,7 +175,7 @@ const isOpen = (item: NavItem) => Boolean(item.children?.some(child => isActive(
 }
 
 .sidenav__gen-title {
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   color: var(--mu);
 }
 
@@ -165,7 +190,7 @@ const isOpen = (item: NavItem) => Boolean(item.children?.some(child => isActive(
   cursor: pointer;
   height: 30px;
   border-radius: 6px;
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   background: var(--chip);
   color: var(--tx);
 }
@@ -174,4 +199,21 @@ const isOpen = (item: NavItem) => Boolean(item.children?.some(child => isActive(
   background: var(--uA);
   color: var(--uAtx);
 }
+
+.sidenav__swatches {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.sidenav__swatch {
+  height: 22px;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .45), 0 0 0 2px var(--bd);
+}
+
+.sidenav__swatch--auto { background: linear-gradient(135deg, #3f8fc0 50%, #ff7a1a 50%); }
+.sidenav__swatch--active { box-shadow: inset 0 0 0 2px #fff, 0 0 0 3px var(--tx); }
 </style>

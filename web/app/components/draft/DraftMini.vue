@@ -64,7 +64,7 @@ const position = computed(() => {
 
 .mini__sprite { width: 52px; height: 52px; object-fit: contain; image-rendering: pixelated; }
 .mini__name { flex: 1; font: 700 18px 'Pixelify Sans', sans-serif; color: #fff; text-shadow: 2px 2px 0 rgba(0, 0, 0, .55); }
-.mini__types { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: #fff; text-shadow: 1px 1px 0 #000; }
+.mini__types { font: 700 11px 'Nunito', sans-serif; color: #fff; text-shadow: 1px 1px 0 #000; }
 
 .mini__body {
   padding: 8px 10px 10px;
@@ -88,16 +88,16 @@ const position = computed(() => {
   align-items: center;
 }
 
-.mini__stat span { font: 700 9px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); white-space: nowrap; }
+.mini__stat span { font: 700 9px 'Nunito', sans-serif; color: var(--mu); white-space: nowrap; }
 .mini__stat b { font: 600 14px 'Pixelify Sans', sans-serif; }
-.mini__line { font: 400 12px/1.4 'Atkinson Hyperlegible', sans-serif; }
-.mini__line b { color: var(--uA); }
+.mini__line { font: 400 12px/1.4 'Nunito', sans-serif; }
+.mini__line b { color: var(--uT); }
 
 .mini__tip {
   padding: 6px 8px;
   border-radius: 6px;
   background: var(--uB);
-  font: 700 12px/1.4 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px/1.4 'Nunito', sans-serif;
   color: #fff3d6;
 }
 </style>

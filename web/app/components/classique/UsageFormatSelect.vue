@@ -26,6 +26,6 @@ const groups = computed(() => {
 
 <style scoped>
 .usage-format { display: flex; align-items: center; gap: 8px; min-width: 0; max-width: 100%; }
-.usage-format__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.usage-format__label { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .usage-format__select { flex: 1; height: 34px; width: 240px; min-width: 0; max-width: 100%; }
 </style>

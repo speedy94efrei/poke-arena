@@ -179,7 +179,7 @@ onBeforeUnmount(() => clearInterval(timer))
 .chat { display: flex; flex-direction: column; gap: 12px; }
 .chat__heading { display: flex; flex-direction: column; gap: 2px; }
 .chat__title { margin: 0; font: 700 30px/1 'Pixelify Sans', sans-serif; text-shadow: var(--sh); }
-.chat__subtitle { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.chat__subtitle { font: 700 14px 'Nunito', sans-serif; color: var(--mu); }
 .chat__body { display: grid; grid-template-columns: 230px minmax(0, 1fr) 220px; gap: 12px; height: min(680px, calc(100vh - 170px)); min-height: 440px; }
 .lists { display: flex; flex-direction: column; gap: 12px; min-height: 0; overflow: auto; }
 .list, .people { background: var(--pn); border-radius: var(--r); box-shadow: var(--pnS); overflow: hidden; display: flex; flex-direction: column; }
@@ -209,7 +209,7 @@ onBeforeUnmount(() => clearInterval(timer))
   display: flex;
   align-items: center;
   gap: 6px;
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
 }
 
 .list__row:first-of-type { margin-top: 6px; }
@@ -219,16 +219,16 @@ onBeforeUnmount(() => clearInterval(timer))
 .list__name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .list__count { font: 600 12px 'Pixelify Sans', sans-serif; color: var(--mu); }
 .list__avatar { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--chip); font: 600 13px 'Pixelify Sans', sans-serif; display: grid; place-items: center; }
-.list__text { flex: 1; min-width: 0; display: flex; flex-direction: column; font: 400 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.list__text { flex: 1; min-width: 0; display: flex; flex-direction: column; font: 400 11px 'Nunito', sans-serif; color: var(--mu); }
 .list__text b { font-size: 13px; color: var(--tx); }
 .list__text span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.list__badge { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: #c8362a; color: #fff; font: 700 11px 'Atkinson Hyperlegible', sans-serif; display: grid; place-items: center; }
-.list__empty { margin: 8px 12px; font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.list__hint { margin: 6px 12px 0; font: 700 11px/1.4 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.list__badge { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: #c8362a; color: #fff; font: 700 11px 'Nunito', sans-serif; display: grid; place-items: center; }
+.list__empty { margin: 8px 12px; font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
+.list__hint { margin: 6px 12px 0; font: 700 11px/1.4 'Nunito', sans-serif; color: var(--mu); }
 .list__new { display: flex; gap: 5px; padding: 8px; }
 .list__input { flex: 1; height: 30px; font-size: 12px; }
-.person { display: flex; align-items: center; gap: 6px; padding: 4px 10px; font: 700 13px 'Atkinson Hyperlegible', sans-serif; }
-.person__rank { width: 12px; color: var(--uA); }
+.person { display: flex; align-items: center; gap: 6px; padding: 4px 10px; font: 700 13px 'Nunito', sans-serif; }
+.person__rank { width: 12px; color: var(--uT); }
 .person__name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .person__action {

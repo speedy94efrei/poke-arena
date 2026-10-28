@@ -176,7 +176,7 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
   text-shadow: var(--sh);
 }
 
-.codex__subtitle { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.codex__subtitle { font: 700 14px 'Nunito', sans-serif; color: var(--mu); }
 
 .codex__tabs {
   display: flex;
@@ -184,6 +184,10 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
   padding: 4px;
   border-radius: 10px;
   background: var(--dk);
+  --tx: var(--dkTx);
+  --mu: var(--dkMu);
+  --chip: var(--dkChip);
+  color: var(--tx);
   box-shadow: var(--pnS);
 }
 
@@ -195,7 +199,7 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
   border-radius: 7px;
   background: transparent;
   color: var(--mu);
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
 }
 
 .codex__tab--active { background: var(--uA); color: var(--uAtx); }
@@ -219,7 +223,7 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
   gap: 2px;
 }
 
-.filters__label { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.filters__label { font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
 
 .filters__select {
   height: 34px;
@@ -243,7 +247,7 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
   gap: 6px;
   cursor: pointer;
   opacity: .7;
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   color: var(--mu);
 }
 
@@ -257,7 +261,7 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
   border-radius: var(--r);
   background: var(--uA);
   color: var(--uAtx);
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
   animation: pop .25s both;
 }
 
@@ -271,8 +275,8 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
   padding: 0 12px;
   border-radius: 7px;
   background: var(--uAtx);
-  color: var(--uA);
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  color: var(--uT);
+  font: 700 13px 'Nunito', sans-serif;
 }
 
 .codex__body {
@@ -375,7 +379,7 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
 }
 
 .empty__title { font: 700 22px 'Pixelify Sans', sans-serif; }
-.empty__text { font: 400 15px/1.5 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.empty__text { font: 400 15px/1.5 'Nunito', sans-serif; color: var(--mu); }
 
 .toast {
   position: fixed;
@@ -386,9 +390,12 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
   padding: 12px 18px;
   border-radius: 10px;
   background: var(--dk);
+  --tx: var(--dkTx);
+  --mu: var(--dkMu);
+  --chip: var(--dkChip);
   color: var(--tx);
   box-shadow: 0 0 0 2px var(--uA), 0 10px 30px rgba(0, 0, 0, .5);
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
   animation: pop .2s both;
 }
 

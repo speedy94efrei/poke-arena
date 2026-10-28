@@ -116,10 +116,10 @@ const rows = computed(() => {
   border-radius: 8px;
   background: var(--chip);
   color: var(--tx);
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
 }
 
-.toggle b { font: 600 16px 'Pixelify Sans', sans-serif; color: var(--uA); }
+.toggle b { font: 600 16px 'Pixelify Sans', sans-serif; color: var(--uT); }
 
 .toggle--close {
   align-self: center;
@@ -171,7 +171,7 @@ const rows = computed(() => {
   border-radius: 7px;
   background: var(--in);
   color: var(--tx);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
 }
 
 .filters__sort--on { background: var(--uA); color: var(--uAtx); }
@@ -180,12 +180,12 @@ const rows = computed(() => {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
   color: var(--mu);
 }
 
-.legend__set { color: var(--uA); }
-.legend__stab { color: #9fd8ff; }
+.legend__set { color: var(--uT); }
+.legend__stab { color: var(--info); }
 
 .table {
   display: flex;
@@ -209,7 +209,7 @@ const rows = computed(() => {
 .row--head {
   cursor: default;
   padding: 0 6px 4px;
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   color: var(--mu);
   border-bottom: 2px solid var(--chip);
 }
@@ -231,17 +231,17 @@ const rows = computed(() => {
   min-width: 0;
 }
 
-.row__set { color: var(--uA); font-size: 11px; }
+.row__set { color: var(--uT); font-size: 11px; }
 
 .row__label {
-  font: 400 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 400 13px 'Nunito', sans-serif;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .row--stab .row__label { font-weight: 700; }
-.row__stab { flex: none; font: 700 9px 'Atkinson Hyperlegible', sans-serif; color: #9fd8ff; }
+.row__stab { flex: none; font: 700 9px 'Nunito', sans-serif; color: var(--info); }
 
 .row__badges {
   display: flex;
@@ -253,7 +253,7 @@ const rows = computed(() => {
   height: 16px;
   padding: 0 5px;
   border-radius: 3px;
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   white-space: nowrap;
@@ -264,7 +264,7 @@ const rows = computed(() => {
   border-radius: 3px;
   color: #fff;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .6);
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: grid;
   place-items: center;
   white-space: nowrap;
@@ -287,7 +287,7 @@ const rows = computed(() => {
 
 .row__props {
   font: 600 12px 'Pixelify Sans', sans-serif;
-  color: var(--uA);
+  color: var(--uT);
   letter-spacing: 1px;
   white-space: nowrap;
 }
@@ -296,7 +296,7 @@ const rows = computed(() => {
   margin: 0;
   padding: 14px;
   text-align: center;
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   color: var(--mu);
 }
 

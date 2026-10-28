@@ -58,12 +58,12 @@ const importPasted = () => {
 
 <style scoped>
 .teams { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-.teams__note { margin: 0; font: 700 13px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.teams__note { margin: 0; font: 700 13px/1.45 'Nunito', sans-serif; color: var(--mu); }
 .teams__row { display: flex; gap: 8px; flex-wrap: wrap; }
 .teams__select { flex: 1; min-width: 200px; }
 .teams__preview { display: flex; align-items: center; gap: 2px; flex-wrap: wrap; }
 .teams__mon { width: 44px; height: 44px; background: center / contain no-repeat; image-rendering: pixelated; }
-.teams__warn { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: #ffb070; }
+.teams__warn { font: 700 12px 'Nunito', sans-serif; color: #ffb070; }
 .paste { display: flex; flex-direction: column; gap: 6px; }
 .paste__text { height: auto; min-height: 150px; font: 400 13px/1.4 ui-monospace, monospace; resize: vertical; }
 </style>

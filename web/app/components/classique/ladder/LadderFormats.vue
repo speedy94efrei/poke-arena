@@ -59,7 +59,7 @@ const short = (format: BattleFormat) => {
 <style scoped>
 .formats { padding: 10px 12px; border-radius: var(--r); background: var(--pn); box-shadow: var(--pnS); display: flex; flex-direction: column; gap: 8px; }
 .formats__group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.formats__label { width: 110px; flex: none; font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.formats__label { width: 110px; flex: none; font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .formats__chips { flex: 1; display: flex; flex-wrap: wrap; gap: 5px; }
 .formats__all { flex: 1; max-width: 420px; }
 
@@ -71,7 +71,7 @@ const short = (format: BattleFormat) => {
   border-radius: 15px;
   background: var(--chip);
   color: var(--tx);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   gap: 6px;

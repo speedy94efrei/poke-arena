@@ -39,10 +39,10 @@ const emit = defineEmits<{ pick: [id: string] }>()
 
 .row:hover, .row:focus-visible { background: var(--chip); }
 .row--selected, .row--selected:hover { background: var(--in); box-shadow: inset 0 0 0 2px var(--uA); }
-.row__name { font: 700 13px 'Atkinson Hyperlegible', sans-serif; }
+.row__name { font: 700 13px 'Nunito', sans-serif; }
 
 .row__description {
-  font: 400 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 400 12px 'Nunito', sans-serif;
   color: var(--mu);
   white-space: nowrap;
   overflow: hidden;
@@ -55,7 +55,7 @@ const emit = defineEmits<{ pick: [id: string] }>()
   border-radius: 3px;
   background: #2f74a3;
   color: #fff;
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: inline-flex;
   align-items: center;
   white-space: nowrap;

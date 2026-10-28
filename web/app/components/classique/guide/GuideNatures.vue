@@ -66,7 +66,7 @@ const popular = computed(() => {
   overflow-x: auto;
 }
 
-.grid__corner, .grid__minus, .grid__plus { font: 700 11px 'Atkinson Hyperlegible', sans-serif; display: flex; align-items: center; }
+.grid__corner, .grid__minus, .grid__plus { font: 700 11px 'Nunito', sans-serif; display: flex; align-items: center; }
 .grid__corner { color: var(--mu); }
 .grid__minus { justify-content: center; color: #ff9a8a; }
 .grid__plus { color: #8adca0; }
@@ -82,15 +82,15 @@ const popular = computed(() => {
   align-items: center;
   justify-content: center;
   text-align: center;
-  font: 400 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 400 10px 'Nunito', sans-serif;
   color: var(--mu);
 }
 
 .grid__cell b { font-size: 13px; color: var(--tx); }
-.grid__cell--neutral { background: var(--dk); opacity: .75; }
+.grid__cell--neutral { background: var(--dk); --tx: var(--dkTx); --mu: var(--dkMu); --chip: var(--dkChip); color: var(--tx); opacity: .75; }
 .help { padding: 12px; border-radius: var(--r); background: var(--pn); box-shadow: var(--pnS); display: flex; flex-direction: column; gap: 8px; }
 .help__title { font: 600 15px 'Pixelify Sans', sans-serif; }
-.help p { margin: 0; font: 400 13px/1.5 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.help p { margin: 0; font: 400 13px/1.5 'Nunito', sans-serif; color: var(--mu); }
 
 @media (max-width: 900px) {
   .natures { grid-template-columns: minmax(0, 1fr); }

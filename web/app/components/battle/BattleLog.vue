@@ -124,7 +124,7 @@ watch(lineCount, async () => {
 }
 
 .log__title { font: 600 16px 'Pixelify Sans', sans-serif; text-shadow: var(--hdSh, none); }
-.log__live { font: 700 11px 'Atkinson Hyperlegible', sans-serif; }
+.log__live { font: 700 11px 'Nunito', sans-serif; }
 .log__tools { flex: none; padding: 10px 12px 8px; display: flex; flex-direction: column; gap: 8px; }
 .filters { display: flex; flex-wrap: wrap; gap: 4px; }
 
@@ -169,7 +169,7 @@ watch(lineCount, async () => {
 .section__rule { flex: 1; height: 2px; background: var(--chip); }
 .line { display: grid; grid-template-columns: 22px 1fr; gap: 8px; align-items: start; animation: pop .25s both; }
 .line__icon { width: 22px; height: 22px; border-radius: 5px; color: #fff; display: grid; place-items: center; font: 600 11px 'Pixelify Sans', sans-serif; }
-.line__text { font: 400 13px/1.4 'Atkinson Hyperlegible', sans-serif; }
+.line__text { font: 400 13px/1.4 'Nunito', sans-serif; }
 .line__text--strong { font-weight: 800; }
-.log__empty { margin: 0; font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.log__empty { margin: 0; font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 </style>

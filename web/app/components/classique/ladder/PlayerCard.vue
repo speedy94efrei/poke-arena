@@ -115,20 +115,20 @@ const favorite = computed(() => {
   box-shadow: 0 0 0 3px var(--bd);
 }
 
-.card__identity { display: flex; flex-direction: column; gap: 2px; min-width: 0; font: 700 12px 'Atkinson Hyperlegible', sans-serif; opacity: .95; }
+.card__identity { display: flex; flex-direction: column; gap: 2px; min-width: 0; font: 700 12px 'Nunito', sans-serif; opacity: .95; }
 .card__identity b { font: 700 22px 'Pixelify Sans', sans-serif; text-shadow: 2px 2px 0 rgba(0, 0, 0, .6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card__body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 8px; }
 .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
-.stat { padding: 6px; border-radius: 7px; background: var(--dk); display: flex; flex-direction: column; gap: 2px; font: 700 10px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.stat { padding: 6px; border-radius: 7px; background: var(--dk); --tx: var(--dkTx); --mu: var(--dkMu); --chip: var(--dkChip); display: flex; flex-direction: column; gap: 2px; font: 700 10px 'Nunito', sans-serif; color: var(--mu); }
 .stat b { font: 600 16px 'Pixelify Sans', sans-serif; color: var(--tx); }
-.card__title { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); margin-top: 4px; }
-.card__empty { margin: 0; font: 700 12px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.curve { height: 90px; padding: 6px; border-radius: 7px; background: var(--dk); display: flex; align-items: flex-end; gap: 3px; }
+.card__title { font: 700 12px 'Nunito', sans-serif; color: var(--mu); margin-top: 4px; }
+.card__empty { margin: 0; font: 700 12px/1.45 'Nunito', sans-serif; color: var(--mu); }
+.curve { height: 90px; padding: 6px; border-radius: 7px; background: var(--dk); --tx: var(--dkTx); --mu: var(--dkMu); --chip: var(--dkChip); color: var(--tx); display: flex; align-items: flex-end; gap: 3px; }
 .curve__bar { flex: 1; min-width: 3px; max-width: 18px; border-radius: 2px 2px 0 0; background: var(--hd); }
 .curve__bar--last { background: var(--uA); }
 .mons { display: flex; gap: 3px; flex-wrap: wrap; }
 .mon { width: 40px; height: 32px; border-radius: 6px; background: var(--in) center / 40px no-repeat; image-rendering: pixelated; }
-.fight { display: flex; align-items: center; gap: 8px; padding: 4px 6px; border-radius: 6px; background: var(--in); font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
+.fight { display: flex; align-items: center; gap: 8px; padding: 4px 6px; border-radius: 6px; background: var(--in); font: 700 12px 'Nunito', sans-serif; }
 
 .fight__result {
   flex: none;
@@ -145,7 +145,7 @@ const favorite = computed(() => {
 .fight__result--victoire { background: #2f9a58; }
 .fight__result--defaite { background: #c8362a; }
 .fight__name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.fight__delta { font: 600 13px 'Pixelify Sans', sans-serif; color: #58d080; }
+.fight__delta { font: 600 13px 'Pixelify Sans', sans-serif; color: var(--good); }
 .fight__delta--down { color: #ff7a6a; }
 .fight__when { font-size: 11px; color: var(--mu); }
 .card__actions { display: flex; gap: 6px; margin-top: 4px; }

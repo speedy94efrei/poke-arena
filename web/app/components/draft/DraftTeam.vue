@@ -106,7 +106,7 @@ const slots = computed(() => {
   text-overflow: ellipsis;
 }
 
-.team__state { font: 700 11px 'Atkinson Hyperlegible', sans-serif; }
+.team__state { font: 700 11px 'Nunito', sans-serif; }
 
 .slot {
   position: relative;
@@ -161,8 +161,8 @@ const slots = computed(() => {
   text-overflow: ellipsis;
 }
 
-.slot__sub { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: #e6ecf5; text-shadow: 1px 1px 0 rgba(0, 0, 0, .6); }
-.slot--active .slot__sub { color: var(--uA); }
+.slot__sub { font: 700 11px 'Nunito', sans-serif; color: #e6ecf5; text-shadow: 1px 1px 0 rgba(0, 0, 0, .6); }
+.slot--active .slot__sub { color: var(--uT); }
 .slot__sub--random { color: #ff9a8a; }
 
 @media (max-width: 1100px) {

@@ -124,7 +124,7 @@ const example = computed(() => {
 .guide__head { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
 .guide__heading { flex: 1 1 260px; display: flex; flex-direction: column; gap: 2px; }
 .guide__title { margin: 0; font: 700 30px/1 'Pixelify Sans', sans-serif; text-shadow: var(--sh); }
-.guide__subtitle { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.guide__subtitle { font: 700 14px 'Nunito', sans-serif; color: var(--mu); }
 .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
 
 .tab {
@@ -134,7 +134,7 @@ const example = computed(() => {
   background: var(--pn);
   color: var(--tx);
   box-shadow: var(--pnS);
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -146,16 +146,16 @@ const example = computed(() => {
 .card { padding: 10px 12px; border-radius: var(--r); background: var(--pn); box-shadow: var(--pnS); display: flex; flex-direction: column; gap: 6px; }
 .card__head { display: flex; align-items: center; gap: 8px; }
 .card__icon { flex: none; display: block; }
-.card__names { flex: 1; display: flex; flex-direction: column; min-width: 0; font: 400 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.card__names { flex: 1; display: flex; flex-direction: column; min-width: 0; font: 400 11px 'Nunito', sans-serif; color: var(--mu); }
 .card__names b { font-size: 15px; color: var(--tx); }
-.card__share { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--uA); white-space: nowrap; }
-.card__text { margin: 0; font: 400 13px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.card__tip { margin: 0; padding: 6px 8px; border-radius: 6px; background: var(--in); font: 700 12px/1.45 'Atkinson Hyperlegible', sans-serif; }
+.card__share { font: 700 11px 'Nunito', sans-serif; color: var(--uT); white-space: nowrap; }
+.card__text { margin: 0; font: 400 13px/1.45 'Nunito', sans-serif; color: var(--mu); }
+.card__tip { margin: 0; padding: 6px 8px; border-radius: 6px; background: var(--in); font: 700 12px/1.45 'Nunito', sans-serif; }
 .ivs { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; align-items: start; }
 .ivs__text { display: flex; flex-direction: column; gap: 12px; }
 .explain { padding: 12px; border-radius: var(--r); background: var(--pn); box-shadow: var(--pnS); display: flex; flex-direction: column; gap: 8px; }
 .explain__title { font: 600 16px 'Pixelify Sans', sans-serif; }
-.explain p { margin: 0; font: 400 13px/1.5 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.explain p { margin: 0; font: 400 13px/1.5 'Nunito', sans-serif; color: var(--mu); }
 .explain .explain__example { color: var(--tx); font-weight: 700; }
 
 @media (max-width: 900px) {

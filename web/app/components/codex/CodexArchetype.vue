@@ -96,7 +96,7 @@ const emit = defineEmits<{ open: [id: string] }>()
 }
 
 .arch__kind {
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   color: #fff;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .5);
 }
@@ -108,14 +108,14 @@ const emit = defineEmits<{ open: [id: string] }>()
   gap: 12px;
 }
 
-.arch__empty { margin: 0; font: 400 14px/1.5 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.arch__empty { margin: 0; font: 400 14px/1.5 'Nunito', sans-serif; color: var(--mu); }
 
 .arch__note {
   margin: 0;
   padding: 8px 10px;
   border-radius: 8px;
   background: var(--in);
-  font: 700 13px/1.4 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px/1.4 'Nunito', sans-serif;
   color: var(--mu);
 }
 
@@ -125,7 +125,7 @@ const emit = defineEmits<{ open: [id: string] }>()
   gap: 6px;
 }
 
-.arch__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.arch__label { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 
 .arch__chips {
   display: flex;
@@ -156,7 +156,7 @@ const emit = defineEmits<{ open: [id: string] }>()
   gap: 3px;
 }
 
-.launcher__name { font: 700 15px 'Atkinson Hyperlegible', sans-serif; }
-.launcher__source { color: var(--uA); }
-.launcher__effect { font: 400 13px/1.4 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.launcher__name { font: 700 15px 'Nunito', sans-serif; }
+.launcher__source { color: var(--uT); }
+.launcher__effect { font: 400 13px/1.4 'Nunito', sans-serif; color: var(--mu); }
 </style>

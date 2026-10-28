@@ -38,12 +38,12 @@ const statusText = computed(() => ({ connecte: '● en ligne', connexion: '◌ c
 
 .connection__done {
   margin: 0;
-  font: 700 15px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 15px 'Nunito', sans-serif;
 }
 
 .connection__hint {
   margin: 0;
-  font: 400 13px/1.4 'Atkinson Hyperlegible', sans-serif;
+  font: 400 13px/1.4 'Nunito', sans-serif;
   color: var(--mu);
 }
 </style>

@@ -124,16 +124,16 @@ const abilities = computed(() => {
 }
 
 .hero__text { flex: 1; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; min-width: 0; }
-.hero__num { font: 700 13px 'Atkinson Hyperlegible', sans-serif; opacity: .85; }
+.hero__num { font: 700 13px 'Nunito', sans-serif; opacity: .85; }
 .hero__name { margin: 0; font: 700 32px/1 'Pixelify Sans', sans-serif; text-shadow: 2px 2px 0 rgba(0, 0, 0, .6); }
-.hero__sub { font: 700 12px 'Atkinson Hyperlegible', sans-serif; opacity: .85; }
+.hero__sub { font: 700 12px 'Nunito', sans-serif; opacity: .85; }
 .hero__types, .hero__facts { display: flex; gap: 5px; flex-wrap: wrap; }
 
 .hero__type {
   height: 22px;
   padding: 0 8px;
   border-radius: 4px;
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .6);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, .4);
   display: flex;
@@ -145,7 +145,7 @@ const abilities = computed(() => {
   padding: 0 10px;
   border-radius: 7px;
   background: rgba(0, 0, 0, .45);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
@@ -164,11 +164,11 @@ const abilities = computed(() => {
   align-items: center;
 }
 
-.panel__aside { margin-left: auto; font: 700 12px 'Atkinson Hyperlegible', sans-serif; text-shadow: none; }
+.panel__aside { margin-left: auto; font: 700 12px 'Nunito', sans-serif; text-shadow: none; }
 .panel__body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 6px; }
-.panel__note { font: 700 11px/1.4 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.panel__note { font: 700 11px/1.4 'Nunito', sans-serif; color: var(--mu); }
 .stat { display: grid; grid-template-columns: 74px 34px minmax(0, 1fr); gap: 8px; align-items: center; }
-.stat__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.stat__label { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .stat__value { font: 600 14px 'Pixelify Sans', sans-serif; text-align: right; }
 .stat__track { height: 10px; border-radius: 3px; background: var(--in); overflow: hidden; }
 .stat__fill { display: block; height: 100%; border-radius: 3px; }
@@ -179,14 +179,14 @@ const abilities = computed(() => {
   width: 34px;
   height: 22px;
   border-radius: 4px;
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   display: grid;
   place-items: center;
 }
 
 .matchup__factor--weak { background: #c8362a; color: #fff; }
 .matchup__factor--resist { background: #2f9a58; color: #fff; }
-.matchup__factor--immune { background: var(--dk); color: var(--tx); box-shadow: inset 0 0 0 2px var(--chip); }
+.matchup__factor--immune { background: var(--dk); --tx: var(--dkTx); --mu: var(--dkMu); --chip: var(--dkChip); color: var(--tx); box-shadow: inset 0 0 0 2px var(--chip); }
 .matchup__types { display: flex; flex-wrap: wrap; gap: 4px; }
 
 .matchup__type {
@@ -195,17 +195,17 @@ const abilities = computed(() => {
   border-radius: 4px;
   color: #fff;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .6);
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
 
 .talents { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 .talent { padding: 8px 10px; border-radius: 8px; background: var(--in); box-shadow: inset 0 0 0 2px var(--chip); display: flex; flex-direction: column; gap: 4px; }
-.talent__head { display: flex; gap: 8px; font: 700 14px 'Atkinson Hyperlegible', sans-serif; }
+.talent__head { display: flex; gap: 8px; font: 700 14px 'Nunito', sans-serif; }
 .talent__head b { flex: 1; }
-.talent__head span { font: 600 13px 'Pixelify Sans', sans-serif; color: var(--uA); }
-.talent__text { font: 400 12px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.talent__head span { font: 600 13px 'Pixelify Sans', sans-serif; color: var(--uT); }
+.talent__text { font: 400 12px/1.45 'Nunito', sans-serif; color: var(--mu); }
 
 @media (max-width: 760px) {
   .sheet__grid { grid-template-columns: minmax(0, 1fr); }

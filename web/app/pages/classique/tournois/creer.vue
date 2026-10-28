@@ -137,7 +137,7 @@ const publish = async () => {
 .create__head a { text-decoration: none; }
 .create__heading { flex: 1 1 260px; display: flex; flex-direction: column; gap: 2px; }
 .create__title { margin: 0; font: 700 30px/1 'Pixelify Sans', sans-serif; text-shadow: var(--sh); }
-.create__subtitle { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.create__subtitle { font: 700 14px 'Nunito', sans-serif; color: var(--mu); }
 .create__body { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 12px; align-items: start; }
 .form { background: var(--pn); border-radius: var(--r); box-shadow: var(--pnS); overflow: hidden; }
 
@@ -155,7 +155,7 @@ const publish = async () => {
 .form__body { padding: 12px; display: flex; flex-direction: column; gap: 14px; }
 .form__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .field-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.field-group__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); text-transform: uppercase; letter-spacing: .04em; }
+.field-group__label { font: 700 12px 'Nunito', sans-serif; color: var(--mu); text-transform: uppercase; letter-spacing: .04em; }
 .segments { display: flex; flex-wrap: wrap; gap: 5px; }
 
 .segment {
@@ -166,18 +166,18 @@ const publish = async () => {
   border-radius: 7px;
   background: var(--chip);
   color: var(--tx);
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
 }
 
 .segment--on { background: var(--hd); color: var(--hdTx); }
 .segments--small .segment { height: 26px; padding: 0 9px; font-size: 12px; }
 .rule { display: flex; align-items: center; gap: 10px; padding: 5px 8px; border-radius: 7px; background: var(--in); flex-wrap: wrap; }
-.rule__name { flex: 1; min-width: 140px; font: 700 13px 'Atkinson Hyperlegible', sans-serif; }
+.rule__name { flex: 1; min-width: 140px; font: 700 13px 'Nunito', sans-serif; }
 .preview { display: flex; flex-direction: column; gap: 10px; }
-.preview__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.preview__label { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .preview__publish { width: 100%; height: 44px; font-size: 15px; }
-.preview__error { margin: 0; font: 700 13px/1.4 'Atkinson Hyperlegible', sans-serif; color: #ffb070; }
-.preview__note { margin: 0; font: 700 12px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.preview__error { margin: 0; font: 700 13px/1.4 'Nunito', sans-serif; color: #ffb070; }
+.preview__note { margin: 0; font: 700 12px/1.45 'Nunito', sans-serif; color: var(--mu); }
 
 @media (max-width: 1000px) {
   .create__body { grid-template-columns: minmax(0, 1fr); }

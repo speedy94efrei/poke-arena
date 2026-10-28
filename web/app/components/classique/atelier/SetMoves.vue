@@ -144,7 +144,7 @@ const remove = (index: number) => {
 <style scoped>
 .moves { display: flex; flex-direction: column; gap: 8px; }
 .moves__title { font: 600 15px 'Pixelify Sans', sans-serif; }
-.moves__title span { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); margin-left: 6px; }
+.moves__title span { font: 700 12px 'Nunito', sans-serif; color: var(--mu); margin-left: 6px; }
 .chosen { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
 .chosen__slot { position: relative; min-width: 0; border-radius: 9px; }
 .chosen__slot--on { box-shadow: 0 0 0 3px var(--uA); }
@@ -164,7 +164,7 @@ const remove = (index: number) => {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
 }
 
 .chosen__move b { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -182,14 +182,14 @@ const remove = (index: number) => {
   cursor: pointer;
   background: rgba(0, 0, 0, .4);
   color: #fff;
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
 }
 
 .filters { display: flex; gap: 6px; flex-wrap: wrap; }
 .filters__search { flex: 1 1 200px; height: 32px; font-size: 13px; }
 .filters__select { height: 32px; font-size: 13px; }
 .list { display: flex; flex-direction: column; gap: 1px; max-height: 380px; overflow: auto; border-radius: 8px; background: var(--in); padding: 4px; }
-.list__group { position: sticky; top: 24px; z-index: 1; padding: 6px 8px 3px; background: var(--in); font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--uA); text-transform: uppercase; letter-spacing: .04em; }
+.list__group { position: sticky; top: 24px; z-index: 1; padding: 6px 8px 3px; background: var(--in); font: 700 11px 'Nunito', sans-serif; color: var(--uT); text-transform: uppercase; letter-spacing: .04em; }
 
 .list__row {
   border: 0;
@@ -203,12 +203,12 @@ const remove = (index: number) => {
   border-radius: 6px;
   background: transparent;
   color: var(--tx);
-  font: 400 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 400 13px 'Nunito', sans-serif;
 }
 
 .list__row:hover { background: var(--chip); }
 .list__row--used { background: color-mix(in srgb, var(--uA) 18%, transparent); box-shadow: inset 3px 0 0 var(--uA); }
-.list__row--head { position: sticky; top: 0; z-index: 2; cursor: default; background: var(--in); font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.list__row--head { position: sticky; top: 0; z-index: 2; cursor: default; background: var(--in); font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
 .list__row--head:hover { background: var(--in); }
 .list__name { display: flex; flex-direction: column; min-width: 0; }
 .list__name b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -219,15 +219,15 @@ const remove = (index: number) => {
   border-radius: 3px;
   color: #fff;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .6);
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: grid;
   place-items: center;
 }
 
 .list__cat { width: 10px; height: 10px; box-shadow: 0 0 0 2px rgba(0, 0, 0, .45); }
 .list__num { font: 600 13px 'Pixelify Sans', sans-serif; text-align: right; }
-.list__num--share { color: var(--uA); }
-.list__none { margin: 0; padding: 10px; text-align: center; font: 700 13px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.list__num--share { color: var(--uT); }
+.list__none { margin: 0; padding: 10px; text-align: center; font: 700 13px 'Nunito', sans-serif; color: var(--mu); }
 
 @media (max-width: 760px) {
   .chosen { grid-template-columns: repeat(2, minmax(0, 1fr)); }

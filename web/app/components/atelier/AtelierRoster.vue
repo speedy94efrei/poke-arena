@@ -102,7 +102,7 @@ const rows = computed(() => {
 .row__name {
   flex: 1;
   min-width: 0;
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -114,13 +114,13 @@ const rows = computed(() => {
   border-radius: 3px;
   background: #e8704a;
   color: #1a0a00;
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
 
 .row__count { font: 600 13px 'Pixelify Sans', sans-serif; color: var(--mu); }
-.row__count--ready { color: #58d080; }
+.row__count--ready { color: var(--good); }
 
 @media (max-width: 980px) {
   .roster { position: static; max-height: none; }

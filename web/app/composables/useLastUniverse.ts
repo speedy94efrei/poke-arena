@@ -1,8 +1,9 @@
-import type { Universe } from '~/utils/navigation'
-
 const STORAGE_KEY = 'arene-univers'
 
-export function lastUniverse(): Universe | null {
+/** Les deux univers que le Hub rouvre tout seul ; les modes à part ne sont pas retenus. */
+export type MainUniverse = 'classique' | 'pokedraft'
+
+export function lastUniverse(): MainUniverse | null {
   try {
     const value = localStorage.getItem(STORAGE_KEY)
     return value === 'classique' || value === 'pokedraft' ? value : null
@@ -17,7 +18,7 @@ export function lastUniverse(): Universe | null {
 export function useLastUniverse() {
   const route = useRoute()
   watch(() => universeOf(route.path), (universe) => {
-    if (!universe) return
+    if (universe !== 'classique' && universe !== 'pokedraft') return
     try {
       localStorage.setItem(STORAGE_KEY, universe)
     } catch {

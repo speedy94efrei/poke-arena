@@ -65,7 +65,7 @@ const rows = computed(() => {
 
 .list__search { padding: 10px; display: flex; flex-direction: column; gap: 4px; background: var(--hd); }
 .list__input { height: 34px; }
-.list__hint { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--hdTx); opacity: .85; }
+.list__hint { font: 700 11px 'Nunito', sans-serif; color: var(--hdTx); opacity: .85; }
 .list__rows { overflow: auto; padding: 6px; display: flex; flex-direction: column; gap: 1px; }
 
 .row {
@@ -83,9 +83,9 @@ const rows = computed(() => {
 .row--on { background: color-mix(in srgb, var(--uA) 22%, var(--in)); box-shadow: inset 0 0 0 2px var(--uA); }
 .row__rank { font: 600 12px 'Pixelify Sans', sans-serif; color: var(--mu); text-align: right; }
 .row__icon { width: 40px; height: 30px; background: center / 40px no-repeat; image-rendering: pixelated; }
-.row__name { font: 700 13px 'Atkinson Hyperlegible', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row__name { font: 700 13px 'Nunito', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .row__usage { font: 600 12px 'Pixelify Sans', sans-serif; text-align: right; }
-.list__none { margin: 0; padding: 14px; text-align: center; font: 700 13px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.list__none { margin: 0; padding: 14px; text-align: center; font: 700 13px 'Nunito', sans-serif; color: var(--mu); }
 
 @media (max-width: 980px) {
   .list { position: static; max-height: 320px; }

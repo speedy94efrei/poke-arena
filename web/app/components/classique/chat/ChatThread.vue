@@ -74,9 +74,9 @@ watch(() => props.lines.length, async () => {
 }
 
 .thread__title { font: 600 15px 'Pixelify Sans', sans-serif; text-shadow: var(--hdSh, none); }
-.thread__sub { font: 700 11px 'Atkinson Hyperlegible', sans-serif; opacity: .85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.thread__sub { font: 700 11px 'Nunito', sans-serif; opacity: .85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .thread__lines { flex: 1; min-height: 0; overflow: auto; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
-.thread__empty { margin: auto; font: 700 13px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); text-align: center; }
+.thread__empty { margin: auto; font: 700 13px 'Nunito', sans-serif; color: var(--mu); text-align: center; }
 .line { display: flex; gap: 8px; align-items: flex-start; }
 
 .line__avatar {
@@ -91,11 +91,11 @@ watch(() => props.lines.length, async () => {
 }
 
 .line__body { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
-.line__meta { display: flex; gap: 8px; align-items: baseline; font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
+.line__meta { display: flex; gap: 8px; align-items: baseline; font: 700 12px 'Nunito', sans-serif; }
 .line__meta time { font-size: 10px; color: var(--mu); }
-.line__text { font: 400 13px/1.45 'Atkinson Hyperlegible', sans-serif; overflow-wrap: anywhere; }
+.line__text { font: 400 13px/1.45 'Nunito', sans-serif; overflow-wrap: anywhere; }
 .line__text--action { font-style: italic; color: var(--mu); }
-.line__info { font: italic 400 12px/1.4 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.line__info { font: italic 400 12px/1.4 'Nunito', sans-serif; color: var(--mu); }
 .thread__form { display: flex; gap: 6px; padding: 10px 12px; border-top: 2px solid var(--chip); }
 .thread__input { flex: 1; }
 </style>

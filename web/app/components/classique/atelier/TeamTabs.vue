@@ -57,7 +57,7 @@ const shortFormat = (id: string) => formatIdLabel(id).split(' · ')[0]
 .tab__name {
   flex: 1;
   min-width: 0;
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -71,14 +71,14 @@ const shortFormat = (id: string) => formatIdLabel(id).split(' · ')[0]
   border-radius: 4px;
   background: var(--hd);
   color: var(--hdTx);
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   overflow: hidden;
   white-space: nowrap;
 }
 
-.tab__icons { display: flex; gap: 1px; height: 28px; padding: 0 2px; border-radius: 6px; background: var(--dk); }
+.tab__icons { display: flex; gap: 1px; height: 28px; padding: 0 2px; border-radius: 6px; background: var(--dk); --tx: var(--dkTx); --mu: var(--dkMu); --chip: var(--dkChip); color: var(--tx); }
 .tab__icon { flex: 1; background: center / 36px no-repeat; image-rendering: pixelated; }
 
 .tab--new {
@@ -88,6 +88,6 @@ const shortFormat = (id: string) => formatIdLabel(id).split(' · ')[0]
   align-items: center;
   background: var(--sel);
   color: var(--selTx);
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
 }
 </style>

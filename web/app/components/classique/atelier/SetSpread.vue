@@ -93,7 +93,7 @@ const setIv = (stat: StatId, value: number) => {
 <style scoped>
 .spread { display: flex; flex-direction: column; gap: 8px; }
 .spread__title { font: 600 15px 'Pixelify Sans', sans-serif; }
-.spread__title span { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); margin-left: 6px; }
+.spread__title span { font: 700 12px 'Nunito', sans-serif; color: var(--mu); margin-left: 6px; }
 .presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
 
 .preset {
@@ -111,11 +111,11 @@ const setIv = (stat: StatId, value: number) => {
 }
 
 .preset--on { background: color-mix(in srgb, var(--uA) 18%, var(--in)); box-shadow: inset 0 0 0 2px var(--uA); }
-.preset__head { display: flex; gap: 6px; font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
+.preset__head { display: flex; gap: 6px; font: 700 12px 'Nunito', sans-serif; }
 .preset__head b { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .preset__head span { font: 600 13px 'Pixelify Sans', sans-serif; }
-.preset__evs { font: 400 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.nature { display: flex; align-items: center; gap: 8px; font: 700 13px 'Atkinson Hyperlegible', sans-serif; }
+.preset__evs { font: 400 11px 'Nunito', sans-serif; color: var(--mu); }
+.nature { display: flex; align-items: center; gap: 8px; font: 700 13px 'Nunito', sans-serif; }
 .nature__select { flex: 1; max-width: 320px; height: 32px; font-size: 13px; }
 .stats { display: flex; flex-direction: column; gap: 3px; }
 
@@ -126,11 +126,11 @@ const setIv = (stat: StatId, value: number) => {
   align-items: center;
 }
 
-.stats__head { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.stat__label { font: 700 13px 'Atkinson Hyperlegible', sans-serif; }
+.stats__head { font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
+.stat__label { font: 700 13px 'Nunito', sans-serif; }
 .stat__label b { margin-left: 3px; }
-.stat--plus .stat__label { color: #ff9a7a; }
-.stat--minus .stat__label { color: #8ab4ff; }
+.stat--plus .stat__label { color: var(--bad); }
+.stat--minus .stat__label { color: var(--info); }
 .stat__base { font: 600 13px 'Pixelify Sans', sans-serif; color: var(--mu); text-align: right; }
 .stat__range { width: 100%; accent-color: var(--uA); }
 
@@ -143,12 +143,12 @@ const setIv = (stat: StatId, value: number) => {
   background: var(--in);
   color: var(--tx);
   box-shadow: inset 0 0 0 2px var(--chip);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   text-align: right;
 }
 
 .stat__value { font: 600 15px 'Pixelify Sans', sans-serif; text-align: right; }
-.stats__total { align-self: flex-end; font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.stats__total { align-self: flex-end; font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .stats__total--over { color: #ff8a70; }
 
 .stats__ev { grid-column: span 2; }

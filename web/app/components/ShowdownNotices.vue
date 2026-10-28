@@ -16,7 +16,7 @@ const { store } = useShowdown()
   border-radius: var(--r);
   background: var(--pn2);
   box-shadow: var(--pnS), 0 12px 30px rgba(0, 0, 0, .45);
-  font: 700 14px/1.4 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px/1.4 'Nunito', sans-serif;
   white-space: pre-line;
   animation: pop .2s both;
 }

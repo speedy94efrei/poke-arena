@@ -78,14 +78,14 @@ const enabled = computed(() => {
   box-shadow: var(--pnS);
 }
 
-.help__title { flex: none; font: 600 14px 'Pixelify Sans', sans-serif; color: var(--uA); }
+.help__title { flex: none; font: 600 14px 'Pixelify Sans', sans-serif; color: var(--uT); }
 
 .help__chip, .help__alert {
   flex: none;
   height: 26px;
   padding: 0 8px;
   border-radius: 5px;
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -102,8 +102,8 @@ const enabled = computed(() => {
 .help__alert--menace { background: rgba(255, 176, 32, .12); }
 .help__alert--menace b { color: #ffb020; }
 .help__alert--info { background: var(--in); }
-.help__alert--info b { color: var(--uA); }
-.help__empty { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.help__alert--info b { color: var(--uT); }
+.help__empty { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 
 .action {
   display: flex;
@@ -135,7 +135,7 @@ const enabled = computed(() => {
   border-radius: 6px;
   background: var(--uA);
   color: var(--uAtx);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   text-align: center;
   animation: pop .25s both;
 }

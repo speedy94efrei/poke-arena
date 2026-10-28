@@ -168,14 +168,14 @@ const clear = (index: number) => {
 }
 
 .slot__name {
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .slot__sub {
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
   color: var(--mu);
   white-space: nowrap;
   overflow: hidden;
@@ -195,10 +195,10 @@ const clear = (index: number) => {
   border-radius: 5px;
   background: rgba(0, 0, 0, .35);
   color: var(--tx);
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
 }
 
-.hint { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.hint { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 
 .filters {
   display: flex;
@@ -267,7 +267,7 @@ const clear = (index: number) => {
 }
 
 .move__label {
-  font: 400 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 400 13px 'Nunito', sans-serif;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -280,7 +280,7 @@ const clear = (index: number) => {
   height: 16px;
   padding: 0 4px;
   border-radius: 3px;
-  font: 700 9px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 9px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
@@ -290,7 +290,7 @@ const clear = (index: number) => {
   border-radius: 3px;
   color: #fff;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .6);
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: grid;
   place-items: center;
   white-space: nowrap;
@@ -310,7 +310,7 @@ const clear = (index: number) => {
   margin: 0;
   padding: 14px;
   text-align: center;
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   color: var(--mu);
 }
 </style>

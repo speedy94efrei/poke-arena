@@ -100,8 +100,8 @@ onBeforeUnmount(() => clearInterval(clock))
 .tours__head a { text-decoration: none; }
 .tours__heading { flex: 1 1 260px; display: flex; flex-direction: column; gap: 2px; }
 .tours__title { margin: 0; font: 700 30px/1 'Pixelify Sans', sans-serif; text-shadow: var(--sh); }
-.tours__subtitle { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.tours__loading { margin: 0; font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.tours__subtitle { font: 700 14px 'Nunito', sans-serif; color: var(--mu); }
+.tours__loading { margin: 0; font: 700 14px 'Nunito', sans-serif; color: var(--mu); }
 .tours__body { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 12px; align-items: start; }
 .tours__main, .tours__side { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .news { background: var(--pn); border-radius: var(--r); box-shadow: var(--pnS); overflow: hidden; }
@@ -118,7 +118,7 @@ onBeforeUnmount(() => clearInterval(clock))
 }
 
 .news__body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 6px; }
-.news__item { padding: 7px 9px; border-radius: 7px; background: var(--in); display: flex; flex-direction: column; gap: 2px; font: 400 11px/1.4 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.news__item { padding: 7px 9px; border-radius: 7px; background: var(--in); display: flex; flex-direction: column; gap: 2px; font: 400 11px/1.4 'Nunito', sans-serif; color: var(--mu); }
 .news__item b { font-size: 13px; color: var(--tx); }
 
 @media (max-width: 1100px) {

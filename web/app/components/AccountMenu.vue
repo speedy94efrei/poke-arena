@@ -74,15 +74,15 @@ const leave = async () => {
 
 .account__card:hover { text-decoration: none; background: var(--pn2); }
 .account__who { display: flex; flex-direction: column; line-height: 1.15; }
-.account__name { font: 700 15px 'Atkinson Hyperlegible', sans-serif; }
-.account__rank { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--uA); }
+.account__name { font: 700 15px 'Nunito', sans-serif; }
+.account__rank { font: 700 12px 'Nunito', sans-serif; color: var(--uT); }
 
 .account__logout {
   border: 0;
   cursor: pointer;
   background: transparent;
   color: var(--mu);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
 }
 
 .account__logout:hover { color: var(--tx); }
@@ -92,10 +92,13 @@ const leave = async () => {
   padding: 0 10px;
   border-radius: 14px;
   background: var(--dk);
+  --tx: var(--dkTx);
+  --mu: var(--dkMu);
+  --chip: var(--dkChip);
   display: flex;
   align-items: center;
   gap: 6px;
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   color: var(--mu);
 }
 

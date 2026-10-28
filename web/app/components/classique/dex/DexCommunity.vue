@@ -102,20 +102,20 @@ const counters = computed(() => named(props.usage?.counters ?? []))
   gap: 2px 10px;
 }
 
-.community__aside { margin-left: auto; font: 700 11px 'Atkinson Hyperlegible', sans-serif; text-shadow: none; }
-.community__empty { margin: 0; padding: 14px; font: 700 13px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.community__aside { margin-left: auto; font: 700 11px 'Nunito', sans-serif; text-shadow: none; }
+.community__empty { margin: 0; padding: 14px; font: 700 13px/1.45 'Nunito', sans-serif; color: var(--mu); }
 .community__body { padding: 10px 12px 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .column { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
-.column__title { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); text-transform: uppercase; letter-spacing: .04em; margin-top: 4px; }
+.column__title { font: 700 11px 'Nunito', sans-serif; color: var(--mu); text-transform: uppercase; letter-spacing: .04em; margin-top: 4px; }
 .bar { display: grid; grid-template-columns: minmax(0, 1fr) 70px 46px; gap: 6px; align-items: center; }
-.bar__name { font: 700 12px 'Atkinson Hyperlegible', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar__name { font: 700 12px 'Nunito', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .bar__track { height: 8px; border-radius: 3px; background: var(--in); overflow: hidden; }
 .bar__fill { display: block; height: 100%; border-radius: 3px; }
 .bar__pct { font: 600 12px 'Pixelify Sans', sans-serif; text-align: right; }
 .item { display: grid; grid-template-columns: 24px minmax(0, 1fr) 46px; gap: 6px; align-items: center; }
 .item__icon { width: 24px; height: 24px; }
 .item__icon > span { display: block; }
-.item__name { font: 700 12px 'Atkinson Hyperlegible', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item__name { font: 700 12px 'Nunito', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chips { display: flex; flex-wrap: wrap; gap: 4px; }
 
 .chip {
@@ -124,16 +124,16 @@ const counters = computed(() => named(props.usage?.counters ?? []))
   border-radius: 4px;
   color: #fff;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .6);
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
 
 .spread { padding: 6px 8px; border-radius: 7px; background: var(--in); box-shadow: inset 0 0 0 2px var(--chip); display: flex; flex-direction: column; gap: 2px; }
-.spread__head { display: flex; gap: 6px; font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
+.spread__head { display: flex; gap: 6px; font: 700 12px 'Nunito', sans-serif; }
 .spread__head b { flex: 1; }
 .spread__head span { font: 600 12px 'Pixelify Sans', sans-serif; }
-.spread__evs { font: 400 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.spread__evs { font: 400 11px 'Nunito', sans-serif; color: var(--mu); }
 .mons { display: flex; flex-wrap: wrap; gap: 3px; }
 .mon { width: 44px; height: 36px; border-radius: 6px; background: var(--in) center / 40px no-repeat; image-rendering: pixelated; box-shadow: inset 0 0 0 2px var(--chip); }
 .mon:hover { box-shadow: inset 0 0 0 2px var(--uA); }

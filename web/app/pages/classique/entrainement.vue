@@ -238,14 +238,14 @@ watch(() => store.latestBattle, (roomid, previous) => {
 .training__head { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
 .training__heading { flex: 1 1 260px; display: flex; flex-direction: column; gap: 2px; }
 .training__title { margin: 0; font: 700 30px/1 'Pixelify Sans', sans-serif; text-shadow: var(--sh); }
-.training__subtitle { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.training__subtitle { font: 700 14px 'Nunito', sans-serif; color: var(--mu); }
 .training__launch { height: 44px; padding: 0 20px; font-size: 15px; background: #48a860; color: #fff; }
-.training__error { margin: 0; padding: 10px 12px; border-radius: var(--r); background: #3a2216; color: #ffd9c8; font: 700 13px/1.45 'Atkinson Hyperlegible', sans-serif; }
+.training__error { margin: 0; padding: 10px 12px; border-radius: var(--r); background: #3a2216; color: #ffd9c8; font: 700 13px/1.45 'Nunito', sans-serif; }
 .training__body { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 12px; align-items: start; }
 .training__main, .training__side { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .step { display: flex; flex-direction: column; gap: 8px; }
 .step__title { font: 600 16px 'Pixelify Sans', sans-serif; }
-.step__title span { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); margin-left: 6px; }
+.step__title span { font: 700 12px 'Nunito', sans-serif; color: var(--mu); margin-left: 6px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .chip {
@@ -257,7 +257,7 @@ watch(() => store.latestBattle, (roomid, previous) => {
   background: var(--chip);
   color: var(--tx);
   box-shadow: 0 0 0 2px var(--bd);
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
 }
 
 .chip--on { background: var(--hd); color: var(--hdTx); }
@@ -274,21 +274,21 @@ watch(() => store.latestBattle, (roomid, previous) => {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  font: 400 12px/1.4 'Atkinson Hyperlegible', sans-serif;
+  font: 400 12px/1.4 'Nunito', sans-serif;
 }
 
-.goal b, .level b { font: 700 15px 'Atkinson Hyperlegible', sans-serif; }
+.goal b, .level b { font: 700 15px 'Nunito', sans-serif; }
 .goal span, .level span { color: var(--mu); }
 .goal--on, .style--on, .level--on { box-shadow: inset 0 0 0 2px var(--uA), 0 0 0 3px var(--bd); }
 .styles { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
-.style__head { display: flex; gap: 6px; font: 700 14px 'Atkinson Hyperlegible', sans-serif; }
+.style__head { display: flex; gap: 6px; font: 700 14px 'Nunito', sans-serif; }
 .style__head b { flex: 1; }
-.style__head span { font: 600 13px 'Pixelify Sans', sans-serif; color: var(--uA); }
+.style__head span { font: 600 13px 'Pixelify Sans', sans-serif; color: var(--uT); }
 .style__team { display: flex; gap: 1px; min-height: 30px; }
 .style__mon { width: 32px; height: 30px; background: center / 34px no-repeat; image-rendering: pixelated; }
 .style__text { color: var(--mu); }
 .levels { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
-.level__number { display: flex; align-items: center; justify-content: space-between; font: 700 22px 'Pixelify Sans', sans-serif; color: var(--uA) !important; }
+.level__number { display: flex; align-items: center; justify-content: space-between; font: 700 22px 'Pixelify Sans', sans-serif; color: var(--uT) !important; }
 .level__dots { font-size: 10px; letter-spacing: 1px; }
 .level--off { opacity: .5; }
 .panel { background: var(--pn); border-radius: var(--r); box-shadow: var(--pnS); overflow: hidden; }
@@ -305,14 +305,14 @@ watch(() => store.latestBattle, (roomid, previous) => {
 }
 
 .panel__body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 10px; }
-.panel__text { margin: 0; font: 700 12px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.panel__text { margin: 0; font: 700 12px/1.45 'Nunito', sans-serif; color: var(--mu); }
 .team { display: flex; flex-direction: column; gap: 6px; }
-.team__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.team__label { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .team__mons { display: flex; gap: 2px; flex-wrap: wrap; }
 .team__mon { width: 40px; height: 34px; border-radius: 6px; background: var(--in) center / 40px no-repeat; image-rendering: pixelated; }
-.toggle { display: flex; gap: 8px; align-items: flex-start; font: 700 12px/1.4 'Atkinson Hyperlegible', sans-serif; }
+.toggle { display: flex; gap: 8px; align-items: flex-start; font: 700 12px/1.4 'Nunito', sans-serif; }
 .toggle input { margin-top: 2px; accent-color: var(--uA); }
-.lesson { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font: 400 13px/1.45 'Atkinson Hyperlegible', sans-serif; }
+.lesson { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font: 400 13px/1.45 'Nunito', sans-serif; }
 
 @media (max-width: 1100px) {
   .training__body { grid-template-columns: minmax(0, 1fr); }

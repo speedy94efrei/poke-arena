@@ -93,7 +93,7 @@ defineExpose({ ask })
   background: var(--uA);
   color: var(--uAtx);
   text-shadow: none;
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
@@ -102,7 +102,7 @@ defineExpose({ ask })
 .message { max-width: 92%; padding: 8px 10px; border-radius: 9px; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
 .message--bot { align-self: flex-start; background: var(--in); box-shadow: inset 0 0 0 2px var(--chip); }
 .message--me { align-self: flex-end; background: var(--hd); color: var(--hdTx); }
-.message__text { margin: 0; font: 700 13px/1.45 'Atkinson Hyperlegible', sans-serif; }
+.message__text { margin: 0; font: 700 13px/1.45 'Nunito', sans-serif; }
 .message__team { display: flex; gap: 1px; flex-wrap: wrap; }
 .message__mon { width: 36px; height: 30px; background: center / 36px no-repeat; image-rendering: pixelated; }
 .ideas { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 12px; }
@@ -115,7 +115,7 @@ defineExpose({ ask })
   border-radius: 13px;
   background: var(--chip);
   color: var(--tx);
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
 }
 
 .ask { display: flex; gap: 6px; padding: 10px 12px 12px; }

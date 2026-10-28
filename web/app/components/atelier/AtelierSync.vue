@@ -33,8 +33,12 @@ const state = computed(() => {
   padding: 0 6px 0 12px;
   border-radius: 8px;
   background: var(--dk);
+  --tx: var(--dkTx);
+  --mu: var(--dkMu);
+  --chip: var(--dkChip);
+  color: var(--tx);
   box-shadow: var(--pnS);
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -53,7 +57,7 @@ const state = computed(() => {
   border-radius: 5px;
   background: var(--in);
   color: var(--tx);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   cursor: pointer;
 }
 

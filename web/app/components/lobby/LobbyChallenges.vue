@@ -70,14 +70,14 @@ const sendChallenge = () => challenge(opponent.value.trim(), sets.value)
   align-items: center;
   gap: 10px;
   justify-content: space-between;
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
 }
 
 .pending__pulse { animation: pulse 1.2s ease-in-out infinite; }
 
 .hint {
   margin: 0;
-  font: 400 13px/1.4 'Atkinson Hyperlegible', sans-serif;
+  font: 400 13px/1.4 'Nunito', sans-serif;
   color: var(--mu);
 }
 
@@ -88,11 +88,15 @@ const sendChallenge = () => challenge(opponent.value.trim(), sets.value)
   padding: 8px;
   border-radius: 8px;
   background: var(--dk);
+  --tx: var(--dkTx);
+  --mu: var(--dkMu);
+  --chip: var(--dkChip);
+  color: var(--tx);
   animation: pop .25s both;
 }
 
 .incoming__who {
   flex: 1;
-  font: 400 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 400 14px 'Nunito', sans-serif;
 }
 </style>

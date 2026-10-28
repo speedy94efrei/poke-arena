@@ -84,12 +84,12 @@ const range = computed(() => {
   gap: 4px 12px;
 }
 
-.calendar__legend { margin-left: auto; display: flex; align-items: center; gap: 5px; font: 700 11px 'Atkinson Hyperlegible', sans-serif; text-shadow: none; }
+.calendar__legend { margin-left: auto; display: flex; align-items: center; gap: 5px; font: 700 11px 'Nunito', sans-serif; text-shadow: none; }
 .dot { width: 10px; height: 10px; border-radius: 3px; margin-left: 6px; }
 .dot--regular { background: #3d6fc8; }
 .dot--community { background: #8a4ac8; }
 .calendar__grid { padding: 8px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
-.calendar__weekday { text-align: center; font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.calendar__weekday { text-align: center; font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
 .day { min-height: 74px; padding: 4px; border-radius: 7px; background: var(--in); box-shadow: inset 0 0 0 2px var(--chip); display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .day--today { box-shadow: inset 0 0 0 2px var(--uA); }
 .day--past { opacity: .55; }
@@ -102,7 +102,7 @@ const range = computed(() => {
   padding: 3px 5px;
   border-radius: 4px;
   color: #fff;
-  font: 700 10px/1.25 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px/1.25 'Nunito', sans-serif;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;

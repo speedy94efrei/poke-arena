@@ -86,9 +86,9 @@ const pinned = computed(() => {
   gap: 6px 10px;
 }
 
-.ladder__count { font: 700 12px 'Atkinson Hyperlegible', sans-serif; text-shadow: none; opacity: .9; }
+.ladder__count { font: 700 12px 'Nunito', sans-serif; text-shadow: none; opacity: .9; }
 .ladder__search { margin-left: auto; height: 30px; width: 200px; font-size: 13px; }
-.ladder__empty { margin: 0; padding: 16px; font: 700 13px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.ladder__empty { margin: 0; padding: 16px; font: 700 13px/1.45 'Nunito', sans-serif; color: var(--mu); }
 .table { padding: 6px; display: flex; flex-direction: column; gap: 1px; }
 
 .table__row {
@@ -104,7 +104,7 @@ const pinned = computed(() => {
   border-radius: 6px;
   background: transparent;
   color: var(--tx);
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
 }
 
 .table__row:hover:not(.table__row--head) { background: var(--chip); }

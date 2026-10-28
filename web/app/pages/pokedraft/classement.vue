@@ -185,7 +185,7 @@ const historySummary = computed(() => {
   return `${count('victoire')} V · ${count('defaite')} D · ${count('abandon')} abandon${count('abandon') > 1 ? 's' : ''} · ${signed(total)} PL`
 })
 
-const eventColor = (delta: number) => delta > 0 ? '#58d080' : delta < 0 ? '#ff8a7a' : 'var(--mu)'
+const eventColor = (delta: number) => delta > 0 ? 'var(--good)' : delta < 0 ? 'var(--bad)' : 'var(--mu)'
 
 const loadLadder = async () => {
   const standings = await request<{ data: LadderRow[], distribution: TierShare[] }>('/seasons/current/ladder')
@@ -219,14 +219,14 @@ onMounted(async () => {
 .ranking { display: flex; flex-direction: column; gap: 12px; }
 .ranking__head { display: flex; flex-direction: column; gap: 2px; }
 .ranking__title { margin: 0; font: 700 30px/1 'Pixelify Sans', sans-serif; text-shadow: var(--sh); }
-.ranking__subtitle { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.ranking__subtitle { font: 700 14px 'Nunito', sans-serif; color: var(--mu); }
 
 .notice {
   padding: 10px 14px;
   border-radius: var(--r);
   background: #3a2216;
   box-shadow: inset 0 0 0 2px #e8704a, 0 0 0 2px var(--bd);
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
   color: #ffd9c8;
 }
 
@@ -249,9 +249,9 @@ onMounted(async () => {
 .me__crest, .me__main, .status { position: relative; }
 .me__crest { display: flex; justify-content: center; }
 .me__main { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-.me__banner { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: #e8eefc; }
+.me__banner { font: 700 12px 'Nunito', sans-serif; color: #e8eefc; }
 .me__rank { font: 700 40px/1 'Pixelify Sans', sans-serif; text-shadow: 3px 3px 0 rgba(0, 0, 0, .6); }
-.me__points { font: 700 14px/1.45 'Atkinson Hyperlegible', sans-serif; }
+.me__points { font: 700 14px/1.45 'Nunito', sans-serif; }
 .me__points b { font: 600 20px 'Pixelify Sans', sans-serif; }
 .me__actions { display: flex; gap: 8px; }
 
@@ -266,7 +266,7 @@ onMounted(async () => {
 
 .me__fill { position: relative; height: 100%; background: linear-gradient(90deg, #b88a10, #ffd23a); overflow: hidden; animation: grow .8s steps(14) both; }
 .me__sweep { position: absolute; top: 0; bottom: 0; width: 30%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .55), transparent); animation: sweep 2.6s 1s ease-in-out infinite; }
-.me__position { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: #d8e0f0; }
+.me__position { font: 700 12px 'Nunito', sans-serif; color: #d8e0f0; }
 .me__position b { font: 600 14px 'Pixelify Sans', sans-serif; }
 .me__public { color: #ffd23a; }
 .status { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
@@ -280,10 +280,10 @@ onMounted(async () => {
   gap: 3px;
 }
 
-.status__key { display: flex; align-items: center; gap: 5px; font: 700 11px 'Atkinson Hyperlegible', sans-serif; }
+.status__key { display: flex; align-items: center; gap: 5px; font: 700 11px 'Nunito', sans-serif; }
 .status__key b { font: 600 13px 'Pixelify Sans', sans-serif; }
-.status__value { font: 700 13px 'Atkinson Hyperlegible', sans-serif; }
-.status__detail { font: 400 11px/1.3 'Atkinson Hyperlegible', sans-serif; color: #d8dce6; }
+.status__value { font: 700 13px 'Nunito', sans-serif; }
+.status__detail { font: 400 11px/1.3 'Nunito', sans-serif; color: #d8dce6; }
 
 .panel { background: var(--pn); border-radius: var(--r); box-shadow: var(--pnS); overflow: hidden; min-width: 0; }
 
@@ -300,7 +300,7 @@ onMounted(async () => {
   text-shadow: var(--hdSh);
 }
 
-.panel__aside { margin-left: auto; font: 700 12px 'Atkinson Hyperlegible', sans-serif; text-shadow: none; }
+.panel__aside { margin-left: auto; font: 700 12px 'Nunito', sans-serif; text-shadow: none; }
 
 .tiers {
   padding: 16px 12px 12px;
@@ -324,8 +324,8 @@ onMounted(async () => {
 
 .tier--me { background: rgba(255, 210, 58, .1); box-shadow: inset 0 0 0 2px var(--uA); }
 .tier__crest { display: flex; align-items: flex-end; justify-content: center; }
-.tier__name { font: 700 15px 'Pixelify Sans', sans-serif; }
-.tier__divisions { font: 700 10px/1.3 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.tier__name { font: 700 15px 'Pixelify Sans', sans-serif; filter: var(--inkFilter, none); }
+.tier__divisions { font: 700 10px/1.3 'Nunito', sans-serif; color: var(--mu); }
 .tier__share { font: 600 13px 'Pixelify Sans', sans-serif; }
 
 .tier__me {
@@ -337,7 +337,7 @@ onMounted(async () => {
   border-radius: 9px;
   background: var(--uA);
   color: var(--uAtx);
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
@@ -358,14 +358,14 @@ onMounted(async () => {
   border-radius: 4px;
   background: rgba(0, 0, 0, .65);
   color: #fff;
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
 
 .banner__tag--on { background: var(--uA); color: var(--uAtx); }
 .banner__foot { padding: 7px 10px 9px; display: flex; align-items: center; gap: 8px; }
-.banner__condition { flex: 1; font: 700 11px/1.3 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.banner__condition { flex: 1; font: 700 11px/1.3 'Nunito', sans-serif; color: var(--mu); }
 
 .bottom { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 12px; align-items: start; }
 .bottom__side { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
@@ -391,10 +391,10 @@ onMounted(async () => {
 .ladder__position { font: 600 16px 'Pixelify Sans', sans-serif; color: var(--mu); }
 .ladder__row--champion .ladder__position { color: #ffd970; }
 .ladder__crest { display: flex; justify-content: center; }
-.ladder__name { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--tx); text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ladder__name { font: 700 14px 'Nunito', sans-serif; color: var(--tx); text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ladder__row:hover .ladder__veil { background: linear-gradient(90deg, rgba(10, 12, 18, .35), rgba(10, 12, 18, .78) 45%); }
 .ladder__row:hover .ladder__name { text-decoration: underline; }
-.ladder__tier { font: 700 12px 'Atkinson Hyperlegible', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ladder__tier { font: 700 12px 'Nunito', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ladder__points { font: 600 15px 'Pixelify Sans', sans-serif; text-align: right; }
 .ladder__record { font: 600 13px 'Pixelify Sans', sans-serif; text-align: right; color: var(--mu); }
 .history { padding: 8px 10px; display: flex; flex-direction: column; gap: 4px; }
@@ -410,10 +410,10 @@ onMounted(async () => {
 }
 
 .event__delta { font: 600 17px 'Pixelify Sans', sans-serif; }
-.event__text { display: flex; flex-direction: column; min-width: 0; font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.event__text b { font: 700 13px 'Atkinson Hyperlegible', sans-serif; color: var(--tx); }
+.event__text { display: flex; flex-direction: column; min-width: 0; font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
+.event__text b { font: 700 13px 'Nunito', sans-serif; color: var(--tx); }
 .event__opponent { color: inherit; }
-.empty { padding: 14px 12px; font: 700 13px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.empty { padding: 14px 12px; font: 700 13px/1.45 'Nunito', sans-serif; color: var(--mu); }
 
 @keyframes grow { from { width: 0; } }
 @keyframes sweep { from { left: -30%; } to { left: 100%; } }

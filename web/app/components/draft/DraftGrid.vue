@@ -137,7 +137,7 @@ const lock = (card: { pokemon: Pokemon, disabled: boolean }) => {
   border: 0;
   border-radius: 7px;
   padding: 0 10px;
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   background: #fff;
   color: #22252b;
   outline: none;
@@ -148,7 +148,7 @@ const lock = (card: { pokemon: Pokemon, disabled: boolean }) => {
   border: 0;
   border-radius: 7px;
   padding: 0 6px;
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   background: var(--in);
   color: var(--tx);
   box-shadow: inset 0 0 0 2px var(--chip);
@@ -159,7 +159,7 @@ const lock = (card: { pokemon: Pokemon, disabled: boolean }) => {
   align-items: center;
   gap: 6px;
   cursor: pointer;
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   color: var(--mu);
 }
 
@@ -180,7 +180,7 @@ const lock = (card: { pokemon: Pokemon, disabled: boolean }) => {
   border-radius: 14px;
   background: var(--chip);
   color: var(--tx);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
 }
 
 .role--on { background: var(--uA); color: var(--uAtx); }
@@ -223,7 +223,7 @@ const lock = (card: { pokemon: Pokemon, disabled: boolean }) => {
 
 .card__name {
   max-width: 100%;
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -239,7 +239,7 @@ const lock = (card: { pokemon: Pokemon, disabled: boolean }) => {
   height: 17px;
   padding: 0 4px;
   border-radius: 3px;
-  font: 700 9px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 9px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }

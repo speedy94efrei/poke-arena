@@ -102,7 +102,7 @@ const portrait = computed(() => {
   text-shadow: var(--sh);
 }
 
-.head__link { font: 700 13px 'Atkinson Hyperlegible', sans-serif; }
+.head__link { font: 700 13px 'Nunito', sans-serif; }
 
 .tabs {
   display: flex;
@@ -121,7 +121,7 @@ const portrait = computed(() => {
   border-radius: 7px;
   background: var(--chip);
   color: var(--tx);
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -129,9 +129,9 @@ const portrait = computed(() => {
 
 .tab--active { background: var(--uA); color: var(--uAtx); }
 .tab--ghost { background: transparent; box-shadow: inset 0 0 0 2px var(--chip); }
-.tab--danger { background: transparent; color: #ff8a7a; }
+.tab--danger { background: transparent; color: var(--bad); }
 .tab__star { font-size: 15px; }
-.tab__star--on { color: var(--uA); }
+.tab__star--on { color: var(--uT); }
 .tab--active .tab__star--on { color: var(--uAtx); }
 
 .tab__warn {
@@ -140,10 +140,10 @@ const portrait = computed(() => {
   border-radius: 3px;
   background: #e8704a;
   color: #1a0a00;
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
 
-.head__note { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.head__note { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 </style>

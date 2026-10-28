@@ -267,7 +267,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   border-radius: 8px;
   background: rgba(0, 0, 0, .4);
   color: #fff;
-  font: 700 18px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 18px 'Nunito', sans-serif;
 }
 
 .hero__types { display: flex; gap: 5px; flex-wrap: wrap; }
@@ -278,13 +278,13 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   border-radius: 5px;
   color: #fff;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .55);
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .2), 0 0 0 2px rgba(255, 255, 255, .6);
 }
 
-.hero__roles { font: 700 13px/1.4 'Atkinson Hyperlegible', sans-serif; }
+.hero__roles { font: 700 13px/1.4 'Nunito', sans-serif; }
 
 .hero__chips {
   display: flex;
@@ -298,7 +298,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   padding: 0 8px;
   border-radius: 5px;
   background: rgba(0, 0, 0, .4);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -315,7 +315,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   border-radius: 5px;
   background: var(--uA);
   color: var(--uAtx);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
 }
 
 .correction {
@@ -335,7 +335,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   border-radius: 4px;
   background: #e8704a;
   color: #1a0a00;
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
@@ -344,7 +344,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   display: flex;
   flex-direction: column;
   gap: 2px;
-  font: 400 14px/1.45 'Atkinson Hyperlegible', sans-serif;
+  font: 400 14px/1.45 'Nunito', sans-serif;
   color: #ffd9c8;
 }
 
@@ -360,8 +360,8 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   gap: 4px;
 }
 
-.conseil__title { font: 600 15px 'Pixelify Sans', sans-serif; color: var(--uA); }
-.conseil__text { font: 700 14px/1.45 'Atkinson Hyperlegible', sans-serif; color: #fff3d6; }
+.conseil__title { font: 600 15px 'Pixelify Sans', sans-serif; color: var(--uT); }
+.conseil__text { font: 700 14px/1.45 'Nunito', sans-serif; color: #fff3d6; }
 
 .num { font: 600 15px 'Pixelify Sans', sans-serif; }
 
@@ -372,7 +372,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   gap: 8px;
 }
 
-.stat__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.stat__label { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .stat__value { font: 600 16px 'Pixelify Sans', sans-serif; text-align: right; }
 
 .stat__track {
@@ -403,7 +403,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
 .stat__delta { font: 600 14px 'Pixelify Sans', sans-serif; text-align: right; }
 
 .legend {
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
   color: var(--mu);
   display: flex;
   align-items: center;
@@ -416,19 +416,19 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   background: repeating-linear-gradient(135deg, rgba(255, 255, 255, .4) 0 3px, rgba(255, 255, 255, .12) 3px 6px);
 }
 
-.title { font: 700 17px 'Atkinson Hyperlegible', sans-serif; }
-.text { font: 400 14px/1.45 'Atkinson Hyperlegible', sans-serif; }
+.title { font: 700 17px 'Nunito', sans-serif; }
+.text { font: 400 14px/1.45 'Nunito', sans-serif; }
 .text--muted { color: var(--mu); font-size: 13px; }
-.lore { font: italic 400 13px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.note { font: 400 13px/1.4 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.lore { font: italic 400 13px/1.45 'Nunito', sans-serif; color: var(--mu); }
+.note { font: 400 13px/1.4 'Nunito', sans-serif; color: var(--mu); }
 
 .comite {
   padding: 6px 8px;
   border-radius: 6px;
   background: var(--in);
   box-shadow: inset 0 0 0 1px var(--uA);
-  font: 700 12px/1.4 'Atkinson Hyperlegible', sans-serif;
-  color: var(--uA);
+  font: 700 12px/1.4 'Nunito', sans-serif;
+  color: var(--uT);
 }
 
 .sig {
@@ -440,7 +440,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
 
 .sig__name {
   cursor: help;
-  font: 700 17px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 17px 'Nunito', sans-serif;
   text-decoration: underline dotted var(--mu);
   text-underline-offset: 4px;
 }
@@ -451,7 +451,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   border-radius: 4px;
   color: #fff;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .55);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
@@ -461,7 +461,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   padding: 0 8px 0 6px;
   border-radius: 4px;
   background: var(--in);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -484,7 +484,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   gap: 2px;
 }
 
-.nums__cell span { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.nums__cell span { font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
 .nums__cell b { font: 600 17px 'Pixelify Sans', sans-serif; }
 
 .ajouts {
@@ -495,7 +495,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   border-top: 2px solid var(--chip);
 }
 
-.ajouts__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.ajouts__label { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .ajouts__list { display: flex; gap: 4px; flex-wrap: wrap; }
 
 .ajouts__move {
@@ -504,7 +504,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   padding: 0 8px;
   border-radius: 5px;
   background: var(--chip);
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
@@ -516,7 +516,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   padding: 0 9px;
   border-radius: 5px;
   background: var(--in);
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -536,7 +536,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   padding: 0 10px;
   border-radius: 6px;
   background: var(--chip);
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -547,11 +547,11 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
 .set__name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .set__move--hors { opacity: .6; }
 .set__move--hors .set__name { text-decoration: line-through; }
-.set__flag { flex: none; font: 700 10px 'Atkinson Hyperlegible', sans-serif; }
-.set__flag--sig { color: var(--uA); }
-.set__flag--stab { color: #9fd8ff; }
+.set__flag { flex: none; font: 700 10px 'Nunito', sans-serif; }
+.set__flag--sig { color: var(--uT); }
+.set__flag--stab { color: var(--info); }
 .set__flag--hors { color: #ffd23a; }
-.set__pp { flex: none; margin-left: auto; font: 700 10px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.set__pp { flex: none; margin-left: auto; font: 700 10px 'Nunito', sans-serif; color: var(--mu); }
 .set__pp b { font: 600 12px 'Pixelify Sans', sans-serif; color: var(--tx); }
 .set__actions { display: flex; gap: 6px; flex-wrap: wrap; }
 
@@ -575,7 +575,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   height: 18px;
   color: #fff;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .6);
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: grid;
   place-items: center;
   white-space: nowrap;
@@ -589,7 +589,7 @@ const piegeables = computed(() => (props.pokemon.piegeables ?? []).map(nom => by
   font: 600 14px 'Pixelify Sans', sans-serif;
 }
 
-.sub { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.sub { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .sub--sep { padding-top: 8px; border-top: 2px solid var(--chip); }
 .chips { display: flex; gap: 4px; flex-wrap: wrap; }
 </style>

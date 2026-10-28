@@ -72,7 +72,7 @@ const tera = computed(() => {
     const type = index >= 0 ? props.battle.request?.active?.[index]?.canTerastallize : undefined
     return type ? { label: `Téra ${frenchType(type)} dispo`, color: '#60a1b8' } : null
   }
-  return { label: 'Téra ?', color: 'rgba(128,128,128,.4)' }
+  return { label: 'Téra ?', color: '#7a8292' }
 })
 
 /** Description d'un objet ou d'un talent : fiche PokéDraft, sinon Pokédex. */
@@ -141,7 +141,7 @@ const ability = computed(() => {
   white-space: nowrap;
 }
 
-.card__info { display: flex; gap: 10px; font: 700 11px 'Atkinson Hyperlegible', sans-serif; opacity: .9; white-space: nowrap; }
+.card__info { display: flex; gap: 10px; font: 700 11px 'Nunito', sans-serif; opacity: .9; white-space: nowrap; }
 .card__detail { position: relative; cursor: help; outline: none; border-bottom: 1px dotted currentColor; }
 .tip-title { font: 600 16px 'Pixelify Sans', sans-serif; }
 </style>

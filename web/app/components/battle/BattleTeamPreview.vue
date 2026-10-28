@@ -6,7 +6,7 @@
       <div class="preview__side">
         <span class="preview__label">{{ opponentName }}</span>
         <div class="preview__row">
-          <span v-for="member in opponents" :key="member.speciesId" class="preview__mon preview__mon--opp">
+          <span v-for="member in opponents" :key="member.speciesId" class="preview__mon preview__mon--opp" :style="{ '--habitat': habitat(member.speciesId) }">
             <span class="preview__sprite" :style="{ backgroundImage: `url(${spriteUrl(member.speciesId)})` }" />
             <span class="preview__name">{{ speciesName(member.speciesId) }}</span>
           </span>
@@ -22,6 +22,7 @@
             class="preview__mon"
             :class="{ 'preview__mon--picked': picked.includes(index) }"
             :disabled="battle.choiceSent"
+            :style="{ '--habitat': habitat(member.speciesId) }"
             @click="pick(index)"
           >
             <span v-if="picked.includes(index)" class="preview__rank">{{ picked.indexOf(index) + 1 }}</span>
@@ -52,6 +53,7 @@ const mine = computed(() => (props.battle.request?.side.pokemon ?? []).map((memb
   return { ident: member.ident, speciesId, name: speciesName(speciesId) }
 }))
 
+const habitat = (speciesId: string) => habitatBackground(speciesView(speciesId, isPokedraft(props.battle)).types[0])
 const picked = ref<number[]>([])
 const size = computed(() => Math.min(props.battle.request?.maxChosenTeamSize ?? mine.value.length, mine.value.length))
 const leads = computed(() => activeCount(props.battle))
@@ -101,7 +103,7 @@ const confirm = () => send(picked.value)
 }
 
 .preview__title { margin: 0; font: 700 26px 'Pixelify Sans', sans-serif; }
-.preview__hint, .preview__wait { margin: 0; font: 400 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.preview__hint, .preview__wait { margin: 0; font: 400 14px 'Nunito', sans-serif; color: var(--mu); }
 
 .preview__side {
   display: flex;
@@ -109,7 +111,7 @@ const confirm = () => send(picked.value)
   gap: 6px;
 }
 
-.preview__label { font: 700 13px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.preview__label { font: 700 13px 'Nunito', sans-serif; color: var(--mu); }
 
 .preview__row {
   display: grid;
@@ -120,8 +122,9 @@ const confirm = () => send(picked.value)
 .preview__mon {
   border: 0;
   border-radius: 10px;
-  background: var(--chip);
-  color: var(--tx);
+  background: linear-gradient(180deg, rgba(0, 0, 0, .1), rgba(0, 0, 0, .55)), var(--habitat, var(--chip));
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
   box-shadow: 0 0 0 2px var(--bd);
   padding: 6px;
   display: flex;
@@ -133,7 +136,7 @@ const confirm = () => send(picked.value)
 }
 
 .preview__mon:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 0 0 2px var(--sel); }
-.preview__mon--opp { background: var(--dk); cursor: default; }
+.preview__mon--opp { cursor: default; }
 
 .preview__sprite {
   width: 64px;
@@ -143,7 +146,7 @@ const confirm = () => send(picked.value)
 }
 
 .preview__name {
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -161,7 +164,7 @@ const confirm = () => send(picked.value)
   border-radius: 50%;
   background: var(--uA);
   color: var(--uAtx);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   display: grid;
   place-items: center;
 }

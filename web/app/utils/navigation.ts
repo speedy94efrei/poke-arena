@@ -1,4 +1,4 @@
-export type Universe = 'classique' | 'pokedraft'
+export type Universe = 'classique' | 'pokedraft' | 'roguelike' | 'route' | 'budget'
 
 export interface NavLink {
   label: string
@@ -11,7 +11,7 @@ export interface NavItem extends NavLink {
   children?: NavLink[]
 }
 
-/** Menus des deux univers ; une entrée sans `to` est affichée « bientôt ». */
+/** Menus de chaque mode ; une entrée sans `to` est affichée « bientôt ». */
 export const NAVIGATION: Record<Universe, NavItem[]> = {
   classique: [
     {
@@ -52,10 +52,32 @@ export const NAVIGATION: Record<Universe, NavItem[]> = {
     { icon: '⚔', label: 'Combat libre et défis', color: '#3d6fc8', to: '/pokedraft/combat' },
     { icon: '★', label: 'Classement et saison', color: '#3f8fa3', to: '/pokedraft/classement' },
   ],
+  roguelike: [
+    { icon: '▲', label: 'Accueil', color: '#7a52c8', to: '/roguelike' },
+    { icon: '★', label: 'Départ', color: '#7a52c8' },
+    { icon: '▤', label: 'Tour et portes', color: '#7a52c8' },
+    { icon: '◆', label: 'Récompenses', color: '#7a52c8' },
+    { icon: '●', label: 'Équipe', color: '#7a52c8' },
+  ],
+  route: [
+    { icon: '◉', label: 'Régions', color: '#2a7a40', to: '/route-des-ligues' },
+    { icon: '★', label: 'Tirage du banc', color: '#2a7a40' },
+    { icon: '▤', label: 'Carte de la région', color: '#2a7a40' },
+    { icon: '⚔', label: 'Arène', color: '#2a7a40' },
+    { icon: '$', label: 'Boutique', color: '#2a7a40' },
+  ],
+  budget: [
+    { icon: '▶', label: 'Accueil', color: '#16756c', to: '/budget' },
+    { icon: '✎', label: 'Constructeur', color: '#16756c', to: '/budget/constructeur' },
+    { icon: '¤', label: 'Barème et coûts', color: '#16756c', to: '/budget/bareme' },
+  ],
 }
 
 export function universeOf(path: string): Universe | null {
   if (path.startsWith('/classique')) return 'classique'
   if (path.startsWith('/pokedraft')) return 'pokedraft'
+  if (path.startsWith('/roguelike')) return 'roguelike'
+  if (path.startsWith('/route-des-ligues')) return 'route'
+  if (path.startsWith('/budget')) return 'budget'
   return null
 }

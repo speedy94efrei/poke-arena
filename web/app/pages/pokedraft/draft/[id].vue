@@ -206,7 +206,7 @@ onBeforeUnmount(() => clearInterval(timer))
 }
 
 .prep__title { font: 600 18px 'Pixelify Sans', sans-serif; text-shadow: var(--sh); }
-.prep__hint { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.prep__hint { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .prep__spacer { flex: 1; }
 
 .prep__count {
@@ -214,13 +214,13 @@ onBeforeUnmount(() => clearInterval(timer))
   padding: 0 10px;
   border-radius: 13px;
   background: var(--in);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.prep__count b { font: 600 14px 'Pixelify Sans', sans-serif; color: var(--uA); }
+.prep__count b { font: 600 14px 'Pixelify Sans', sans-serif; color: var(--uT); }
 
 .prep__grid {
   display: grid;
@@ -228,7 +228,7 @@ onBeforeUnmount(() => clearInterval(timer))
   gap: 10px;
 }
 
-.prep__note { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.prep__note { font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
 
 .launch, .none {
   flex: 1;
@@ -242,7 +242,7 @@ onBeforeUnmount(() => clearInterval(timer))
 
 .launch__title, .none__title { font: 700 26px 'Pixelify Sans', sans-serif; text-shadow: var(--sh); }
 .launch__title { animation: pulse 1.2s ease-in-out infinite; }
-.launch__text, .none__text { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.launch__text, .none__text { font: 700 14px 'Nunito', sans-serif; color: var(--mu); }
 .none { min-height: 60vh; }
 
 .quit {
@@ -269,7 +269,7 @@ onBeforeUnmount(() => clearInterval(timer))
 }
 
 .quit__title { font: 700 24px 'Pixelify Sans', sans-serif; }
-.quit__text { font: 700 15px/1.45 'Atkinson Hyperlegible', sans-serif; color: #ffb0a0; }
+.quit__text { font: 700 15px/1.45 'Nunito', sans-serif; color: #ffb0a0; }
 .quit__actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
 
 @media (max-width: 1100px) {

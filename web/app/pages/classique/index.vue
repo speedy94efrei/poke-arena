@@ -138,7 +138,7 @@ watch([format, connected], async () => {
 .home { display: flex; flex-direction: column; gap: 12px; }
 .home__head { display: flex; flex-direction: column; gap: 2px; }
 .home__title { margin: 0; font: 700 30px/1 'Pixelify Sans', sans-serif; text-shadow: var(--sh); }
-.home__subtitle { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.home__subtitle { font: 700 14px 'Nunito', sans-serif; color: var(--mu); }
 
 .hero {
   position: relative;
@@ -156,9 +156,9 @@ watch([format, connected], async () => {
 }
 
 .hero__sprite { position: absolute; right: 30px; bottom: 0; width: 170px; height: 150px; background: center bottom / contain no-repeat; image-rendering: pixelated; animation: bob 2.6s ease-in-out infinite; }
-.hero__kicker { font: 700 12px 'Atkinson Hyperlegible', sans-serif; opacity: .85; }
+.hero__kicker { font: 700 12px 'Nunito', sans-serif; opacity: .85; }
 .hero__title { font: 700 36px/1 'Pixelify Sans', sans-serif; text-shadow: 3px 3px 0 rgba(0, 0, 0, .35); }
-.hero__text { max-width: 520px; font: 700 14px/1.4 'Atkinson Hyperlegible', sans-serif; }
+.hero__text { max-width: 520px; font: 700 14px/1.4 'Nunito', sans-serif; }
 .modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 
 .mode {
@@ -178,7 +178,7 @@ watch([format, connected], async () => {
 .mode--soon { opacity: .6; }
 .mode__sprite { position: absolute; right: 8px; top: 6px; width: 72px; height: 72px; background: center / contain no-repeat; image-rendering: pixelated; }
 .mode__title { font: 700 20px 'Pixelify Sans', sans-serif; text-shadow: 2px 2px 0 rgba(0, 0, 0, .3); }
-.mode__text { font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
+.mode__text { font: 700 12px 'Nunito', sans-serif; }
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
 .panel { background: var(--pn); border-radius: var(--r); box-shadow: var(--pnS); overflow: hidden; min-width: 0; }
 
@@ -194,30 +194,30 @@ watch([format, connected], async () => {
   text-shadow: var(--hdSh);
 }
 
-.panel__aside, .panel__link { margin-left: auto; font: 700 12px 'Atkinson Hyperlegible', sans-serif; text-shadow: none; color: inherit; }
+.panel__aside, .panel__link { margin-left: auto; font: 700 12px 'Nunito', sans-serif; text-shadow: none; color: inherit; }
 .panel__body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 6px; }
 .rank { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
 .rank__elo { font: 700 34px/1 'Pixelify Sans', sans-serif; }
-.rank__text { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.rank__text { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .rank__bar, .use__bar, .style__bar { height: 8px; border-radius: 4px; background: var(--in); overflow: hidden; }
 .rank__fill { display: block; height: 100%; background: linear-gradient(90deg, #b88a10, #ffd23a); }
 .use { display: grid; grid-template-columns: 18px 36px minmax(0, 1fr) minmax(0, 120px) 54px; gap: 8px; align-items: center; }
 .use__rank { font: 600 15px 'Pixelify Sans', sans-serif; color: var(--mu); }
 .use__sprite { width: 36px; height: 36px; background: center / contain no-repeat; image-rendering: pixelated; }
-.use__name { font: 700 14px 'Atkinson Hyperlegible', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.use__name { font: 700 14px 'Nunito', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .use__fill { display: block; height: 100%; background: var(--hd); }
 .use__pct, .style__pct { font: 600 14px 'Pixelify Sans', sans-serif; text-align: right; }
 .style { display: grid; grid-template-columns: minmax(0, 150px) minmax(0, 1fr) 46px; gap: 8px; align-items: center; }
-.style__name { font: 700 13px 'Atkinson Hyperlegible', sans-serif; }
+.style__name { font: 700 13px 'Nunito', sans-serif; }
 .style__fill { display: block; height: 100%; background: #48a860; }
 .played { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 8px; align-items: center; padding: 6px 8px; border-radius: 7px; background: var(--in); }
-.played__result { padding: 3px 6px; border-radius: 5px; color: #fff; text-align: center; font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
+.played__result { padding: 3px 6px; border-radius: 5px; color: #fff; text-align: center; font: 700 12px 'Nunito', sans-serif; }
 .played__result--victoire { background: #48a860; }
 .played__result--defaite { background: #e04838; }
 .played__result--egalite { background: #6a7080; }
-.played__text { display: flex; flex-direction: column; min-width: 0; font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.played__text b { font: 700 13px 'Atkinson Hyperlegible', sans-serif; color: var(--tx); }
-.empty { margin: 0; font: 700 13px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.played__text { display: flex; flex-direction: column; min-width: 0; font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
+.played__text b { font: 700 13px 'Nunito', sans-serif; color: var(--tx); }
+.empty { margin: 0; font: 700 13px/1.45 'Nunito', sans-serif; color: var(--mu); }
 
 @media (max-width: 1000px) {
   .grid, .modes { grid-template-columns: minmax(0, 1fr); }

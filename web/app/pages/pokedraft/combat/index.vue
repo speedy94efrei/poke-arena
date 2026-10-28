@@ -44,7 +44,7 @@ watch(() => store.latestBattle, (roomid) => {
 }
 
 .lobby__subtitle {
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
   color: var(--mu);
 }
 

@@ -171,15 +171,19 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
   text-shadow: var(--sh);
 }
 
-.atelier__subtitle { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.atelier__subtitle { font: 700 14px 'Nunito', sans-serif; color: var(--mu); }
 
 .atelier__ready {
   height: 32px;
   padding: 0 12px;
   border-radius: 8px;
   background: var(--dk);
+  --tx: var(--dkTx);
+  --mu: var(--dkMu);
+  --chip: var(--dkChip);
+  color: var(--tx);
   box-shadow: var(--pnS);
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -190,7 +194,7 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
   border-radius: var(--r);
   background: #16301f;
   box-shadow: inset 0 0 0 2px #58d080, 0 0 0 2px var(--bd);
-  font: 700 13px/1.4 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px/1.4 'Nunito', sans-serif;
   color: #d8f5e0;
   display: flex;
   align-items: center;
@@ -232,9 +236,9 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
 }
 
 .editor__actions { display: flex; gap: 6px; flex-wrap: wrap; }
-.talent__name { font: 700 16px 'Atkinson Hyperlegible', sans-serif; }
-.talent__effect { font: 400 14px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.talent__lore { font: italic 400 13px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.talent__name { font: 700 16px 'Nunito', sans-serif; }
+.talent__effect { font: 400 14px/1.45 'Nunito', sans-serif; color: var(--mu); }
+.talent__lore { font: italic 400 13px/1.45 'Nunito', sans-serif; color: var(--mu); }
 
 .warning {
   padding: 10px 12px;
@@ -253,7 +257,7 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
   border-radius: 4px;
   background: #e8704a;
   color: #1a0a00;
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
@@ -264,7 +268,7 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
   display: flex;
   flex-direction: column;
   gap: 3px;
-  font: 400 14px/1.45 'Atkinson Hyperlegible', sans-serif;
+  font: 400 14px/1.45 'Nunito', sans-serif;
   color: #ffd9c8;
 }
 
@@ -277,9 +281,12 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
   padding: 12px 18px;
   border-radius: 10px;
   background: var(--dk);
+  --tx: var(--dkTx);
+  --mu: var(--dkMu);
+  --chip: var(--dkChip);
   color: var(--tx);
   box-shadow: 0 0 0 2px var(--uA), 0 10px 30px rgba(0, 0, 0, .5);
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
   animation: pop .2s both;
 }
 

@@ -49,7 +49,7 @@ const step = computed(() => draftStep(props.draft.phase))
 
 .top__diamond { width: 10px; height: 10px; transform: rotate(45deg); background: var(--uA); }
 .top__name { font: 700 17px 'Pixelify Sans', sans-serif; }
-.top__season { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.top__season { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 
 .steps {
   list-style: none;
@@ -59,6 +59,10 @@ const step = computed(() => draftStep(props.draft.phase))
   gap: 3px;
   border-radius: var(--r);
   background: var(--dk);
+  --tx: var(--dkTx);
+  --mu: var(--dkMu);
+  --chip: var(--dkChip);
+  color: var(--tx);
   box-shadow: var(--pnS);
 }
 
@@ -67,7 +71,7 @@ const step = computed(() => draftStep(props.draft.phase))
   padding: 0 10px;
   border-radius: 7px;
   color: var(--mu);
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -77,8 +81,8 @@ const step = computed(() => draftStep(props.draft.phase))
 .step--now { background: var(--uA); color: var(--uAtx); }
 .step__number { font: 600 13px 'Pixelify Sans', sans-serif; }
 .top__spacer { flex: 1; }
-.top__max-label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.top__max-value { font: 600 19px 'Pixelify Sans', sans-serif; color: var(--uA); }
+.top__max-label { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
+.top__max-value { font: 600 19px 'Pixelify Sans', sans-serif; color: var(--uT); }
 
 .top__quit {
   border: 0;
@@ -89,6 +93,6 @@ const step = computed(() => draftStep(props.draft.phase))
   background: transparent;
   box-shadow: inset 0 0 0 2px #e8604a;
   color: #ff9a8a;
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
 }
 </style>

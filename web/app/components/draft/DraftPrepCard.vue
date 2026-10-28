@@ -128,7 +128,7 @@ const footText = computed(() => {
 }
 
 .prep__name { font: 700 20px/1 'Pixelify Sans', sans-serif; color: #fff; text-shadow: 2px 2px 0 rgba(0, 0, 0, .6); }
-.prep__talent { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: #fff; text-shadow: 1px 1px 0 #000; }
+.prep__talent { font: 700 11px 'Nunito', sans-serif; color: #fff; text-shadow: 1px 1px 0 #000; }
 
 .prep__badge {
   position: absolute;
@@ -139,7 +139,7 @@ const footText = computed(() => {
   border-radius: 4px;
   background: var(--uA);
   color: var(--uAtx);
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
@@ -152,7 +152,7 @@ const footText = computed(() => {
   flex: 1;
 }
 
-.prep__label { font: 700 10px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.prep__label { font: 700 10px 'Nunito', sans-serif; color: var(--mu); }
 .tabs { display: flex; gap: 3px; flex-wrap: wrap; }
 
 .tab {
@@ -164,7 +164,7 @@ const footText = computed(() => {
   border-radius: 6px;
   background: var(--chip);
   color: var(--tx);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -201,7 +201,7 @@ const footText = computed(() => {
 .pair__text {
   flex: 1;
   min-width: 0;
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -216,8 +216,8 @@ const footText = computed(() => {
   line-height: 1.1;
 }
 
-.pair__nature-name { font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
-.pair__nature-effect { font: 700 9px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.pair__nature-name { font: 700 12px 'Nunito', sans-serif; }
+.pair__nature-effect { font: 700 9px 'Nunito', sans-serif; color: var(--mu); }
 .moves { display: flex; flex-direction: column; gap: 3px; }
 
 .move {
@@ -234,23 +234,23 @@ const footText = computed(() => {
   height: 100%;
   color: #fff;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .6);
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: grid;
   place-items: center;
 }
 
 .move__name {
-  font: 400 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 400 12px 'Nunito', sans-serif;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .move__name--stab { font-weight: 700; }
-.move__stab { font: 700 9px 'Atkinson Hyperlegible', sans-serif; color: #9fd8ff; margin-left: 4px; }
+.move__stab { font: 700 9px 'Nunito', sans-serif; color: var(--info); margin-left: 4px; }
 .move__cat { width: 10px; height: 10px; box-shadow: 0 0 0 2px rgba(0, 0, 0, .45); }
 .move__power { font: 600 13px 'Pixelify Sans', sans-serif; text-align: right; }
-.move__pp { font: 700 9px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); text-align: right; }
+.move__pp { font: 700 9px 'Nunito', sans-serif; color: var(--mu); text-align: right; }
 
 .foot {
   margin-top: auto;
@@ -260,8 +260,8 @@ const footText = computed(() => {
   min-height: 28px;
 }
 
-.foot__text { flex: 1; min-width: 0; font: 700 11px/1.3 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.foot__text--modified { color: var(--uA); }
+.foot__text { flex: 1; min-width: 0; font: 700 11px/1.3 'Nunito', sans-serif; color: var(--mu); }
+.foot__text--modified { color: var(--uT); }
 
 .foot__undo, .foot__edit {
   border: 0;
@@ -269,7 +269,7 @@ const footText = computed(() => {
   height: 26px;
   padding: 0 9px;
   border-radius: 5px;
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
 }
 
 .foot__undo { background: var(--chip); color: var(--tx); }

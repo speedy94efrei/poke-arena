@@ -165,13 +165,13 @@ onBeforeUnmount(() => {
   border-radius: 8px;
   background: rgba(0, 0, 0, .4);
   color: #fff;
-  font: 700 16px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 16px 'Nunito', sans-serif;
 }
 
 .tip__missing {
   margin: 0;
   padding: 12px;
-  font: 700 13px/1.4 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px/1.4 'Nunito', sans-serif;
   color: var(--mu);
 }
 
@@ -195,7 +195,7 @@ onBeforeUnmount(() => {
   border-radius: 4px;
   color: #fff;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .55);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   box-shadow: 0 0 0 2px rgba(255, 255, 255, .4);
@@ -206,7 +206,7 @@ onBeforeUnmount(() => {
   padding: 0 8px 0 6px;
   border-radius: 4px;
   background: var(--in);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -218,7 +218,7 @@ onBeforeUnmount(() => {
   height: 22px;
   padding: 0 7px;
   border-radius: 4px;
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
@@ -238,16 +238,16 @@ onBeforeUnmount(() => {
   gap: 1px;
 }
 
-.tip__num span { font: 700 10px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.tip__num span { font: 700 10px 'Nunito', sans-serif; color: var(--mu); }
 .tip__num b { font: 600 15px 'Pixelify Sans', sans-serif; white-space: nowrap; }
-.tip__effet { font: 400 14px/1.45 'Atkinson Hyperlegible', sans-serif; text-wrap: pretty; }
+.tip__effet { font: 400 14px/1.45 'Nunito', sans-serif; text-wrap: pretty; }
 
 .tip__ban {
   padding: 6px 8px;
   border-radius: 6px;
   background: rgba(200, 54, 42, .22);
   box-shadow: inset 0 0 0 1px #c8362a;
-  font: 700 12px/1.4 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px/1.4 'Nunito', sans-serif;
 }
 
 .tip__mods {
@@ -260,8 +260,8 @@ onBeforeUnmount(() => {
   gap: 3px;
 }
 
-.tip__mods-title { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: #ffb89a; }
-.tip__mod { font: 700 12px/1.4 'Atkinson Hyperlegible', sans-serif; }
+.tip__mods-title { font: 700 11px 'Nunito', sans-serif; color: #ffb89a; }
+.tip__mod { font: 700 12px/1.4 'Nunito', sans-serif; }
 .tip__mod s { color: var(--mu); }
 
 .tip__props {
@@ -277,12 +277,12 @@ onBeforeUnmount(() => {
   padding: 0 7px;
   border-radius: 4px;
   background: var(--chip);
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.tip__prop b { font: 600 12px 'Pixelify Sans', sans-serif; color: var(--uA); }
-.tip__none { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.tip__prop b { font: 600 12px 'Pixelify Sans', sans-serif; color: var(--uT); }
+.tip__none { font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
 </style>

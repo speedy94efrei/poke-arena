@@ -235,7 +235,7 @@ onBeforeUnmount(() => {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, .55);
   display: flex;
   align-items: center;
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
   white-space: nowrap;
   z-index: 6;
 }
@@ -301,7 +301,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 5px;
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   white-space: nowrap;
 }
 
@@ -312,7 +312,7 @@ onBeforeUnmount(() => {
   color: #fff;
   display: grid;
   place-items: center;
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
 }
 
 .scene__card { position: absolute; z-index: 5; }
@@ -349,7 +349,7 @@ onBeforeUnmount(() => {
 
 .scene__text {
   flex: 1;
-  font: 700 18px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 18px 'Nunito', sans-serif;
   color: var(--tbTx);
   white-space: nowrap;
   overflow: hidden;

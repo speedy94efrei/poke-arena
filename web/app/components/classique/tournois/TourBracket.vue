@@ -60,14 +60,14 @@ const players = computed(() => props.bracket?.users ?? props.players)
   gap: 8px;
 }
 
-.bracket__winner { margin-left: auto; font: 700 12px 'Atkinson Hyperlegible', sans-serif; text-shadow: none; }
+.bracket__winner { margin-left: auto; font: 700 12px 'Nunito', sans-serif; text-shadow: none; }
 .bracket__body { padding: 12px; overflow-x: auto; }
 .bracket__tree { display: flex; justify-content: flex-start; min-width: max-content; }
-.bracket__note { margin: 0 0 8px; font: 700 13px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.bracket__note { margin: 0 0 8px; font: 700 13px/1.45 'Nunito', sans-serif; color: var(--mu); }
 .bracket__players { display: flex; flex-wrap: wrap; gap: 5px; }
-.bracket__player { height: 26px; padding: 0 10px; border-radius: 13px; background: var(--chip); font: 700 12px 'Atkinson Hyperlegible', sans-serif; display: flex; align-items: center; }
+.bracket__player { height: 26px; padding: 0 10px; border-radius: 13px; background: var(--chip); font: 700 12px 'Nunito', sans-serif; display: flex; align-items: center; }
 .bracket__player--me { background: var(--sel); color: var(--selTx); }
-.table { border-collapse: separate; border-spacing: 3px; font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
+.table { border-collapse: separate; border-spacing: 3px; font: 700 12px 'Nunito', sans-serif; }
 .table th { color: var(--mu); padding: 2px 6px; white-space: nowrap; }
 .table td { min-width: 44px; height: 26px; border-radius: 4px; text-align: center; background: var(--in); }
 .table__cell--none { background: transparent !important; }

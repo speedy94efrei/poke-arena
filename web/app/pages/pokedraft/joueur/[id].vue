@@ -187,7 +187,7 @@ watch(() => String(route.params.id), load, { immediate: true })
 
 <style scoped>
 .player { display: flex; flex-direction: column; gap: 12px; }
-.player__back { align-self: flex-start; font: 700 13px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); text-decoration: none; }
+.player__back { align-self: flex-start; font: 700 13px 'Nunito', sans-serif; color: var(--mu); text-decoration: none; }
 .player__back:hover { color: var(--tx); }
 
 .notice {
@@ -195,7 +195,7 @@ watch(() => String(route.params.id), load, { immediate: true })
   border-radius: var(--r);
   background: #3a2216;
   box-shadow: inset 0 0 0 2px #e8704a, 0 0 0 2px var(--bd);
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
   color: #ffd9c8;
 }
 
@@ -217,7 +217,7 @@ watch(() => String(route.params.id), load, { immediate: true })
 .hero__crest, .hero__main, .stats { position: relative; }
 .hero__crest { display: flex; justify-content: center; }
 .hero__main { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.hero__kicker { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: #e8eefc; }
+.hero__kicker { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font: 700 12px 'Nunito', sans-serif; color: #e8eefc; }
 
 .hero__me {
   height: 18px;
@@ -225,17 +225,17 @@ watch(() => String(route.params.id), load, { immediate: true })
   border-radius: 9px;
   background: var(--uA);
   color: var(--uAtx);
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: inline-flex;
   align-items: center;
 }
 
 .hero__name { margin: 0; font: 700 44px/1 'Pixelify Sans', sans-serif; text-shadow: 3px 3px 0 rgba(0, 0, 0, .6); overflow-wrap: anywhere; }
 .hero__rank { font: 700 24px/1 'Pixelify Sans', sans-serif; text-shadow: 2px 2px 0 rgba(0, 0, 0, .6); }
-.hero__points { font: 700 14px/1.45 'Atkinson Hyperlegible', sans-serif; }
+.hero__points { font: 700 14px/1.45 'Nunito', sans-serif; }
 .hero__points b { font: 600 18px 'Pixelify Sans', sans-serif; }
-.hero__peak { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: #d8e0f0; }
-.hero__link { align-self: flex-start; font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: #ffd23a; }
+.hero__peak { font: 700 12px 'Nunito', sans-serif; color: #d8e0f0; }
+.hero__link { align-self: flex-start; font: 700 12px 'Nunito', sans-serif; color: #ffd23a; }
 .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
 
 .stats__tile {
@@ -249,9 +249,9 @@ watch(() => String(route.params.id), load, { immediate: true })
   min-width: 0;
 }
 
-.stats__key { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: #c8d0dc; }
+.stats__key { font: 700 11px 'Nunito', sans-serif; color: #c8d0dc; }
 .stats__value { font: 600 22px/1.1 'Pixelify Sans', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.stats__detail { font: 400 11px/1.3 'Atkinson Hyperlegible', sans-serif; color: #d8dce6; }
+.stats__detail { font: 400 11px/1.3 'Nunito', sans-serif; color: #d8dce6; }
 
 .panel { background: var(--pn); border-radius: var(--r); box-shadow: var(--pnS); overflow: hidden; min-width: 0; }
 
@@ -268,7 +268,7 @@ watch(() => String(route.params.id), load, { immediate: true })
   text-shadow: var(--hdSh);
 }
 
-.panel__aside { margin-left: auto; font: 700 12px 'Atkinson Hyperlegible', sans-serif; text-shadow: none; }
+.panel__aside { margin-left: auto; font: 700 12px 'Nunito', sans-serif; text-shadow: none; }
 .columns { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 12px; align-items: start; }
 .picks { padding: 8px 10px; display: flex; flex-direction: column; gap: 4px; }
 
@@ -285,13 +285,13 @@ watch(() => String(route.params.id), load, { immediate: true })
 .pick--ban { grid-template-columns: 44px minmax(0, 1fr); }
 .pick--ban .pick__sprite { filter: grayscale(.7); }
 .pick__sprite { width: 44px; height: 44px; object-fit: contain; image-rendering: pixelated; }
-.pick__text { display: flex; flex-direction: column; min-width: 0; font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.pick__text b { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--tx); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pick__text { display: flex; flex-direction: column; min-width: 0; font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
+.pick__text b { font: 700 14px 'Nunito', sans-serif; color: var(--tx); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pick__rate { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 8px; align-items: center; }
-.pick__value { grid-row: span 2; font: 600 17px 'Pixelify Sans', sans-serif; color: #58d080; }
+.pick__value { grid-row: span 2; font: 600 17px 'Pixelify Sans', sans-serif; color: var(--good); }
 .pick__bar { height: 7px; border-radius: 4px; background: rgba(0, 0, 0, .35); overflow: hidden; }
 .pick__fill { display: block; height: 100%; background: linear-gradient(90deg, #2f9a58, #58d080); }
-.pick__label { font: 700 10px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.pick__label { font: 700 10px 'Nunito', sans-serif; color: var(--mu); }
 .drafts { padding: 8px 10px; display: flex; flex-direction: column; gap: 4px; }
 
 .draft {
@@ -305,9 +305,9 @@ watch(() => String(route.params.id), load, { immediate: true })
 }
 
 .draft__result { font: 700 20px 'Pixelify Sans', sans-serif; text-align: center; }
-.draft__who { display: flex; flex-direction: column; min-width: 0; font: 700 13px 'Atkinson Hyperlegible', sans-serif; }
+.draft__who { display: flex; flex-direction: column; min-width: 0; font: 700 13px 'Nunito', sans-serif; }
 .draft__opponent { color: var(--tx); }
-.draft__when { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.draft__when { font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
 .draft__teams { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; min-width: 0; }
 .draft__team { flex: none; display: flex; gap: 2px; }
 .draft__team--opponent { opacity: .75; }
@@ -328,7 +328,7 @@ watch(() => String(route.params.id), load, { immediate: true })
   border-radius: 4px;
   background: var(--uA);
   color: var(--uAtx);
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
@@ -346,9 +346,9 @@ watch(() => String(route.params.id), load, { immediate: true })
 }
 
 .season__rate { font: 600 17px 'Pixelify Sans', sans-serif; }
-.season__text { display: flex; flex-direction: column; min-width: 0; font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.season__text b { font: 700 13px 'Atkinson Hyperlegible', sans-serif; color: var(--tx); }
-.empty { margin: 0; padding: 14px 12px; font: 700 13px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.season__text { display: flex; flex-direction: column; min-width: 0; font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
+.season__text b { font: 700 13px 'Nunito', sans-serif; color: var(--tx); }
+.empty { margin: 0; padding: 14px 12px; font: 700 13px/1.45 'Nunito', sans-serif; color: var(--mu); }
 
 @media (max-width: 1100px) {
   .hero, .columns { grid-template-columns: minmax(0, 1fr); }

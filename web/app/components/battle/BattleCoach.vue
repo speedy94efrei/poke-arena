@@ -110,26 +110,26 @@ watch(() => props.battle.request, async (request) => {
 </script>
 
 <style scoped>
-.coach { flex: none; background: var(--dk); color: #fff; border-radius: var(--r); box-shadow: var(--pnS); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.coach { flex: none; background: var(--dk); --tx: var(--dkTx); --mu: var(--dkMu); --chip: var(--dkChip); color: #fff; border-radius: var(--r); box-shadow: var(--pnS); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
 .coach__head { display: flex; align-items: center; gap: 8px; }
 .coach__badge { height: 22px; padding: 0 8px; border-radius: 5px; background: var(--sel); color: #383838; font: 600 12px 'Pixelify Sans', sans-serif; display: grid; place-items: center; }
 .coach__title { flex: 1; min-width: 0; font: 600 15px/1.1 'Pixelify Sans', sans-serif; }
-.coach__turn { flex: none; white-space: nowrap; font: 700 11px 'Atkinson Hyperlegible', sans-serif; opacity: .7; }
+.coach__turn { flex: none; white-space: nowrap; font: 700 11px 'Nunito', sans-serif; opacity: .7; }
 .coach__fold { flex: none; border: 0; cursor: pointer; height: 26px; padding: 0 10px; border-radius: 6px; background: rgba(255, 255, 255, .14); color: #fff; font: 600 13px 'Pixelify Sans', sans-serif; }
 .coach__body { display: flex; flex-direction: column; gap: 8px; }
-.coach__note { margin: 0; font: 700 12px/1.45 'Atkinson Hyperlegible', sans-serif; opacity: .75; }
+.coach__note { margin: 0; font: 700 12px/1.45 'Nunito', sans-serif; opacity: .75; }
 .coach__reveal { align-self: flex-start; }
-.coach__pick { margin: 0; font: 800 13px/1.4 'Atkinson Hyperlegible', sans-serif; }
+.coach__pick { margin: 0; font: 800 13px/1.4 'Nunito', sans-serif; }
 .coach__pick b { color: var(--sel); }
 .coach__options { display: flex; flex-direction: column; gap: 4px; }
-.option { display: grid; grid-template-columns: minmax(0, 1fr) 80px; gap: 8px; align-items: center; padding: 3px 6px; border-radius: 6px; font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
+.option { display: grid; grid-template-columns: minmax(0, 1fr) 80px; gap: 8px; align-items: center; padding: 3px 6px; border-radius: 6px; font: 700 12px 'Nunito', sans-serif; }
 .option--best { background: rgba(248, 208, 48, .16); }
 .option--mine { box-shadow: inset 0 0 0 2px #4a8fe0; }
 .option__label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .option__track { height: 8px; border-radius: 4px; background: rgba(255, 255, 255, .12); overflow: hidden; }
 .option__fill { display: block; height: 100%; background: var(--sel); }
-.coach__verdict { margin: 0; padding: 6px 8px; border-radius: 7px; font: 700 12px/1.45 'Atkinson Hyperlegible', sans-serif; }
+.coach__verdict { margin: 0; padding: 6px 8px; border-radius: 7px; font: 700 12px/1.45 'Nunito', sans-serif; }
 .coach__verdict--good { background: #16301f; color: #c8f0d4; }
 .coach__verdict--warn { background: #3a2216; color: #ffd9c8; }
-.coach__meta { font: 700 11px 'Atkinson Hyperlegible', sans-serif; opacity: .6; }
+.coach__meta { font: 700 11px 'Nunito', sans-serif; opacity: .6; }
 </style>

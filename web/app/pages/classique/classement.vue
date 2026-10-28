@@ -114,7 +114,7 @@ const play = () => navigateTo('/classique/classe')
 .ranking__head { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
 .ranking__heading { flex: 1 1 260px; display: flex; flex-direction: column; gap: 2px; }
 .ranking__title { margin: 0; font: 700 30px/1 'Pixelify Sans', sans-serif; text-shadow: var(--sh); }
-.ranking__subtitle { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.ranking__subtitle { font: 700 14px 'Nunito', sans-serif; color: var(--mu); }
 .mine { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
 
 .mine__card {
@@ -132,19 +132,19 @@ const play = () => navigateTo('/classique/classe')
 }
 
 .mine__card--on { box-shadow: inset 0 0 0 2px var(--uA), 0 0 0 3px var(--bd); }
-.mine__format { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.mine__format { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .mine__elo { font: 700 26px/1.1 'Pixelify Sans', sans-serif; }
-.mine__line { display: flex; gap: 6px; align-items: center; font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
-.mine__trend { color: #58d080; }
+.mine__line { display: flex; gap: 6px; align-items: center; font: 700 12px 'Nunito', sans-serif; }
+.mine__trend { color: var(--good); }
 .mine__trend--down { color: #ff7a6a; }
-.mine__sub { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.mine__sub { font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
 .ranking__body { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 12px; align-items: start; }
 .ranking__side { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .help { padding: 12px; border-radius: var(--r); background: var(--pn); box-shadow: var(--pnS); display: flex; flex-direction: column; gap: 8px; }
 .help__title { font: 600 15px 'Pixelify Sans', sans-serif; }
-.help p { margin: 0; font: 400 13px/1.5 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.help p { margin: 0; font: 400 13px/1.5 'Nunito', sans-serif; color: var(--mu); }
 .tiers { display: flex; flex-wrap: wrap; gap: 4px 10px; }
-.tiers__item { display: flex; gap: 4px; font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.tiers__item { display: flex; gap: 4px; font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 
 @media (max-width: 1100px) {
   .ranking__body { grid-template-columns: minmax(0, 1fr); }

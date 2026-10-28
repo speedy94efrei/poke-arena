@@ -121,7 +121,7 @@ const teraChips = computed(() => {
 .gear__block { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .gear__title { font: 600 15px 'Pixelify Sans', sans-serif; margin-bottom: 2px; }
 .gear__select { height: 32px; font-size: 13px; margin-top: 2px; }
-.gear__desc { font: 400 12px/1.4 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.gear__desc { font: 400 12px/1.4 'Nunito', sans-serif; color: var(--mu); }
 
 .option {
   border: 0;
@@ -136,7 +136,7 @@ const teraChips = computed(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
 }
 
 .option--on { background: color-mix(in srgb, var(--uA) 18%, var(--in)); box-shadow: inset 0 0 0 2px var(--uA); }
@@ -156,7 +156,7 @@ const teraChips = computed(() => {
   color: #fff;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .6);
   box-shadow: 0 0 0 2px var(--bd);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
 }
 
 .tera__chip--on { box-shadow: inset 0 0 0 2px #fff, 0 0 0 2px var(--uA); }

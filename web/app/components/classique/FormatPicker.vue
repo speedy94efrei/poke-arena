@@ -94,12 +94,12 @@ watch(all, (formats) => {
   background: var(--chip);
   color: var(--tx);
   box-shadow: 0 0 0 2px var(--bd);
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
 }
 
 .chip--on { background: var(--hd); color: var(--hdTx); }
 .picker__all { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.picker__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.picker__label { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 
 .picker__label--hidden {
   position: absolute;
@@ -109,5 +109,5 @@ watch(all, (formats) => {
   clip: rect(0 0 0 0);
 }
 .picker__select { flex: 1; min-width: 220px; }
-.picker__info { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.picker__info { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 </style>

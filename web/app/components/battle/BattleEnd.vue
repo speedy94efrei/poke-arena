@@ -48,7 +48,7 @@ const subtitle = computed(() => {
   border-radius: 6px;
   display: flex;
   align-items: center;
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
   animation: pop .3s both;
 }
 
@@ -80,7 +80,7 @@ const subtitle = computed(() => {
 }
 
 .end__title { font: 700 44px/1 'Pixelify Sans', sans-serif; text-shadow: 3px 3px 0 #000; }
-.end__sub { font: 700 15px 'Atkinson Hyperlegible', sans-serif; }
+.end__sub { font: 700 15px 'Nunito', sans-serif; }
 
 .end__buttons {
   display: flex;

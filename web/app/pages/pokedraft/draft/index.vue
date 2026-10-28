@@ -106,7 +106,7 @@ watch(() => store.draft?.id, (id) => {
   text-shadow: var(--sh);
 }
 
-.salon__subtitle { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.salon__subtitle { font: 700 14px 'Nunito', sans-serif; color: var(--mu); }
 
 .salon__grid {
   display: grid;
@@ -129,7 +129,7 @@ watch(() => store.draft?.id, (id) => {
   border-radius: 8px;
   background: var(--in);
   box-shadow: inset 0 0 0 2px #e8704a;
-  font: 700 13px/1.45 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px/1.45 'Nunito', sans-serif;
   color: #ffd9c8;
 }
 
@@ -140,7 +140,7 @@ watch(() => store.draft?.id, (id) => {
   border-radius: var(--r);
   background: #3a2216;
   box-shadow: inset 0 0 0 2px #e8704a, 0 0 0 2px var(--bd);
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
   color: #ffd9c8;
 }
 
@@ -156,14 +156,14 @@ watch(() => store.draft?.id, (id) => {
   align-items: center;
   gap: 10px;
   justify-content: space-between;
-  font: 700 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 14px 'Nunito', sans-serif;
 }
 
 .pending__pulse { animation: pulse 1.2s ease-in-out infinite; }
 
 .hint {
   margin: 0;
-  font: 400 13px/1.45 'Atkinson Hyperlegible', sans-serif;
+  font: 400 13px/1.45 'Nunito', sans-serif;
   color: var(--mu);
 }
 
@@ -175,7 +175,7 @@ watch(() => store.draft?.id, (id) => {
 
 .incoming__who {
   flex: 1;
-  font: 400 14px 'Atkinson Hyperlegible', sans-serif;
+  font: 400 14px 'Nunito', sans-serif;
 }
 
 @media (max-width: 900px) {

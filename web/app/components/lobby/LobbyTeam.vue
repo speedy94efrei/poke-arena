@@ -111,6 +111,10 @@ const moveColor = (moveId: string) => {
 
 .slot--empty {
   background: var(--dk);
+  --tx: var(--dkTx);
+  --mu: var(--dkMu);
+  --chip: var(--dkChip);
+  color: var(--tx);
   justify-content: center;
   align-items: center;
 }
@@ -132,7 +136,7 @@ const moveColor = (moveId: string) => {
 
 .slot__name {
   position: relative;
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   text-shadow: 1px 1px 0 #000;
   white-space: nowrap;
   overflow: hidden;
@@ -145,7 +149,7 @@ const moveColor = (moveId: string) => {
   height: 18px;
   border: 0;
   border-radius: 4px;
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: grid;
   place-items: center;
 }
@@ -192,6 +196,9 @@ const moveColor = (moveId: string) => {
   cursor: pointer;
   border-radius: 9px;
   background: var(--dk);
+  --tx: var(--dkTx);
+  --mu: var(--dkMu);
+  --chip: var(--dkChip);
   color: var(--tx);
   box-shadow: 0 0 0 2px var(--bd);
   padding: 4px 6px 6px;
@@ -220,7 +227,7 @@ const moveColor = (moveId: string) => {
 }
 
 .card__name {
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 13px 'Nunito', sans-serif;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -241,7 +248,7 @@ const moveColor = (moveId: string) => {
   height: 20px;
   border-radius: 5px;
   background: var(--uAtx);
-  color: var(--uA);
+  color: var(--uT);
   display: grid;
   place-items: center;
   font: 600 13px 'Pixelify Sans', sans-serif;
@@ -284,8 +291,8 @@ const moveColor = (moveId: string) => {
   box-shadow: inset 0 0 0 2px var(--chip);
 }
 
-.detail__meta { flex: 1; min-width: 0; font: 400 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.detail__edit { font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
+.detail__meta { flex: 1; min-width: 0; font: 400 12px 'Nunito', sans-serif; color: var(--mu); }
+.detail__edit { font: 700 12px 'Nunito', sans-serif; }
 
 .detail__moves {
   display: flex;
@@ -299,7 +306,7 @@ const moveColor = (moveId: string) => {
   border-radius: 4px;
   color: #fff;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .5);
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
@@ -310,7 +317,7 @@ const moveColor = (moveId: string) => {
   border-radius: 4px;
   background: #ffd23a;
   color: #2a2410;
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }

@@ -73,7 +73,7 @@ const shown = computed(() => {
 
 .moves__head::before { content: '▸'; transition: transform .15s; }
 .moves[open] .moves__head::before { transform: rotate(90deg); }
-.moves__count { margin-left: auto; font: 700 12px 'Atkinson Hyperlegible', sans-serif; text-shadow: none; }
+.moves__count { margin-left: auto; font: 700 12px 'Nunito', sans-serif; text-shadow: none; }
 .moves__body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 8px; }
 .moves__filters { display: flex; gap: 6px; flex-wrap: wrap; }
 .moves__search { flex: 1 1 200px; height: 32px; font-size: 13px; }
@@ -87,11 +87,11 @@ const shown = computed(() => {
   align-items: center;
   padding: 4px 8px;
   border-radius: 6px;
-  font: 400 13px 'Atkinson Hyperlegible', sans-serif;
+  font: 400 13px 'Nunito', sans-serif;
 }
 
 .table__row:not(.table__row--head):hover { background: var(--chip); }
-.table__row--head { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); position: sticky; top: 0; background: var(--pn); }
+.table__row--head { font: 700 11px 'Nunito', sans-serif; color: var(--mu); position: sticky; top: 0; background: var(--pn); }
 .table__name { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .table__type {
@@ -99,14 +99,14 @@ const shown = computed(() => {
   border-radius: 3px;
   color: #fff;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .6);
-  font: 700 10px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 10px 'Nunito', sans-serif;
   display: grid;
   place-items: center;
 }
 
-.table__cat { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.table__cat { font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
 .table__num { font: 600 13px 'Pixelify Sans', sans-serif; text-align: right; }
-.moves__none { margin: 0; padding: 10px; text-align: center; font: 700 13px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.moves__none { margin: 0; padding: 10px; text-align: center; font: 700 13px 'Nunito', sans-serif; color: var(--mu); }
 
 @media (max-width: 560px) {
   .table__row { grid-template-columns: minmax(0, 1fr) 70px 40px 40px; }
