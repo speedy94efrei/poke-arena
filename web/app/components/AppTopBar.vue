@@ -1,18 +1,23 @@
 <template>
   <header class="topbar">
     <AppLogo />
-    <div role="tablist" aria-label="Univers" class="topbar__universes">
-      <span class="topbar__universe" title="Bientôt">
+    <nav aria-label="Univers" class="topbar__universes">
+      <NuxtLink to="/classique" class="topbar__universe" :class="{ 'topbar__universe--active': universe === 'classique' }" :aria-current="universe === 'classique' ? 'page' : undefined">
         <span class="topbar__dot topbar__dot--classique" />Classique · Smogon
-      </span>
-      <span aria-selected="true" class="topbar__universe topbar__universe--active">
+      </NuxtLink>
+      <NuxtLink to="/pokedraft" class="topbar__universe" :class="{ 'topbar__universe--active': universe === 'pokedraft' }" :aria-current="universe === 'pokedraft' ? 'page' : undefined">
         <span class="topbar__dot topbar__dot--pokedraft" />PokéDraft · Saison {{ roster.saison }}
-      </span>
-    </div>
+      </NuxtLink>
+    </nav>
     <span class="topbar__spacer" />
     <AccountMenu />
   </header>
 </template>
+
+<script setup lang="ts">
+const route = useRoute()
+const universe = computed(() => universeOf(route.path))
+</script>
 
 <style scoped>
 .topbar {
@@ -42,6 +47,8 @@
   color: var(--mu);
   font: 700 14px 'Atkinson Hyperlegible', sans-serif;
 }
+
+.topbar__universe:hover { color: var(--tx); }
 
 .topbar__universe--active {
   background: var(--uA);

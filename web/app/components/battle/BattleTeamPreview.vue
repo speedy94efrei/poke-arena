@@ -2,7 +2,7 @@
   <div class="preview" role="dialog" aria-label="Aperçu des équipes">
     <div class="preview__box">
       <h2 class="preview__title">Aperçu des équipes</h2>
-      <p class="preview__hint">Clique sur le Pokémon qui commence le combat. Les autres gardent leur ordre.</p>
+      <p class="preview__hint">{{ hint }}</p>
       <div class="preview__side">
         <span class="preview__label">{{ opponentName }}</span>
         <div class="preview__row">
@@ -20,14 +20,19 @@
             :key="member.ident"
             type="button"
             class="preview__mon"
+            :class="{ 'preview__mon--picked': picked.includes(index) }"
             :disabled="battle.choiceSent"
-            @click="emit('choose', `team ${order(index)}`)"
+            @click="pick(index)"
           >
+            <span v-if="picked.includes(index)" class="preview__rank">{{ picked.indexOf(index) + 1 }}</span>
             <span class="preview__sprite" :style="{ backgroundImage: `url(${spriteUrl(member.speciesId)})` }" />
             <span class="preview__name">{{ member.name }}</span>
           </button>
         </div>
       </div>
+      <button v-if="choosing && !battle.choiceSent" type="button" class="btn btn--primary preview__confirm" :disabled="picked.length < needed" @click="confirm">
+        Valider ({{ picked.length }}/{{ needed }})
+      </button>
       <p v-if="battle.choiceSent" class="preview__wait">En attente de l'adversaire…</p>
     </div>
   </div>
@@ -47,10 +52,30 @@ const mine = computed(() => (props.battle.request?.side.pokemon ?? []).map((memb
   return { ident: member.ident, speciesId, name: speciesName(speciesId) }
 }))
 
-const order = (lead: number) => {
-  const rest = mine.value.map((_, index) => index).filter(index => index !== lead)
-  return [lead, ...rest].map(index => index + 1).join('')
+const picked = ref<number[]>([])
+const size = computed(() => Math.min(props.battle.request?.maxChosenTeamSize ?? mine.value.length, mine.value.length))
+const leads = computed(() => activeCount(props.battle))
+/** Formats où l'on choisit plusieurs Pokémon dans l'ordre : VGC (4 sur 6), doubles et triples. */
+const choosing = computed(() => size.value < mine.value.length || leads.value > 1)
+const needed = computed(() => size.value < mine.value.length ? size.value : leads.value)
+
+const hint = computed(() => {
+  if (!choosing.value) return 'Clique sur le Pokémon qui commence le combat. Les autres gardent leur ordre.'
+  if (size.value < mine.value.length) return `Choisis ${size.value} Pokémon dans l'ordre : les ${leads.value} premiers commencent le combat.`
+  return `Choisis les ${leads.value} Pokémon qui commencent le combat ; les autres gardent leur ordre.`
+})
+
+const send = (order: number[]) => {
+  const rest = size.value < mine.value.length ? [] : mine.value.map((_, index) => index).filter(index => !order.includes(index))
+  emit('choose', `team ${[...order, ...rest].map(index => index + 1).join('')}`)
 }
+
+const pick = (index: number) => {
+  if (!choosing.value) return send([index])
+  picked.value = picked.value.includes(index) ? picked.value.filter(other => other !== index) : picked.value.length < needed.value ? [...picked.value, index] : picked.value
+}
+
+const confirm = () => send(picked.value)
 </script>
 
 <style scoped>
@@ -124,4 +149,22 @@ const order = (lead: number) => {
   text-overflow: ellipsis;
   max-width: 100%;
 }
+.preview__mon { position: relative; }
+.preview__mon--picked { box-shadow: inset 0 0 0 3px var(--uA); }
+
+.preview__rank {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--uA);
+  color: var(--uAtx);
+  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  display: grid;
+  place-items: center;
+}
+
+.preview__confirm { align-self: center; }
 </style>

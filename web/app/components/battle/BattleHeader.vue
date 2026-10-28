@@ -2,7 +2,7 @@
   <header class="header">
     <AppLogo header />
     <div class="header__box">
-      <span class="header__pair"><span class="header__label">FORMAT</span><span class="header__value">PokéDraft · Saison {{ roster.saison }}</span></span>
+      <span class="header__pair"><span class="header__label">FORMAT</span><span class="header__value">{{ isPokedraft(battle) ? `PokéDraft · Saison ${roster.saison}` : formatLabel(battle.formatName) || '…' }}</span></span>
       <span class="header__sep" />
       <span class="header__pair"><span class="header__label">TOUR</span><span class="header__turn">{{ battle.turn || '—' }}</span></span>
     </div>

@@ -32,13 +32,13 @@ import type { BattlePokemon, BattleState, SideId } from '~/utils/battleTracker'
 const props = defineProps<{ battle: BattleState, side: SideId, pokemon: BattlePokemon }>()
 
 const own = computed(() => props.side === props.battle.mySide)
-const fiche = computed(() => findPokemon(props.pokemon.speciesId))
-const types = computed(() => fiche.value?.types ?? [])
+const species = computed(() => speciesView(props.pokemon.speciesId, isPokedraft(props.battle)))
+const types = computed(() => props.pokemon.tera ? [frenchType(props.pokemon.tera)] : species.value.types)
 const percent = computed(() => hpPercent(props.pokemon))
 const status = computed(() => STATUS_LABELS[props.pokemon.status])
 const boosts = computed(() => Object.entries(props.pokemon.boosts).filter(([, value]) => value).map(([stat, value]) => ({ stat, value })))
 const item = computed(() => props.pokemon.item ? itemName(props.pokemon.item) : own.value ? 'aucun' : '?')
-const ability = computed(() => props.pokemon.ability ? abilityName(props.pokemon.ability) : fiche.value?.talent.nom ?? '?')
+const ability = computed(() => props.pokemon.ability ? abilityName(props.pokemon.ability) : species.value.abilities.length === 1 ? species.value.abilities[0]! : '?')
 </script>
 
 <style scoped>

@@ -9,10 +9,13 @@ export interface BattlePokemon {
   status: string
   fainted: boolean
   active: boolean
+  /** Place sur le terrain quand il est actif : 0 pour a, 1 pour b, 2 pour c (combats doubles et triples). */
+  position: number
   boosts: Record<string, number>
   item: string
   ability: string
   moves: string[]
+  tera?: string
 }
 
 export interface BattleSide {
@@ -32,7 +35,18 @@ export interface RequestMove {
   id: string
   pp: number
   maxpp: number
+  target?: string
   disabled?: boolean | string
+}
+
+export interface RequestActive {
+  moves: RequestMove[]
+  trapped?: boolean
+  maybeTrapped?: boolean
+  canTerastallize?: string
+  canMegaEvo?: boolean
+  canDynamax?: boolean
+  canZMove?: ({ move: string, target: string } | null)[]
 }
 
 export interface RequestPokemon {
@@ -49,13 +63,18 @@ export interface ShowdownRequest {
   rqid?: number
   wait?: boolean
   teamPreview?: boolean
+  maxChosenTeamSize?: number
   forceSwitch?: boolean[]
-  active?: { moves: RequestMove[], trapped?: boolean, maybeTrapped?: boolean }[]
+  active?: RequestActive[]
   side: { name: string, id: SideId, pokemon: RequestPokemon[] }
 }
 
 export interface BattleState {
   roomid: string
+  /** Identifiant du format (`gen9ou`, `gen9pokedraft`…), lu dans la ligne `|tier|`. */
+  format: string
+  formatName: string
+  gameType: string
   mySide: SideId | null
   sides: Record<SideId, BattleSide>
   turn: number
@@ -85,7 +104,7 @@ let animationCounter = 0
 export function createBattle(roomid: string): BattleState {
   const side = (id: SideId): BattleSide => ({ id, name: '', team: [], conditions: {} })
   return {
-    roomid, mySide: null, sides: { p1: side('p1'), p2: side('p2') }, turn: 0, weather: '', fieldEffects: [],
+    roomid, format: '', formatName: '', gameType: 'singles', mySide: null, sides: { p1: side('p1'), p2: side('p2') }, turn: 0, weather: '', fieldEffects: [],
     log: [{ turn: 0, lines: [] }], message: 'Le combat va commencer…', request: null, pendingRequest: null,
     choiceSent: false, started: false, ended: false, winner: '', error: '',
     anims: { p1: { name: '', key: 0 }, p2: { name: '', key: 0 } }, floats: [],
@@ -105,7 +124,21 @@ export function hpColor(percent: number): string {
 }
 
 export function activePokemon(state: BattleState, side: SideId): BattlePokemon | undefined {
-  return state.sides[side].team.find(p => p.active)
+  return state.sides[side].team.find(p => p.active && p.position === 0) ?? state.sides[side].team.find(p => p.active)
+}
+
+/** Pokémon actifs d'un camp, de la place a à la place c. */
+export function activePokemons(state: BattleState, side: SideId): BattlePokemon[] {
+  return state.sides[side].team.filter(p => p.active).sort((a, b) => a.position - b.position)
+}
+
+/** Nombre de Pokémon actifs par camp selon le type de combat. */
+export function activeCount(state: BattleState): number {
+  return state.gameType === 'triples' ? 3 : state.gameType === 'doubles' || state.gameType === 'multi' ? 2 : 1
+}
+
+export function isPokedraft(state: BattleState): boolean {
+  return state.format.endsWith('pokedraft')
 }
 
 export function displayName(state: BattleState, side: SideId, pokemon: BattlePokemon): string {
@@ -113,9 +146,15 @@ export function displayName(state: BattleState, side: SideId, pokemon: BattlePok
   return state.mySide && side !== state.mySide ? `${name} adverse` : name
 }
 
-function parseIdent(ident: string): { side: SideId, name: string } {
-  const [position = '', ...name] = ident.split(': ')
-  return { side: position.slice(0, 2) as SideId, name: name.join(': ').normalize('NFC') }
+/** « de » devant un nom, élidé en « d' » devant une voyelle : « Talent d'Arbok ». */
+function ofName(name: string): string {
+  return /^[aeiouyhàâéèêëîïôûü]/i.test(name) ? `d'${name}` : `de ${name}`
+}
+
+function parseIdent(ident: string): { side: SideId, name: string, position: number } {
+  const [place = '', ...name] = ident.split(': ')
+  const letter = place.charAt(2)
+  return { side: place.slice(0, 2) as SideId, name: name.join(': ').normalize('NFC'), position: letter ? letter.charCodeAt(0) - 97 : 0 }
 }
 
 function parseCondition(condition: string): { hp: number, maxHp: number, status: string, fainted: boolean } {
@@ -131,7 +170,7 @@ function findOrAdd(state: BattleState, side: SideId, name: string, details = '')
   let pokemon = team.find(p => p.name === name)
     ?? team.find(p => !p.name && speciesId && p.speciesId === speciesId)
   if (!pokemon) {
-    team.push({ name, speciesId, hp: 100, maxHp: 100, status: '', fainted: false, active: false, boosts: {}, item: '', ability: '', moves: [] })
+    team.push({ name, speciesId, hp: 100, maxHp: 100, status: '', fainted: false, active: false, position: 0, boosts: {}, item: '', ability: '', moves: [] })
     pokemon = team[team.length - 1]!
   }
   pokemon.name = name
@@ -204,6 +243,13 @@ export function applyLine(state: BattleState, line: string) {
     case 'player':
       if (args[1]) state.sides[args[0] as SideId].name = args[1]
       break
+    case 'tier':
+      state.formatName = args[0] ?? ''
+      state.format = toId(state.formatName)
+      break
+    case 'gametype':
+      state.gameType = args[0] ?? 'singles'
+      break
     case 'clearpoke':
       state.sides.p1.team = state.sides.p1.team.filter(p => p.name)
       state.sides.p2.team = state.sides.p2.team.filter(p => p.name)
@@ -212,7 +258,7 @@ export function applyLine(state: BattleState, line: string) {
       const side = args[0] as SideId
       const speciesId = toId(args[1]?.split(',')[0] ?? '')
       if (!state.sides[side].team.some(p => p.speciesId === speciesId)) {
-        state.sides[side].team.push({ name: '', speciesId, hp: 100, maxHp: 100, status: '', fainted: false, active: false, boosts: {}, item: '', ability: '', moves: [] })
+        state.sides[side].team.push({ name: '', speciesId, hp: 100, maxHp: 100, status: '', fainted: false, active: false, position: 0, boosts: {}, item: '', ability: '', moves: [] })
       }
       break
     }
@@ -225,15 +271,16 @@ export function applyLine(state: BattleState, line: string) {
     case 'switch':
     case 'drag':
     case 'replace': {
-      const { side, name } = parseIdent(args[0] ?? '')
+      const { side, name, position } = parseIdent(args[0] ?? '')
       for (const other of state.sides[side].team) {
-        if (other.active) {
+        if (other.active && other.position === position) {
           other.active = false
           other.boosts = {}
         }
       }
       const pokemon = findOrAdd(state, side, name, args[1])
       pokemon.active = true
+      pokemon.position = position
       setHp(state, side, pokemon, args[2] ?? '100/100')
       animate(state, side, 'sendOut .55s both')
       const trainer = state.sides[side].name
@@ -289,7 +336,7 @@ export function applyLine(state: BattleState, line: string) {
     case '-cureteam': {
       const { side } = parseIdent(args[0] ?? '')
       for (const pokemon of state.sides[side].team) pokemon.status = ''
-      addLine(state, 'status', `L'équipe de ${state.sides[side].name} est soignée.`)
+      addLine(state, 'status', `L'équipe ${ofName(state.sides[side].name)} est soignée.`)
       break
     }
     case '-boost':
@@ -298,14 +345,14 @@ export function applyLine(state: BattleState, line: string) {
       const stat = args[1] ?? ''
       const amount = Number(args[2] ?? 0) * (command === '-boost' ? 1 : -1)
       pokemon.boosts[stat] = Math.max(-6, Math.min(6, (pokemon.boosts[stat] ?? 0) + amount))
-      if (amount) addLine(state, amount > 0 ? 'boost' : 'unboost', `${STAT_LABELS[stat] ?? stat} de ${displayName(state, side, pokemon)} ${boostVerb(amount)} !`)
+      if (amount) addLine(state, amount > 0 ? 'boost' : 'unboost', `${STAT_LABELS[stat] ?? stat} ${ofName(displayName(state, side, pokemon))} ${boostVerb(amount)} !`)
       break
     }
     case '-clearboost':
     case '-clearnegativeboost': {
       const { side, pokemon } = pokemonFrom(state, args[0] ?? '')
       pokemon.boosts = command === '-clearboost' ? {} : Object.fromEntries(Object.entries(pokemon.boosts).filter(([, v]) => v > 0))
-      addLine(state, 'info', `Les changements de stats de ${displayName(state, side, pokemon)} sont annulés.`)
+      addLine(state, 'info', `Les changements de stats ${ofName(displayName(state, side, pokemon))} sont annulés.`)
       break
     }
     case '-clearallboost':
@@ -336,7 +383,20 @@ export function applyLine(state: BattleState, line: string) {
       if (command === '-sidestart') conditions[id] = (conditions[id] ?? 0) + 1
       else delete conditions[id]
       const name = SIDE_CONDITIONS[id]?.nom ?? effectName(args[1] ?? '')
-      addLine(state, 'field', command === '-sidestart' ? `${name} : mis en place du côté de ${state.sides[side].name}.` : `${name} disparaît du côté de ${state.sides[side].name}.`)
+      addLine(state, 'field', command === '-sidestart' ? `${name} : mis en place du côté ${ofName(state.sides[side].name)}.` : `${name} disparaît du côté ${ofName(state.sides[side].name)}.`)
+      break
+    }
+    case 'detailschange':
+    case '-formechange': {
+      const { side, pokemon } = pokemonFrom(state, args[0] ?? '')
+      pokemon.speciesId = toId(args[1]?.split(',')[0] ?? pokemon.speciesId)
+      if (command === 'detailschange' && /-Mega/.test(args[1] ?? '')) addLine(state, 'info', `${displayName(state, side, pokemon)} méga-évolue !`)
+      break
+    }
+    case '-terastallize': {
+      const { side, pokemon } = pokemonFrom(state, args[0] ?? '')
+      pokemon.tera = args[1] ?? ''
+      addLine(state, 'info', `${displayName(state, side, pokemon)} se téracristallise (type ${frenchType(args[1] ?? '?')}) !`)
       break
     }
     case '-supereffective':
@@ -364,7 +424,7 @@ export function applyLine(state: BattleState, line: string) {
     case '-ability': {
       const { side, pokemon } = pokemonFrom(state, args[0] ?? '')
       pokemon.ability = toId(args[1] ?? '')
-      addLine(state, 'info', `Talent de ${displayName(state, side, pokemon)} : ${abilityName(args[1] ?? '')}.`)
+      addLine(state, 'info', `Talent ${ofName(displayName(state, side, pokemon))} : ${abilityName(args[1] ?? '')}.`)
       break
     }
     case '-item':
@@ -395,7 +455,7 @@ export function applyLine(state: BattleState, line: string) {
       }
       if (tags.includes('[leurre]')) {
         const holder = pokemonFrom(state, args[0])
-        addLine(state, 'info', `Le leurre encaisse l'attaque à la place de ${displayName(state, holder.side, holder.pokemon)} !`)
+        addLine(state, 'info', `Le leurre encaisse l'attaque à la place ${ofName(displayName(state, holder.side, holder.pokemon))} !`)
         break
       }
       const { side, pokemon } = pokemonFrom(state, args[0])

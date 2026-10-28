@@ -1,0 +1,45 @@
+<template>
+  <div class="shell">
+    <div class="shell__frame">
+      <AppTopBar />
+      <main class="shell__main">
+        <slot />
+      </main>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.shell {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 16px 12px 40px;
+  background: var(--pg);
+  background-image:
+    linear-gradient(45deg, var(--pgB) 25%, transparent 25%, transparent 75%, var(--pgB) 75%),
+    linear-gradient(45deg, var(--pgB) 25%, transparent 25%, transparent 75%, var(--pgB) 75%);
+  background-size: 32px 32px;
+  background-position: 0 0, 16px 16px;
+  animation: check 6s linear infinite;
+}
+
+.shell__frame {
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 12px;
+  border-radius: 20px;
+  background: var(--fr);
+  box-shadow: 0 0 0 4px var(--bd), 0 30px 80px rgba(0, 0, 0, .45);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.shell__main {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+</style>

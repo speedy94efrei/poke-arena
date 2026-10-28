@@ -8,8 +8,14 @@
       <div class="scene__platform scene__platform--opp">
         <img v-if="stage.plateforme" :src="`${stage.plateforme}-adverse.png`" alt="" @error="hide">
       </div>
-      <div v-if="opp" :key="`opp-${anims[oppSide].key}`" class="scene__sprite scene__sprite--opp" :class="{ 'scene__sprite--fainted': opp.fainted }" :style="{ animation: anims[oppSide].name }">
-        <img :alt="speciesName(opp.speciesId)" class="scene__img" :src="spriteUrl(opp.speciesId, 'face')">
+      <div
+        v-for="(pokemon, index) in theirs"
+        :key="`opp-${pokemon.position}-${anims[oppSide].key}`"
+        class="scene__sprite scene__sprite--opp"
+        :class="{ 'scene__sprite--fainted': pokemon.fainted, 'scene__sprite--small': theirs.length > 1 }"
+        :style="{ animation: anims[oppSide].name, ...spot('opp', index, theirs.length) }"
+      >
+        <img :alt="speciesName(pokemon.speciesId)" class="scene__img" :src="spriteUrl(pokemon.speciesId, 'face')">
       </div>
       <div class="scene__hazards scene__hazards--opp">
         <span v-for="hazard in hazards(oppSide)" :key="hazard.id" class="hazard" :style="{ boxShadow: `0 0 0 2px ${hazard.couleur}` }">
@@ -20,8 +26,14 @@
       <div class="scene__platform scene__platform--me">
         <img v-if="stage.plateforme" :src="`${stage.plateforme}-joueur.png`" alt="" @error="hide">
       </div>
-      <div v-if="me" :key="`me-${anims[meSide].key}`" class="scene__sprite scene__sprite--me" :class="{ 'scene__sprite--fainted': me.fainted }" :style="{ animation: anims[meSide].name }">
-        <img :alt="speciesName(me.speciesId)" class="scene__img" :src="spriteUrl(me.speciesId, meSide === battle.mySide ? 'dos' : 'face')">
+      <div
+        v-for="(pokemon, index) in mine"
+        :key="`me-${pokemon.position}-${anims[meSide].key}`"
+        class="scene__sprite scene__sprite--me"
+        :class="{ 'scene__sprite--fainted': pokemon.fainted, 'scene__sprite--small': mine.length > 1 }"
+        :style="{ animation: anims[meSide].name, ...spot('me', index, mine.length) }"
+      >
+        <img :alt="speciesName(pokemon.speciesId)" class="scene__img" :src="spriteUrl(pokemon.speciesId, meSide === battle.mySide ? 'dos' : 'face')">
       </div>
       <div class="scene__hazards scene__hazards--me">
         <span v-for="hazard in hazards(meSide)" :key="hazard.id" class="hazard" :style="{ boxShadow: `0 0 0 2px ${hazard.couleur}` }">
@@ -29,8 +41,8 @@
         </span>
       </div>
 
-      <BattleHpCard v-if="opp" class="scene__card scene__card--opp" :battle="battle" :side="oppSide" :pokemon="opp" />
-      <BattleHpCard v-if="me" class="scene__card scene__card--me" :battle="battle" :side="meSide" :pokemon="me" />
+      <BattleHpCard v-for="(pokemon, index) in theirs" :key="`card-opp-${pokemon.position}`" class="scene__card scene__card--opp" :style="card('opp', index, theirs.length)" :battle="battle" :side="oppSide" :pokemon="pokemon" />
+      <BattleHpCard v-for="(pokemon, index) in mine" :key="`card-me-${pokemon.position}`" class="scene__card scene__card--me" :style="card('me', index, mine.length)" :battle="battle" :side="meSide" :pokemon="pokemon" />
 
       <span
         v-for="item in battle.floats"
@@ -58,8 +70,8 @@ const wrapper = ref<HTMLElement>()
 const scale = ref(1)
 const meSide = computed<SideId>(() => props.battle.mySide ?? 'p1')
 const oppSide = computed<SideId>(() => meSide.value === 'p1' ? 'p2' : 'p1')
-const me = computed(() => activePokemon(props.battle, meSide.value))
-const opp = computed(() => activePokemon(props.battle, oppSide.value))
+const mine = computed(() => activePokemons(props.battle, meSide.value))
+const theirs = computed(() => activePokemons(props.battle, oppSide.value))
 const anims = computed(() => props.battle.anims)
 const waiting = computed(() => Boolean(props.battle.request) && !props.battle.choiceSent)
 
@@ -81,6 +93,19 @@ const hazards = (side: SideId) => Object.entries(props.battle.sides[side].condit
   const info = SIDE_CONDITIONS[id] ?? { nom: id, couleur: '#5a6478', icone: '•' }
   return { id, ...info, label: layers > 1 ? `${info.nom} ×${layers}` : info.nom }
 })
+
+/** Places des sprites et des cartes de PV quand plusieurs Pokémon sont actifs par camp (doubles, triples). */
+const spot = (side: 'me' | 'opp', index: number, count: number) => {
+  if (count < 2) return {}
+  const width = side === 'opp' ? 150 : 190
+  const left = side === 'opp' ? 450 - (count - 2) * 60 + index * (count > 2 ? 110 : 150) : 20 + index * (count > 2 ? 130 : 190)
+  return { left: `${left}px`, width: `${width}px`, ...(side === 'opp' ? { top: '40px', height: '176px' } : { top: '170px', height: '190px' }) }
+}
+
+const card = (side: 'me' | 'opp', index: number, count: number) => {
+  if (count < 2) return {}
+  return side === 'opp' ? { top: `${22 + index * 72}px` } : { top: `${296 - (count - 1 - index) * 72}px` }
+}
 
 const hide = (event: Event) => {
   (event.target as HTMLImageElement).style.display = 'none'
@@ -191,6 +216,7 @@ onBeforeUnmount(() => observer?.disconnect())
 .scene__sprite--opp { left: 520px; top: 28px; width: 180px; height: 196px; }
 .scene__sprite--me { left: 80px; top: 150px; width: 240px; height: 210px; }
 .scene__sprite--fainted { opacity: 0; transition: opacity .2s .7s; }
+.scene__sprite--small .scene__img { transform: scale(1); }
 
 .scene__img {
   display: block;

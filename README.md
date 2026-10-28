@@ -170,6 +170,19 @@ Le site répond sur http://localhost:3000, ou sur le port libre suivant si celui
 
 Pages disponibles :
 
+- `/` : le hub, pour choisir son univers ; il rouvre le dernier univers visité au bout de 3 secondes, sauf si l'on reste.
+
+Univers Classique (Smogon, tous les formats du serveur de combat) :
+
+- `/classique` : l'accueil. Ton Elo dans le format choisi, les Pokémon les plus utilisés et la répartition des styles d'équipe de ce format (statistiques Smogon), et tes derniers combats ;
+- `/classique/classe` : le combat classé, dans n'importe quel format qui a un ladder. Format choisi dans la liste complète du serveur (raccourcis pour les plus joués), équipe prise dans « Mes équipes » ou collée au format texte de Showdown, ou fournie par le serveur pour les Random Battles ; à côté, le classement Elo du format lu sur le serveur ;
+- `/classique/en-ligne` : les défis entre joueurs dans tous les formats, les défis reçus, les combats en cours à regarder en spectateur et les salons du serveur ;
+- `/classique/combat/<salle>` : l'écran de combat, partagé avec PokéDraft. Simple, double et triple (un choix par Pokémon et le choix de la cible), Téracristal, Méga-Évolution, Dynamax et capacités Z selon la génération. Les noms viennent du Pokédex français (`data/references/dex.json`).
+
+Les équipes du Classique sont gardées dans le navigateur pour l'instant.
+
+Univers PokéDraft :
+
 - `/pokedraft` : l'accueil de saison. Dates et compte à rebours, ton rang, méta de la saison (présence, taux de ban et de victoire de chaque Pokémon), notes du patch (fiches corrigées) et duos les plus draftés ensemble ;
 - `/pokedraft/classement` : ton rang (PL, position, placements, bouclier, pénalités, inactivité), l'échelle des rangs avec la part des joueurs, tes bannières, le classement de la saison, ton historique et tes saisons passées ;
 - `/pokedraft/joueur/<pseudo>` : la fiche d'un joueur, ouverte depuis le classement ou l'historique. Rang et meilleur rang de la saison, bilan et série, Pokémon les plus draftés avec leur taux de victoire, bans favoris, derniers drafts classés avec les deux équipes, bannières débloquées et saisons passées ;

@@ -49,6 +49,16 @@ node data/scripts/build_interdits.cjs server data/rosters/roster-saison-1.json d
 
 Le test `server/test/sim/pokedraft/atelier.js` vérifie que ces listes collent au format : chaque objet et chaque nature sont acceptés, et le validateur refuse exactement les attaques listées. Il échoue si le roster ou le format change sans que les références soient régénérées.
 
+## Pokédex et statistiques du Classique
+
+```bash
+node data/scripts/build_dex.cjs server data/references/dex.json
+node data/scripts/build_usage.cjs data/references/usage
+```
+
+1. `build_dex.cjs` écrit le Pokédex complet de l'univers Classique à partir du simulateur (construire d'abord le serveur) : Pokémon (types, stats, talents, tiers, sprite), attaques, talents et objets, avec les noms et descriptions français des fichiers CSV de [PokéAPI](https://github.com/PokeAPI/pokeapi), gardés dans `data/cache/pokeapi`. Les noms restés en anglais sont pour la plupart identiques en français (Pikachu, Close Combat, Blizzard…).
+2. `build_usage.cjs` compacte les statistiques d'usage mensuelles de Smogon (publiées par [pkmn](https://pkmn.github.io/smogon/data/stats/index.json), gardées dans `data/cache/usage`) : un fichier par format, avec les 40 Pokémon les plus joués, leurs objets, talents, attaques, types Téra, répartitions d'EV, coéquipiers et contres, et la part de chaque style d'équipe (tags « metagame » : stall, balance, offense, pluie, Distorsion…). À relancer chaque mois pour suivre la méta.
+
 ## Types TypeScript
 
 Après chaque changement du schéma, régénère les types depuis `data/` :

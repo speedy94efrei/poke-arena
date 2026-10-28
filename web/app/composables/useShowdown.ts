@@ -1,4 +1,5 @@
 import type { BattleState } from '~/utils/battleTracker'
+import type { FormatSection } from '~/utils/formats'
 import type { TeamSet } from '~/utils/showdownTeam'
 
 export const POKEDRAFT_FORMAT = 'gen9pokedraft'
@@ -11,17 +12,24 @@ interface ShowdownStore {
   challengesFrom: Record<string, { from: string, format: string }>
   challengeTo: { to: string, format: string } | null
   searching: boolean
+  searchingFormats: string[]
+  formats: FormatSection[]
   notices: { id: number, text: string }[]
   battles: Record<string, BattleState>
   latestBattle: string
 }
 
+/** Équipe à envoyer : sets PokéDraft, ou équipe déjà au format compact de Showdown (vide pour une équipe générée). */
+type OutgoingTeam = TeamSet[] | string
+
 const store = reactive<ShowdownStore>({
-  status: 'deconnecte', name: '', challengesFrom: {}, challengeTo: null, searching: false, notices: [], battles: {}, latestBattle: '',
+  status: 'deconnecte', name: '', challengesFrom: {}, challengeTo: null, searching: false, searchingFormats: [], formats: [], notices: [], battles: {}, latestBattle: '',
 })
 const queues = new Map<string, string[]>()
 const playing = new Set<string>()
 const globalHandlers = new Map<string, (payload: string) => void>()
+const queryWaiters = new Map<string, ((data: unknown) => void)[]>()
+const QUERY_TIMEOUT = 6000
 let socket: WebSocket | null = null
 let wantedName = ''
 let noticeCounter = 0
@@ -82,6 +90,11 @@ function handleBattle(roomid: string, lines: string[]) {
     store.latestBattle = roomid
     store.challengeTo = null
     store.searching = false
+    if (lines.some(line => line.startsWith('|turn|'))) {
+      // Combat rejoint en cours (spectateur) : l'historique s'applique d'un coup, seule la suite est animée.
+      for (const line of lines) if (line && !line.startsWith('|request|') && !line.startsWith('|t:|')) applyLine(store.battles[roomid], line)
+      return
+    }
   }
   const battle = store.battles[roomid]
   const queue = queues.get(roomid)!
@@ -117,7 +130,24 @@ function handleGlobal(line: string) {
       break
     case 'updatesearch': {
       const search = JSON.parse(args.join('|') || '{}')
-      store.searching = Boolean(search.searching?.length)
+      store.searchingFormats = search.searching ?? []
+      store.searching = store.searchingFormats.length > 0
+      break
+    }
+    case 'formats':
+      store.formats = parseFormats(args.join('|'))
+      break
+    case 'queryresponse': {
+      const [type = '', ...rest] = args
+      const waiters = queryWaiters.get(type) ?? []
+      queryWaiters.delete(type)
+      let data: unknown = null
+      try {
+        data = JSON.parse(rest.join('|'))
+      } catch {
+        data = null
+      }
+      for (const resolve of waiters) resolve(data)
       break
     }
     case 'pm': {
@@ -174,7 +204,7 @@ export function useShowdown() {
     socket.onerror = () => notify(`Impossible de joindre le serveur de combat (${url}). Est-il lancé ?`)
   }
 
-  const sendTeam = (team: TeamSet[]) => send(`|/utm ${packTeam(team)}`)
+  const sendTeam = (team: OutgoingTeam) => send(`|/utm ${typeof team === 'string' ? team || 'null' : packTeam(team)}`)
 
   return {
     store,
@@ -186,15 +216,15 @@ export function useShowdown() {
     onGlobal(command: string, handler: (payload: string) => void) {
       globalHandlers.set(command, handler)
     },
-    challenge(to: string, team: TeamSet[]) {
+    challenge(to: string, team: OutgoingTeam, format = POKEDRAFT_FORMAT) {
       sendTeam(team)
-      send(`|/challenge ${to}, ${POKEDRAFT_FORMAT}`)
+      send(`|/challenge ${to}, ${format}`)
     },
     cancelChallenge() {
       if (store.challengeTo) send(`|/cancelchallenge ${store.challengeTo.to}`)
       store.challengeTo = null
     },
-    accept(from: string, team: TeamSet[]) {
+    accept(from: string, team: OutgoingTeam) {
       sendTeam(team)
       send(`|/accept ${from}`)
       delete store.challengesFrom[toId(from)]
@@ -203,9 +233,9 @@ export function useShowdown() {
       send(`|/reject ${from}`)
       delete store.challengesFrom[toId(from)]
     },
-    search(team: TeamSet[]) {
+    search(team: OutgoingTeam, format = POKEDRAFT_FORMAT) {
       sendTeam(team)
-      send(`|/search ${POKEDRAFT_FORMAT}`)
+      send(`|/search ${format}`)
     },
     cancelSearch() {
       send('|/cancelsearch')
@@ -220,6 +250,21 @@ export function useShowdown() {
     },
     forfeit(roomid: string) {
       send(`${roomid}|/forfeit`)
+    },
+    /** Requête au serveur (`laddertop`, `roomlist`, `rooms`…) ; `null` sans réponse au bout de quelques secondes. */
+    query<T>(type: string, target = ''): Promise<T | null> {
+      if (store.status !== 'connecte') return Promise.resolve(null)
+      return new Promise((resolve) => {
+        const timer = setTimeout(() => resolve(null), QUERY_TIMEOUT)
+        queryWaiters.set(type, [...(queryWaiters.get(type) ?? []), (data) => {
+          clearTimeout(timer)
+          resolve(data as T)
+        }])
+        send(`|/cmd ${type} ${target}`.trimEnd())
+      })
+    },
+    join(roomid: string) {
+      send(`|/join ${roomid}`)
     },
     leave(roomid: string) {
       send(`|/leave ${roomid}`)

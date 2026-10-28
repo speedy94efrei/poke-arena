@@ -1,18 +1,30 @@
 <template>
-  <nav aria-label="Menu PokéDraft" class="sidenav">
-    <component
-      :is="item.to ? NuxtLink : 'span'"
-      v-for="item in items"
-      :key="item.label"
-      :to="item.to"
-      class="sidenav__item"
-      :class="{ 'sidenav__item--active': isActive(item.to), 'sidenav__item--soon': !item.to }"
-      :title="item.to ? undefined : 'Bientôt'"
-    >
-      <span class="sidenav__icon" :style="{ background: item.color }">{{ item.icon }}</span>
-      <span class="sidenav__label">{{ item.label }}</span>
-      <span v-if="!item.to" class="sidenav__soon">bientôt</span>
-    </component>
+  <nav :aria-label="universe === 'classique' ? 'Menu Classique' : 'Menu PokéDraft'" class="sidenav">
+    <template v-for="item in items" :key="item.label">
+      <component
+        :is="item.to ? NuxtLink : 'span'"
+        :to="item.to"
+        class="sidenav__item"
+        :class="{ 'sidenav__item--active': !item.children && isActive(item.to), 'sidenav__item--open': item.children && isOpen(item), 'sidenav__item--soon': !item.to }"
+        :title="item.to ? undefined : 'Bientôt'"
+      >
+        <span class="sidenav__icon" :style="{ background: item.color }">{{ item.icon }}</span>
+        <span class="sidenav__label">{{ item.label }}</span>
+        <span v-if="!item.to" class="sidenav__soon">bientôt</span>
+      </component>
+      <div v-if="item.children && isOpen(item)" class="sidenav__children">
+        <component
+          :is="child.to ? NuxtLink : 'span'"
+          v-for="child in item.children"
+          :key="child.label"
+          :to="child.to"
+          class="sidenav__child"
+          :class="{ 'sidenav__child--active': isActive(child.to), 'sidenav__item--soon': !child.to }"
+        >
+          {{ child.label }}<span v-if="!child.to" class="sidenav__soon">bientôt</span>
+        </component>
+      </div>
+    </template>
     <div class="sidenav__gen">
       <span class="sidenav__gen-title">Style de l'interface</span>
       <div class="sidenav__gen-tabs">
@@ -34,20 +46,17 @@
 
 <script setup lang="ts">
 import { NuxtLink } from '#components'
+import type { NavItem } from '~/utils/navigation'
 
 const route = useRoute()
 const { gen, setGen } = useGenStyle()
 
-const items = [
-  { icon: '◆', label: 'Accueil de saison', color: 'var(--hd)', to: '/pokedraft' },
-  { icon: 'C', label: 'Codex', color: 'var(--hd)', to: '/pokedraft/codex' },
-  { icon: 'A', label: 'Atelier PokéDraft', color: '#5a8a3a', to: '/pokedraft/atelier' },
-  { icon: 'D', label: 'Classé · Draft', color: '#c8362a', to: '/pokedraft/draft' },
-  { icon: '⚔', label: 'Combat libre et défis', color: '#3d6fc8', to: '/pokedraft/combat' },
-  { icon: '★', label: 'Classement et saison', color: '#3f8fa3', to: '/pokedraft/classement' },
-]
+const universe = computed(() => universeOf(route.path) ?? 'pokedraft')
+const items = computed(() => NAVIGATION[universe.value])
+const roots = ['/pokedraft', '/classique']
 
-const isActive = (to?: string) => Boolean(to) && (route.path === to || (to !== '/pokedraft' && route.path.startsWith(`${to}/`)))
+const isActive = (to?: string) => Boolean(to) && (route.path === to || (!roots.includes(to!) && route.path.startsWith(`${to}/`)))
+const isOpen = (item: NavItem) => Boolean(item.children?.some(child => isActive(child.to))) || isActive(item.to)
 </script>
 
 <style scoped>
@@ -81,6 +90,29 @@ const isActive = (to?: string) => Boolean(to) && (route.path === to || (to !== '
 }
 
 .sidenav__item--soon { opacity: .55; }
+.sidenav__item--open { background: var(--in); }
+
+.sidenav__children {
+  margin: -2px 0 4px 26px;
+  padding-left: 10px;
+  border-left: 2px solid var(--chip);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidenav__child {
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--tx);
+  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
+}
+
+.sidenav__child--active { background: var(--uA); color: var(--uAtx); }
 
 .sidenav__icon {
   width: 26px;

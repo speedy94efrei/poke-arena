@@ -11,6 +11,7 @@ const { refresh } = useAccount()
 
 useHead({ htmlAttrs: { 'data-gen': gen } })
 useRankedLink()
+useLastUniverse()
 useAtelierAccount()
 onMounted(refresh)
 </script>

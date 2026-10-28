@@ -22,13 +22,13 @@
           <div v-if="hovered === index" class="info">
             <div class="info__head">
               <span class="info__name">{{ speciesName(member.speciesId, member.name) }}</span>
-              <TypeBadge v-for="type in findPokemon(member.speciesId)?.types ?? []" :key="type" :type="type" small />
+              <TypeBadge v-for="type in speciesView(member.speciesId, pokedraft).types" :key="type" :type="type" small />
             </div>
-            <div class="info__line"><span>Talent</span><b>{{ findPokemon(member.speciesId)?.talent.nom ?? '?' }}</b></div>
+            <div class="info__line"><span>Talent</span><b>{{ member.ability ? abilityName(member.ability) : speciesView(member.speciesId, pokedraft).abilities.join(' ou ') || '?' }}</b></div>
             <div class="info__line"><span>Objet</span><b>{{ member.item ? itemName(member.item) : 'pas encore vu' }}</b></div>
             <div class="info__line"><span>Statut</span><b>{{ STATUS_LABELS[member.status]?.court ?? 'aucun' }}</b></div>
             <div class="info__line"><span>Attaques</span><b>{{ member.moves.length ? member.moves.map(moveName).join(', ') : 'aucune révélée' }}</b></div>
-            <div class="info__line"><span>Signature</span><b>{{ findPokemon(member.speciesId)?.signature.nom ?? '?' }}</b></div>
+            <div v-if="pokedraft" class="info__line"><span>Signature</span><b>{{ speciesView(member.speciesId, true).signature ?? '?' }}</b></div>
           </div>
         </template>
         <span v-else class="tile__unknown">?</span>
@@ -43,6 +43,7 @@ import type { BattlePokemon, BattleState, SideId } from '~/utils/battleTracker'
 const props = defineProps<{ battle: BattleState, side: SideId }>()
 const hovered = ref(-1)
 
+const pokedraft = computed(() => isPokedraft(props.battle))
 const team = computed(() => props.battle.sides[props.side].team)
 const slots = computed<(BattlePokemon | undefined)[]>(() => Array.from({ length: 6 }, (_, index) => team.value[index]))
 const summary = computed(() => {

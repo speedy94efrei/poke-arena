@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink to="/pokedraft/combat" class="logo" :class="{ 'logo--header': header }">
+  <NuxtLink to="/" class="logo" title="Hub Arène" :class="{ 'logo--header': header }">
     <span class="logo__ball" aria-hidden="true" />
     <span class="logo__name">ARÈNE</span>
   </NuxtLink>
