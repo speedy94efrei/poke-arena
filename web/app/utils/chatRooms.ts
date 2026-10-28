@@ -72,15 +72,25 @@ function push(room: ChatRoomState, kind: ChatLine['kind'], user: string, text: s
   if (room.log.length > MAX_LINES) room.log.splice(0, room.log.length - MAX_LINES)
 }
 
-const NOTICES: [RegExp, string][] = [
+const NOTICES: [RegExp, string | ((match: RegExpExecArray) => string)][] = [
   [/You must be registered to send private messages/i, 'Les messages privés sont réservés aux comptes Arène reliés au serveur de combat.'],
   [/is unregistered and cannot be PMed/i, "Ce joueur n'a pas de compte Arène relié : il ne peut pas recevoir de messages privés."],
   [/user .*(was not found|is offline)/i, 'Joueur introuvable : il est peut-être hors ligne.'],
+  [/wants to battle!$|accepted the challenge, starting/i, ''],
+  [/^(.+) rejected the challenge\.?$/i, match => `${match[1]} a refusé le défi.`],
+  [/^(.+) cancelled the challenge\.?$/i, match => `${match[1]} a annulé le défi.`],
 ]
 
-/** Avis du serveur en français pour les refus les plus courants ; les autres restent tels quels. */
+/**
+ * Avis du serveur en français pour les refus les plus courants ; les autres restent tels quels. Renvoie une chaîne
+ * vide pour les avis que le site affiche déjà autrement (défis envoyés et acceptés).
+ */
 export function frenchNotice(text: string): string {
-  return NOTICES.find(([pattern]) => pattern.test(text))?.[1] ?? text
+  for (const [pattern, french] of NOTICES) {
+    const match = pattern.exec(text)
+    if (match) return typeof french === 'string' ? french : french(match)
+  }
+  return text
 }
 
 /** Texte lisible d'un fragment HTML envoyé par le serveur (messages d'accueil, annonces). */

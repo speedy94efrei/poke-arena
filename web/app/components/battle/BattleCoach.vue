@@ -1,10 +1,12 @@
 <template>
   <section class="coach" aria-label="Coach">
     <header class="coach__head">
-      <span class="coach__badge">IA</span>Coach
+      <span class="coach__badge">COACH</span>
+      <span class="coach__title">Mode entraînement</span>
       <span class="coach__turn">{{ advice?.turn ? `Tour ${advice.turn}` : '' }}</span>
+      <button type="button" class="coach__fold" :aria-expanded="open" @click="open = !open">{{ open ? 'Replier' : 'Déplier' }}</button>
     </header>
-    <div class="coach__body">
+    <div v-if="open" class="coach__body">
       <p v-if="!advice && !loading" class="coach__note">Le coach analyse chaque décision : essaie d'abord seul, puis compare.</p>
       <p v-else-if="loading" class="coach__note">Le coach rejoue tes options dans le simulateur…</p>
       <p v-else-if="advice?.error" class="coach__note">{{ advice.error }}</p>
@@ -37,6 +39,7 @@ const advice = ref<CoachAdvice | null>(null)
 const adviceRequest = ref<ShowdownRequest | null>(null)
 const loading = ref(false)
 const revealed = ref(false)
+const open = ref(true)
 const shown = computed(() => revealed.value || props.battle.choiceSent)
 
 /** Nom d'un choix de la requête : « move 2 terastallize » donne l'attaque, « switch 3 » le Pokémon. */
@@ -107,36 +110,26 @@ watch(() => props.battle.request, async (request) => {
 </script>
 
 <style scoped>
-.coach { background: var(--pn); border-radius: var(--r); box-shadow: var(--pnS); overflow: hidden; }
-
-.coach__head {
-  min-height: 32px;
-  padding: 0 12px;
-  background: var(--hd);
-  color: var(--hdTx);
-  font: 600 15px 'Pixelify Sans', sans-serif;
-  text-shadow: var(--hdSh, none);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.coach__badge { height: 20px; padding: 0 5px; border-radius: 4px; background: var(--uA); color: var(--uAtx); text-shadow: none; font: 700 11px 'Atkinson Hyperlegible', sans-serif; display: flex; align-items: center; }
-.coach__turn { margin-left: auto; font: 700 12px 'Atkinson Hyperlegible', sans-serif; text-shadow: none; }
-.coach__body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 8px; }
-.coach__note { margin: 0; font: 700 12px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.coach { flex: none; background: var(--dk); color: #fff; border-radius: var(--r); box-shadow: var(--pnS); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.coach__head { display: flex; align-items: center; gap: 8px; }
+.coach__badge { height: 22px; padding: 0 8px; border-radius: 5px; background: var(--sel); color: #383838; font: 600 12px 'Pixelify Sans', sans-serif; display: grid; place-items: center; }
+.coach__title { flex: 1; min-width: 0; font: 600 15px/1.1 'Pixelify Sans', sans-serif; }
+.coach__turn { flex: none; white-space: nowrap; font: 700 11px 'Atkinson Hyperlegible', sans-serif; opacity: .7; }
+.coach__fold { flex: none; border: 0; cursor: pointer; height: 26px; padding: 0 10px; border-radius: 6px; background: rgba(255, 255, 255, .14); color: #fff; font: 600 13px 'Pixelify Sans', sans-serif; }
+.coach__body { display: flex; flex-direction: column; gap: 8px; }
+.coach__note { margin: 0; font: 700 12px/1.45 'Atkinson Hyperlegible', sans-serif; opacity: .75; }
 .coach__reveal { align-self: flex-start; }
-.coach__pick { margin: 0; font: 700 13px 'Atkinson Hyperlegible', sans-serif; }
-.coach__pick b { color: var(--uA); }
+.coach__pick { margin: 0; font: 800 13px/1.4 'Atkinson Hyperlegible', sans-serif; }
+.coach__pick b { color: var(--sel); }
 .coach__options { display: flex; flex-direction: column; gap: 4px; }
 .option { display: grid; grid-template-columns: minmax(0, 1fr) 80px; gap: 8px; align-items: center; padding: 3px 6px; border-radius: 6px; font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
-.option--best { background: color-mix(in srgb, var(--uA) 14%, transparent); }
-.option--mine { box-shadow: inset 0 0 0 2px var(--hd); }
+.option--best { background: rgba(248, 208, 48, .16); }
+.option--mine { box-shadow: inset 0 0 0 2px #4a8fe0; }
 .option__label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.option__track { height: 8px; border-radius: 4px; background: var(--in); overflow: hidden; }
-.option__fill { display: block; height: 100%; background: var(--uA); }
+.option__track { height: 8px; border-radius: 4px; background: rgba(255, 255, 255, .12); overflow: hidden; }
+.option__fill { display: block; height: 100%; background: var(--sel); }
 .coach__verdict { margin: 0; padding: 6px 8px; border-radius: 7px; font: 700 12px/1.45 'Atkinson Hyperlegible', sans-serif; }
 .coach__verdict--good { background: #16301f; color: #c8f0d4; }
 .coach__verdict--warn { background: #3a2216; color: #ffd9c8; }
-.coach__meta { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.coach__meta { font: 700 11px 'Atkinson Hyperlegible', sans-serif; opacity: .6; }
 </style>

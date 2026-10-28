@@ -54,7 +54,9 @@ function cleanName(raw = ''): string {
 }
 
 function notify(text: string) {
-  const notice = { id: ++noticeCounter, text: frenchNotice(text.replace(/\|\|/g, '\n')) }
+  const french = frenchNotice(text.replace(/\|\|/g, '\n'))
+  if (!french) return
+  const notice = { id: ++noticeCounter, text: french }
   store.notices.push(notice)
   setTimeout(() => {
     store.notices = store.notices.filter(n => n.id !== notice.id)

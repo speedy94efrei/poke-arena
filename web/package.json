@@ -12,6 +12,7 @@
     "bot": "node scripts/bot.mjs"
   },
   "dependencies": {
+    "@smogon/calc": "0.12.0",
     "nuxt": "^4.6.2",
     "vue": "^3.5.44",
     "vue-router": "^5.4.0"

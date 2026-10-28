@@ -1,6 +1,6 @@
 <template>
   <div class="actions">
-    <div class="actions__intro">
+    <div class="actions__head">
       <span class="actions__title">{{ title }}</span>
       <span v-if="battle.error" class="actions__error">{{ battle.error }}</span>
       <span v-else class="actions__hint">{{ hint }}</span>
@@ -10,19 +10,18 @@
         </span>
         <button v-if="current > 0 && !battle.choiceSent" type="button" class="btn btn--small" @click="undo">Annuler</button>
       </div>
-      <div v-if="mechanics.length" class="mechanics">
-        <button
-          v-for="mechanic in mechanics"
-          :key="mechanic.key"
-          type="button"
-          class="mechanic"
-          :class="{ 'mechanic--on': toggled === mechanic.key }"
-          :aria-pressed="toggled === mechanic.key"
-          @click="toggled = toggled === mechanic.key ? '' : mechanic.key"
-        >
-          {{ mechanic.label }}
-        </button>
-      </div>
+      <button
+        v-for="mechanic in mechanics"
+        :key="mechanic.key"
+        type="button"
+        class="mechanic"
+        :class="{ 'mechanic--on': toggled === mechanic.key, 'mechanic--tera': mechanic.key === 'terastallize' }"
+        :aria-pressed="toggled === mechanic.key"
+        @click="toggled = toggled === mechanic.key ? '' : mechanic.key"
+      >
+        <span v-if="mechanic.key === 'terastallize'" class="mechanic__gem" />
+        {{ toggled === mechanic.key && mechanic.key === 'terastallize' ? `Téra ${frenchType(active?.canTerastallize ?? '')} activé` : mechanic.label }}
+      </button>
     </div>
 
     <div v-if="targeting" class="targets">
@@ -45,7 +44,7 @@
         :aria-label="`${move.name}, ${move.type}, PP ${move.pp}`"
         class="move"
         :class="{ 'move--disabled': move.disabled }"
-        :style="{ background: move.color, color: move.textColor }"
+        :style="{ '--type': move.color }"
         @click="pickMove(index, move.disabled)"
         @keydown.enter="pickMove(index, move.disabled)"
         @mouseenter="hovered = move.id"
@@ -53,60 +52,88 @@
         @focus="hovered = move.id"
         @blur="hovered = ''"
       >
-        <div class="move__row">
-          <span class="move__name">{{ move.name }}</span>
-          <span class="move__power">{{ move.power }}</span>
-        </div>
-        <div class="move__row">
-          <span class="move__tag">{{ move.type }}</span>
-          <span v-if="move.effect" class="move__tag" :style="{ background: move.effect.bg, color: move.effect.fg }">{{ move.effect.label }}</span>
-          <span class="move__spacer" />
-          <span class="move__tag">PP <b>{{ move.pp }}</b></span>
-        </div>
-        <div v-if="hovered === move.id" class="tooltip">
-          <div class="tooltip__head">
-            <span class="tooltip__name">{{ move.name }}</span>
-            <span class="tooltip__meta">{{ move.category }} · PP {{ move.pp }}</span>
+        <div class="move__inner">
+          <div class="move__main">
+            <span class="move__name">{{ move.name }}</span>
+            <span class="move__meta"><span class="move__type">{{ move.type }}</span>{{ move.category }} · PP {{ move.pp }}</span>
+            <span v-if="beginner && move.warning" class="move__warn">⚠ {{ move.warning }}</span>
           </div>
-          <div v-for="row in move.numbers" :key="row.k" class="tooltip__line">
-            <span>{{ row.k }}</span><b>{{ row.v }}</b>
+          <div class="move__side">
+            <span class="move__dmg">{{ beginner ? move.damage : move.power }}</span>
+            <span v-if="beginner && move.effect" class="move__eff" :style="{ background: move.effect.bg, color: move.effect.fg }">{{ move.effect.label }}</span>
           </div>
-          <p class="tooltip__effect">{{ move.text }}</p>
-          <span v-if="move.props" class="tooltip__props">{{ move.props }}</span>
         </div>
+        <BattleTip v-if="hovered === move.id" placement="above" :align="index % 2 ? 'end' : 'start'">
+          <div class="calc__head"><b>{{ move.calc ? 'Calcul' : move.category }} · {{ move.name }}</b><span v-if="move.calc" class="calc__dmg">{{ move.damage }}</span></div>
+          <div v-for="row in move.rows" :key="row.k" class="calc__row"><span>{{ row.k }}</span><span>{{ row.v }}</span></div>
+          <div v-for="warning in move.warnings" :key="warning" class="calc__warn">⚠ {{ warning }}</div>
+          <p v-if="move.verdict" class="calc__verdict">{{ move.verdict }}</p>
+          <p v-if="move.text" class="calc__text">{{ move.text }}</p>
+        </BattleTip>
       </div>
     </div>
 
     <div class="bench" :class="{ 'bench--off': !canSwitch }">
-      <button
-        v-for="member in bench"
+      <div
+        v-for="(member, index) in bench"
         :key="member.slot"
-        type="button"
+        role="button"
+        :tabindex="canSwitch && !member.fainted && !member.taken ? 0 : -1"
         class="member"
-        :disabled="!canSwitch || member.fainted || member.taken"
-        :title="member.fainted ? `${member.name} est K.O.` : `Envoyer ${member.name}`"
-        @click="commit(`switch ${member.slot}`)"
+        :class="{ 'member--off': !canSwitch || member.fainted || member.taken }"
+        :style="{ '--type': member.color }"
+        :aria-label="member.fainted ? `${member.name} est K.O.` : `Envoyer ${member.name}`"
+        @click="switchTo(member)"
+        @keydown.enter="switchTo(member)"
+        @mouseenter="hoveredMember = member.slot"
+        @mouseleave="hoveredMember = 0"
+        @focus="hoveredMember = member.slot"
+        @blur="hoveredMember = 0"
       >
-        <div class="member__top">
-          <span class="member__icon" :style="{ backgroundImage: `url(${spriteUrl(member.speciesId)})` }" />
-          <span class="member__name">{{ member.name }}</span>
-          <span v-if="member.status" class="member__status" :style="{ background: member.status.couleur }">{{ member.status.court }}</span>
-        </div>
+        <span class="member__sprite" :style="{ backgroundImage: `url(${spriteUrl(member.speciesId)})` }" />
+        <span class="member__name">{{ member.name }}</span>
+        <span v-if="member.status" class="member__status" :style="{ background: member.status.couleur }">{{ member.status.court }}</span>
+        <span v-else-if="beginner && member.matchup" class="member__status" :style="{ background: member.matchup.bg, color: member.matchup.fg }">{{ member.matchup.label }}</span>
         <div class="member__hp">
           <div class="member__track"><div class="member__bar" :style="{ width: `${member.percent}%`, background: hpColor(member.percent) }" /></div>
           <span class="member__pct">{{ member.fainted ? 'K.O.' : `${member.percent} %` }}</span>
         </div>
-      </button>
+        <BattleTip v-if="hoveredMember === member.slot" placement="above" :align="index >= 3 ? 'end' : 'start'">
+          <div class="poke__head">
+            <b>{{ member.name }}</b>
+            <span>N.{{ member.level }}</span>
+          </div>
+          <div class="poke__types">
+            <TypeBadge v-for="type in member.types" :key="type" :type="type" small />
+            <span v-if="member.teraType" class="poke__tera">Téra {{ frenchType(member.teraType) }}</span>
+          </div>
+          <div class="calc__row"><span>PV</span><span>{{ member.hpText }}</span></div>
+          <div class="calc__row"><span>Talent</span><span>{{ member.ability }}</span></div>
+          <div class="calc__row"><span>Objet</span><span>{{ member.item }}</span></div>
+          <div v-if="member.stats" class="poke__stats">{{ member.stats }}</div>
+          <ul class="poke__moves">
+            <li v-for="move in member.moves" :key="move.id">
+              <span class="poke__move-type" :style="{ background: TYPE_COLORS[move.type] }" />
+              {{ move.name }}<span class="poke__pp">{{ move.pp }}</span>
+            </li>
+          </ul>
+          <p v-if="member.matchupText" class="calc__verdict">{{ member.matchupText }}</p>
+        </BattleTip>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { BattleState, RequestPokemon, SideId } from '~/utils/battleTracker'
+import type { TypePokemon } from '#data/types/roster'
+import type { BattlePokemon, BattleState, RequestPokemon, SideId } from '~/utils/battleTracker'
 
 const props = defineProps<{ battle: BattleState }>()
 const emit = defineEmits<{ choose: [choice: string] }>()
+const calc = inject(BATTLE_CALC)
+const { beginner } = useBattleHelp()
 const hovered = ref('')
+const hoveredMember = ref(0)
 const choices = ref<string[]>([])
 const toggled = ref('')
 const targeting = ref<{ name: string, command: string, suffix: string, options: { value: number, label: string, speciesId: string }[] } | null>(null)
@@ -119,6 +146,15 @@ const MECHANICS = [
   { key: 'dynamax', label: 'Dynamax' },
   { key: 'zmove', label: 'Capacité Z' },
 ]
+const EFFECTS: Record<string, { label: string, bg: string, fg: string }> = {
+  0: { label: '✕ Sans effet', bg: '#383838', fg: '#fff' },
+  0.25: { label: '▼ Très peu efficace ×¼', bg: '#e04838', fg: '#fff' },
+  0.5: { label: '▼ Peu efficace ×0,5', bg: '#e04838', fg: '#fff' },
+  1: { label: '= Neutre ×1', bg: '#d8d8d0', fg: '#383838' },
+  2: { label: '▲ Super efficace ×2', bg: '#2f9a58', fg: '#fff' },
+  4: { label: '▲ Super efficace ×4', bg: '#1f7a40', fg: '#fff' },
+}
+const STAT_ORDER = ['atk', 'def', 'spa', 'spd', 'spe'] as const
 
 const request = computed(() => props.battle.request)
 const pokedraft = computed(() => isPokedraft(props.battle))
@@ -126,6 +162,8 @@ const mySide = computed<SideId>(() => props.battle.mySide ?? 'p1')
 const foeSide = computed<SideId>(() => mySide.value === 'p1' ? 'p2' : 'p1')
 const speciesOf = (member: RequestPokemon) => toId(member.details.split(',')[0] ?? '')
 const isFainted = (member?: RequestPokemon) => !member || member.condition.endsWith(' fnt') || member.condition.startsWith('0')
+const ownPokemon = (member: RequestPokemon) => props.battle.sides[mySide.value].team.find(pokemon => member.ident.endsWith(`: ${pokemon.name}`) || (!pokemon.name && pokemon.speciesId === speciesOf(member)))
+const percentText = (value: number) => `${Math.round(value * 100)}`
 
 /** Places qui attendent un choix ce tour-ci ; les autres passent. */
 const slots = computed(() => {
@@ -178,62 +216,106 @@ const hint = computed(() => {
   if (props.battle.choiceSent) return "Ton choix est envoyé, l'adversaire réfléchit."
   if (forced.value) return 'Ton Pokémon est K.O.'
   if (active.value?.trapped) return 'Ton Pokémon est piégé : il ne peut pas sortir.'
-  return `Tour ${props.battle.turn}`
+  return 'Survole une attaque pour le détail du calcul, un Pokémon pour ses attaques et ses PP.'
 })
 
-const EFFECTS: Record<number, { label: string, bg: string, fg: string }> = {
-  0: { label: 'Aucun effet', bg: '#1d1d1d', fg: '#fff' },
-  0.25: { label: 'Très peu efficace', bg: 'rgba(0,0,0,.45)', fg: '#ffb4a8' },
-  0.5: { label: 'Peu efficace', bg: 'rgba(0,0,0,.35)', fg: '#ffd0c4' },
-  2: { label: 'Super efficace', bg: '#ffe066', fg: '#2a2410' },
-  4: { label: 'Super efficace ×4', bg: '#ffd23a', fg: '#2a2410' },
-}
-
 const foes = computed(() => activePokemons(props.battle, foeSide.value).filter(pokemon => !pokemon.fainted))
+const attacker = computed(() => {
+  const member = slot.value ? request.value?.side.pokemon[slot.value.index] : undefined
+  return member ? ownPokemon(member) : undefined
+})
+
+/** Calcul de chaque attaque contre l'adversaire en face, Téracristal compris s'il est choisi. */
+const calcs = computed(() => {
+  const source = attacker.value
+  const target = foes.value[Math.min(slot.value?.index ?? 0, foes.value.length - 1)]
+  if (!calc || !source || !target || !active.value) return {}
+  const tera = toggled.value === 'terastallize' ? active.value.canTerastallize ?? '' : ''
+  return calc.movesAgainst(source, target, active.value.moves.map(move => move.id), tera)
+})
 
 const moves = computed(() => (active.value?.moves ?? []).map((move, index) => {
   const data = moveView(move.id, pokedraft.value)
-  const type = data?.type ?? 'Normal'
-  const status = data?.category === 'Statut'
-  const defender = foes.value.length === 1 ? speciesView(foes.value[0]!.speciesId, pokedraft.value).types : []
-  const multiplier = data && !status && defender.length ? effectiveness(type, defender) : 1
   const zMove = toggled.value === 'zmove' ? active.value?.canZMove?.[index] : null
+  const result = calcs.value[move.id] ?? null
+  const type = result?.type ?? data?.type ?? 'Normal'
+  const status = data?.category === 'Statut'
+  const target = foes.value[0]
+  const rows = result?.rows ?? [
+    { k: 'Puissance', v: data?.power ? String(data.power) : '—' },
+    { k: 'Précision', v: data?.accuracy == null ? 'ne rate jamais' : `${data.accuracy} %` },
+    ...(data?.priority ? [{ k: 'Priorité', v: data.priority > 0 ? `+${data.priority}` : String(data.priority) }] : []),
+  ]
   return {
     id: move.id,
     name: zMove ? moveName(zMove.move) : data?.nom ?? moveName(move.move),
     type,
     color: TYPE_COLORS[type] ?? '#9fa19f',
-    textColor: typeTextColor(type),
-    power: data?.power ? String(data.power) : '—',
+    power: result?.power ? String(result.power) : data?.power ? String(data.power) : '—',
     category: data?.category ?? '',
     pp: `${move.pp}/${move.maxpp}`,
     target: move.target ?? 'normal',
     disabled: Boolean(move.disabled) || move.pp <= 0 || (toggled.value === 'zmove' && !zMove),
-    effect: multiplier === 1 ? null : EFFECTS[multiplier] ?? null,
-    numbers: [
-      { k: 'Puissance', v: data?.power ? String(data.power) : '—' },
-      { k: 'Précision', v: data?.accuracy == null ? '∞' : `${data.accuracy} %` },
-      { k: 'Priorité', v: data?.priority ? (data.priority > 0 ? `+${data.priority}` : String(data.priority)) : '0' },
-    ],
+    calc: result,
+    damage: result ? `${percentText(result.minPct)}–${percentText(result.maxPct)} %` : status ? 'Statut' : '—',
+    effect: result ? EFFECTS[String(result.multiplier)] ?? null : null,
+    warning: result?.warnings[0] ?? '',
+    warnings: result?.warnings ?? [],
+    rows,
+    verdict: result ? `${result.koText}${target ? ` sur ${speciesName(target.speciesId)}` : ''}.` : '',
     text: data?.text ?? '',
-    props: data?.flags.join(' · ') ?? '',
   }
 }))
 
+/** Face au Pokémon adverse actif : ce que ses types d'attaque font au Pokémon du banc. */
+const matchupOf = (types: TypePokemon[], ability: string) => {
+  const target = foes.value[0]
+  if (!target || !types.length) return null
+  const foeTypes = target.tera ? [frenchType(target.tera)] : speciesView(target.speciesId, pokedraft.value).types
+  const values = foeTypes.map(type => ({ type, value: damageTaken(type, types, ability) }))
+  const worst = Math.max(...values.map(entry => entry.value))
+  const foeName = speciesName(target.speciesId)
+  const detail = values.map(entry => `${entry.type} ×${String(entry.value).replace('.', ',')}`).join(', ')
+  if (worst === 0) return { label: 'Immunisé', bg: '#383838', fg: '#fff', text: `Face à ${foeName} : immunisé à ses attaques de type (${detail}).` }
+  if (worst >= 2) return { label: '▲ Faible', bg: '#e04838', fg: '#fff', text: `Face à ${foeName} : faible à ses attaques de type (${detail}).` }
+  if (worst < 1) return { label: '▼ Résiste', bg: '#2f9a58', fg: '#fff', text: `Face à ${foeName} : résiste à ses attaques de type (${detail}).` }
+  return { label: '= Neutre', bg: '#d8d8d0', fg: '#383838', text: `Face à ${foeName} : neutre (${detail}).` }
+}
+
 const bench = computed(() => (request.value?.side.pokemon ?? []).map((member, index) => {
   const speciesId = speciesOf(member)
+  const pokemon: BattlePokemon | undefined = ownPokemon(member)
   const [hp = '0', status = ''] = member.condition.split(' ')
   const [currentHp = '0', max = '1'] = hp.split('/')
   const fainted = isFainted(member)
+  const types = speciesView(speciesId, pokedraft.value).types
+  const matchup = fainted ? null : matchupOf(types, toId(member.baseAbility))
+  const stats = member.stats ?? pokemon?.stats
   return {
     slot: index + 1,
     active: member.active,
     speciesId,
     name: speciesName(speciesId, member.ident.split(': ')[1] ?? ''),
+    level: pokemon?.level ?? 100,
+    types,
+    color: TYPE_COLORS[types[0] ?? 'Normal'] ?? '#555',
+    teraType: member.teraType ?? '',
     fainted,
     taken: choices.value.includes(`switch ${index + 1}`),
     percent: fainted ? 0 : Math.round(Number(currentHp) / Number(max) * 100),
+    hpText: fainted ? 'K.O.' : `${currentHp}/${max} (${Math.round(Number(currentHp) / Number(max) * 100)} %)`,
     status: fainted ? undefined : STATUS_LABELS[status],
+    ability: member.baseAbility ? abilityName(member.baseAbility) : '?',
+    item: member.item ? itemName(member.item) : 'aucun',
+    stats: stats ? STAT_ORDER.map(stat => `${STAT_SHORT[stat]} ${stats[stat]}`).join(' / ') : '',
+    moves: member.moves.map((id) => {
+      const data = moveView(id, pokedraft.value)
+      const known = pokemon?.pp[id]
+      const basePp = currentPokedex()?.moves[id]?.pp ?? 0
+      return { id, name: data?.nom ?? moveName(id), type: data?.type ?? 'Normal', pp: known ? `${known.pp}/${known.maxpp}` : basePp ? `${Math.floor(basePp * 8 / 5)}/${Math.floor(basePp * 8 / 5)}` : '' }
+    }),
+    matchup,
+    matchupText: matchup?.text ?? '',
   }
 }).filter(member => !member.active))
 
@@ -268,6 +350,11 @@ const undo = () => {
   choices.value = next
 }
 
+const switchTo = (member: { slot: number, fainted: boolean, taken: boolean }) => {
+  if (!canSwitch.value || member.fainted || member.taken) return
+  commit(`switch ${member.slot}`)
+}
+
 const pickMove = (index: number, disabled: boolean) => {
   if (!canMove.value || disabled) return
   const move = moves.value[index]!
@@ -291,232 +378,123 @@ const pickMove = (index: number, disabled: boolean) => {
 
 <style scoped>
 .actions {
-  display: grid;
-  grid-template-columns: 210px minmax(0, 1.3fr) minmax(0, 1fr);
-  gap: 10px;
-  padding: 10px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 12px 14px;
   border-radius: var(--r);
   background: var(--pn);
   box-shadow: var(--pnS);
 }
 
-.actions__intro {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-}
-
-.actions__title { font: 700 16px/1.15 'Pixelify Sans', sans-serif; }
-.actions__hint { font: 400 13px/1.35 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-
-.actions__error {
-  padding: 6px 8px;
-  border-radius: 6px;
-  background: rgba(255, 210, 58, .14);
-  color: #ffd23a;
-  font: 700 12px/1.35 'Atkinson Hyperlegible', sans-serif;
-}
-
-.moves {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 62px 62px;
-  gap: 8px;
-}
-
-.moves--off, .bench--off { opacity: .5; pointer-events: none; }
-
-.move {
-  position: relative;
-  cursor: pointer;
-  border-radius: 10px;
-  clip-path: var(--cut);
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .45), inset 0 -5px 0 rgba(0, 0, 0, .2);
-  padding: 7px 10px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform .12s;
-  outline: none;
-}
-
-.move:hover, .move:focus-visible { transform: translateY(-2px); }
-.move--disabled { filter: grayscale(.8) brightness(.7); cursor: not-allowed; }
-
-.move__row {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.move__name {
-  flex: 1;
-  font: 700 16px 'Atkinson Hyperlegible', sans-serif;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.move__power { font: 700 19px 'Pixelify Sans', sans-serif; }
-.move__spacer { flex: 1; }
-
-.move__tag {
-  height: 18px;
-  padding: 0 6px;
-  border-radius: 4px;
-  background: rgba(0, 0, 0, .28);
-  color: #fff;
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  white-space: nowrap;
-}
-
-.tooltip {
-  position: absolute;
-  left: 0;
-  bottom: calc(100% + 10px);
-  width: 320px;
-  z-index: 40;
-  padding: 12px 14px;
-  border-radius: var(--r);
-  background: var(--pn2);
-  color: var(--tx);
-  box-shadow: var(--pnS), 0 16px 30px rgba(0, 0, 0, .5);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  animation: pop .15s both;
-  cursor: default;
-}
-
-.tooltip__head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.tooltip__name { flex: 1; font: 700 17px 'Pixelify Sans', sans-serif; }
-.tooltip__meta { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-
-.tooltip__line {
-  display: flex;
-  justify-content: space-between;
-  font: 400 13px 'Atkinson Hyperlegible', sans-serif;
-  color: var(--mu);
-}
-
-.tooltip__line b { color: var(--tx); }
-
-.tooltip__effect {
-  margin: 0;
-  padding-top: 6px;
-  border-top: 2px solid var(--chip);
-  font: 400 13px/1.4 'Atkinson Hyperlegible', sans-serif;
-}
-
-.tooltip__props { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--sel); }
-
-.bench {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 6px;
-}
-
-.member {
-  border: 0;
-  cursor: pointer;
-  border-radius: 9px;
-  background: var(--chip);
-  box-shadow: 0 0 0 2px var(--bd);
-  padding: 5px 6px 6px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 4px;
-  text-align: left;
-  color: var(--tx);
-  min-width: 0;
-  transition: transform .12s;
-}
-
-.member:hover:not(:disabled) { transform: translateY(-2px); }
-.member:disabled { opacity: .45; cursor: not-allowed; }
-
-.member__top {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  min-width: 0;
-}
-
-.member__icon {
-  width: 34px;
-  height: 34px;
-  flex: none;
-  margin: -4px -2px -2px -4px;
-  background: center/contain no-repeat;
-  image-rendering: pixelated;
-}
-
-.member__name {
-  flex: 1;
-  min-width: 0;
-  font: 700 12px/1.1 'Atkinson Hyperlegible', sans-serif;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.member__status {
-  flex: none;
-  height: 16px;
-  padding: 0 3px;
-  border-radius: 3px;
-  color: #fff;
-  font: 700 9px 'Atkinson Hyperlegible', sans-serif;
-  display: flex;
-  align-items: center;
-}
-
-.member__hp {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.member__track {
-  flex: 1;
-  height: 6px;
-  border-radius: 3px;
-  background: var(--dk);
-  overflow: hidden;
-}
-
-.member__bar { height: 100%; }
-.member__pct { font: 700 12px 'Pixelify Sans', sans-serif; }
-
-.slots { display: flex; flex-direction: column; gap: 4px; }
-.slots__item { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.slots__item--now { color: var(--tx); }
-.slots__item--done { color: #58d080; }
-.mechanics { display: flex; flex-wrap: wrap; gap: 4px; }
+.actions__head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-height: 36px; }
+.actions__title { font: 600 19px 'Pixelify Sans', sans-serif; text-shadow: var(--sh); }
+.actions__hint { flex: 1; min-width: 160px; font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.actions__error { flex: 1; padding: 6px 8px; border-radius: 6px; background: rgba(255, 210, 58, .14); color: #ffd23a; font: 700 12px/1.35 'Atkinson Hyperlegible', sans-serif; }
 
 .mechanic {
   border: 0;
   cursor: pointer;
-  height: 28px;
-  padding: 0 10px;
-  border-radius: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 8px;
   background: var(--chip);
   color: var(--tx);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  box-shadow: 0 0 0 2px var(--bd), inset 0 -3px 0 rgba(0, 0, 0, .2);
+  font: 600 15px 'Pixelify Sans', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.mechanic--on { background: var(--uA); color: var(--uAtx); }
+.mechanic--tera { background: var(--sel); color: var(--selTx); }
+.mechanic--on { background: #60a1b8; color: #fff; }
+.mechanic__gem { width: 14px; height: 14px; transform: rotate(45deg); background: linear-gradient(135deg, #bfe6f2, #60a1b8); border: 2px solid #fff; box-sizing: border-box; }
+.moves { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.moves--off, .bench--off { opacity: .45; pointer-events: none; }
+
+.move {
+  position: relative;
+  height: 84px;
+  cursor: pointer;
+  border-radius: 12px;
+  background: var(--type);
+  clip-path: var(--cut);
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .55), inset 0 -6px 0 rgba(0, 0, 0, .18), 0 0 0 2px var(--bd);
+  transition: transform .12s;
+  outline: none;
+}
+
+.move:hover, .move:focus-visible { transform: translateY(-2px); clip-path: none; }
+.move--disabled { filter: grayscale(.8) brightness(.7); cursor: not-allowed; }
+
+.move__inner {
+  position: absolute;
+  inset: 8px 8px 12px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, .88);
+  color: #383838;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 10px;
+  padding: 4px 10px;
+  box-sizing: border-box;
+}
+
+.move__main { display: flex; flex-direction: column; justify-content: center; gap: 1px; min-width: 0; }
+.move__name { font: 600 18px/1.1 'Pixelify Sans', sans-serif; text-shadow: 2px 2px 0 #d8d8c8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.move__meta { display: flex; align-items: center; gap: 5px; font: 600 12px 'Pixelify Sans', sans-serif; color: #6a6a6a; white-space: nowrap; }
+.move__type { height: 16px; padding: 0 6px; border-radius: 3px; background: var(--type); color: #fff; text-shadow: 1px 1px 0 rgba(0, 0, 0, .45); font-size: 11px; display: flex; align-items: center; }
+.move__warn { font: 800 11px 'Atkinson Hyperlegible', sans-serif; color: #a04030; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.move__side { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 3px; }
+.move__dmg { font: 700 20px/1 'Pixelify Sans', sans-serif; white-space: nowrap; }
+.move__eff { height: 18px; padding: 0 6px; border-radius: 4px; font: 600 11px 'Pixelify Sans', sans-serif; display: flex; align-items: center; white-space: nowrap; }
+.calc__head { display: flex; align-items: center; gap: 8px; }
+.calc__head b { flex: 1; font: 600 16px 'Pixelify Sans', sans-serif; }
+.calc__dmg { font: 700 17px 'Pixelify Sans', sans-serif; color: var(--ac); }
+.calc__row { display: flex; justify-content: space-between; gap: 12px; }
+.calc__row span:first-child { color: var(--mu); }
+.calc__row span:last-child { text-align: right; }
+.calc__warn { color: #ffb070; }
+.calc__verdict { margin: 0; padding-top: 6px; border-top: 2px solid var(--chip); font-weight: 800; }
+.calc__text { margin: 0; font-weight: 400; color: var(--mu); }
+.bench { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+
+.member {
+  position: relative;
+  height: 70px;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(90deg, rgba(0, 0, 0, .55), rgba(0, 0, 0, .1) 70%), linear-gradient(160deg, var(--type), color-mix(in srgb, var(--type) 45%, #0b0f16));
+  box-shadow: 0 0 0 2px var(--bd);
+  transition: transform .12s;
+  outline: none;
+}
+
+.member:hover:not(.member--off), .member:focus-visible { transform: translateY(-2px); }
+.member--off { opacity: .5; cursor: not-allowed; }
+.member__sprite { position: absolute; right: -4px; top: -8px; width: 58px; height: 58px; background: center / contain no-repeat; image-rendering: pixelated; }
+.member__name { position: absolute; left: 7px; top: 6px; right: 40px; font: 600 13px 'Pixelify Sans', sans-serif; color: #fff; text-shadow: 1px 1px 0 #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.member__status { position: absolute; left: 7px; top: 25px; height: 15px; padding: 0 5px; border-radius: 3px; color: #fff; font: 600 10px 'Pixelify Sans', sans-serif; display: flex; align-items: center; }
+.member__hp { position: absolute; left: 7px; right: 7px; bottom: 7px; display: flex; align-items: center; gap: 5px; }
+.member__track { flex: 1; height: 7px; border-radius: 4px; background: #383838; box-shadow: 0 0 0 1px #fff; overflow: hidden; }
+.member__bar { height: 100%; }
+.member__pct { font: 600 12px 'Pixelify Sans', sans-serif; color: #fff; text-shadow: 1px 1px 0 #000; }
+.poke__head { display: flex; align-items: baseline; gap: 8px; }
+.poke__head b { flex: 1; font: 600 17px 'Pixelify Sans', sans-serif; }
+.poke__head span { color: var(--mu); }
+.poke__types { display: flex; align-items: center; gap: 4px; }
+.poke__tera { height: 18px; padding: 0 6px; border-radius: 4px; background: #60a1b8; color: #fff; font-size: 11px; display: flex; align-items: center; }
+.poke__stats { font-weight: 400; color: var(--mu); }
+.poke__moves { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; }
+.poke__moves li { display: flex; align-items: center; gap: 6px; }
+.poke__move-type { width: 8px; height: 14px; border-radius: 2px; flex: none; }
+.poke__pp { margin-left: auto; font: 600 12px 'Pixelify Sans', sans-serif; color: var(--mu); }
+.slots { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.slots__item { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.slots__item--now { color: var(--tx); }
+.slots__item--done { color: #58d080; }
 .targets { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .targets__title { font: 600 15px 'Pixelify Sans', sans-serif; }
 .targets__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }

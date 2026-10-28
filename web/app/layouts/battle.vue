@@ -9,7 +9,7 @@
 .battle-layout {
   height: 100vh;
   min-height: 680px;
-  min-width: 1180px;
+  min-width: 1240px;
   box-sizing: border-box;
   padding: 10px;
   background: var(--pg);

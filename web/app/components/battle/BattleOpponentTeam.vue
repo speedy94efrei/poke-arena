@@ -1,9 +1,9 @@
 <template>
-  <UiPanel title="Équipe adverse">
-    <template #aside>{{ summary }}</template>
-    <div class="team">
+  <section class="opp" aria-label="Équipe adverse">
+    <header class="opp__head"><span>Équipe adverse</span><span class="opp__summary">{{ summary }}</span></header>
+    <div class="opp__grid">
       <div
-        v-for="(member, index) in slots"
+        v-for="(tile, index) in tiles"
         :key="index"
         tabindex="0"
         class="tile"
@@ -12,145 +12,106 @@
         @focus="hovered = index"
         @blur="hovered = -1"
       >
-        <div class="tile__bg" :class="{ 'tile__bg--fainted': member?.fainted, 'tile__bg--active': member?.active }" />
-        <template v-if="member">
-          <span class="tile__sprite" :class="{ 'tile__sprite--fainted': member.fainted }" :style="{ backgroundImage: `url(${spriteUrl(member.speciesId)})` }" />
-          <span class="tile__tag" :style="{ background: member.fainted ? '#1d1d1d' : hpColor(hpPercent(member)), color: member.fainted ? '#fff' : '#1d1d1d' }">
-            {{ member.fainted ? 'K.O.' : `${hpPercent(member)} %` }}
-          </span>
-          <span class="tile__name">{{ speciesName(member.speciesId, member.name) }}</span>
-          <div v-if="hovered === index" class="info">
-            <div class="info__head">
-              <span class="info__name">{{ speciesName(member.speciesId, member.name) }}</span>
-              <TypeBadge v-for="type in speciesView(member.speciesId, pokedraft).types" :key="type" :type="type" small />
-            </div>
-            <div class="info__line"><span>Talent</span><b>{{ member.ability ? abilityName(member.ability) : speciesView(member.speciesId, pokedraft).abilities.join(' ou ') || '?' }}</b></div>
-            <div class="info__line"><span>Objet</span><b>{{ member.item ? itemName(member.item) : 'pas encore vu' }}</b></div>
-            <div class="info__line"><span>Statut</span><b>{{ STATUS_LABELS[member.status]?.court ?? 'aucun' }}</b></div>
-            <div class="info__line"><span>Attaques</span><b>{{ member.moves.length ? member.moves.map(moveName).join(', ') : 'aucune révélée' }}</b></div>
-            <div v-if="pokedraft" class="info__line"><span>Signature</span><b>{{ speciesView(member.speciesId, true).signature ?? '?' }}</b></div>
+        <div class="tile__bg" :style="{ background: tile.background, filter: tile.fainted ? 'grayscale(1) brightness(.7)' : 'none', boxShadow: tile.active ? '0 0 0 3px var(--sel)' : '0 0 0 2px var(--bd)' }" />
+        <span v-if="tile.speciesId" class="tile__sprite" :style="{ backgroundImage: `url(${spriteUrl(tile.speciesId)})`, filter: tile.fainted ? 'grayscale(1)' : 'none' }" />
+        <span class="tile__tag" :style="{ background: tile.tag.bg, color: tile.tag.fg }">{{ tile.tag.label }}</span>
+        <span class="tile__name">{{ tile.name }}</span>
+        <BattleTip v-if="hovered === index" placement="right">
+          <div class="tip-head"><b>{{ tile.name }}</b><span>{{ tile.tag.label }}</span></div>
+          <div v-if="tile.types.length" class="tip-types">
+            <TypeBadge v-for="type in tile.types" :key="type" :type="type" small />
           </div>
-        </template>
-        <span v-else class="tile__unknown">?</span>
+          <div v-for="row in tile.rows" :key="row.k" class="tip-row"><span>{{ row.k }}</span><span>{{ row.v }}</span></div>
+        </BattleTip>
       </div>
     </div>
-  </UiPanel>
+  </section>
 </template>
 
 <script setup lang="ts">
 import type { BattlePokemon, BattleState, SideId } from '~/utils/battleTracker'
 
 const props = defineProps<{ battle: BattleState, side: SideId }>()
+const calc = inject(BATTLE_CALC)
 const hovered = ref(-1)
+
+const TAGS = {
+  ko: { label: 'K.O.', bg: '#e04838', fg: '#fff' },
+  active: { label: '● Actif', bg: '#f8d030', fg: '#383838' },
+  seen: { label: 'Vu', bg: '#fff', fg: '#383838' },
+  preview: { label: 'Aperçu', bg: 'rgba(255,255,255,.75)', fg: '#383838' },
+  unknown: { label: '?', bg: '#fff', fg: '#6a6a6a' },
+}
 
 const pokedraft = computed(() => isPokedraft(props.battle))
 const team = computed(() => props.battle.sides[props.side].team)
-const slots = computed<(BattlePokemon | undefined)[]>(() => Array.from({ length: 6 }, (_, index) => team.value[index]))
+const size = computed(() => Math.max(props.battle.sides[props.side].size ?? 6, team.value.length))
+
+const rowsOf = (member: BattlePokemon) => {
+  const set = calc?.setOf(member)
+  const estimate = calc?.estimate(member)
+  const seen = member.moves.map(moveName)
+  const probable = (calc?.usage.value?.pokemon.find(entry => entry.id === member.speciesId)?.moves ?? [])
+    .filter(([id]) => id && id !== 'nothing' && !member.moves.includes(id)).slice(0, 4 - Math.min(4, member.moves.length))
+    .map(([id, share]) => `${moveName(id)} ${percent(share)}`)
+  const rows = [
+    { k: 'PV', v: member.fainted ? 'K.O.' : `${hpPercent(member)} %${estimate ? ` · ≈ ${estimate.hp}/${estimate.max}` : ''}` },
+    { k: 'Objet', v: member.item ? itemName(member.item) : set?.item ? `${itemName(set.item)} ? (probable)` : 'pas encore vu' },
+    { k: 'Talent', v: member.ability ? abilityName(member.ability) : set?.ability ? `${abilityName(set.ability)} ? (probable)` : '?' },
+    { k: 'Attaques', v: seen.length ? seen.join(', ') : 'aucune révélée' },
+  ]
+  if (probable.length) rows.push({ k: 'Probables', v: probable.join(', ') })
+  if (member.status) rows.push({ k: 'Statut', v: STATUS_LABELS[member.status]?.inflige ?? member.status })
+  if (member.tera) rows.push({ k: 'Téra', v: frenchType(member.tera) })
+  return rows
+}
+
+const tiles = computed(() => Array.from({ length: size.value }, (_, index) => {
+  const member = team.value[index]
+  if (!member) return { name: 'Non révélé', speciesId: '', tag: TAGS.unknown, types: [], rows: [{ k: 'Révélé', v: "Rien pour l'instant" }], background: 'repeating-linear-gradient(135deg, var(--chip) 0 6px, var(--in) 6px 12px)', fainted: false, active: false }
+  const types = speciesView(member.speciesId, pokedraft.value).types
+  const tag = member.fainted ? TAGS.ko : member.active ? TAGS.active : member.revealed ? TAGS.seen : TAGS.preview
+  const color = TYPE_COLORS[types[0] ?? 'Normal'] ?? '#555'
+  return {
+    name: speciesName(member.speciesId, member.name), speciesId: member.speciesId, tag, types, rows: rowsOf(member),
+    background: `linear-gradient(160deg, ${color}, color-mix(in srgb, ${color} 45%, #0b0f16))`, fainted: member.fainted, active: member.active,
+  }
+}))
+
 const summary = computed(() => {
-  const alive = team.value.filter(p => !p.fainted).length
-  return `${props.battle.sides[props.side].name || '…'} · ${alive} debout`
+  const alive = team.value.filter(member => !member.fainted).length + Math.max(0, size.value - team.value.length)
+  const unknown = Math.max(0, size.value - team.value.filter(member => member.revealed || member.speciesId).length)
+  return `${alive} / ${size.value} en jeu${unknown ? ` · ${unknown} inconnu${unknown > 1 ? 's' : ''}` : ''}`
 })
 </script>
 
 <style scoped>
-.team {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 6px;
-}
+.opp { background: var(--pn); border-radius: var(--r); box-shadow: var(--pnS); flex: none; position: relative; z-index: 5; }
 
-.tile {
-  position: relative;
-  height: 58px;
-  outline: none;
-}
-
-.tile__bg {
-  position: absolute;
-  inset: 0;
-  border-radius: 8px;
-  background: var(--chip);
-}
-
-.tile__bg--active { box-shadow: 0 0 0 2px var(--sel); }
-.tile__bg--fainted { background: var(--dk); }
-
-.tile__sprite {
-  position: absolute;
-  right: 0;
-  top: -4px;
-  width: 52px;
-  height: 52px;
-  background: center/contain no-repeat;
-  image-rendering: pixelated;
-}
-
-.tile__sprite--fainted { filter: grayscale(1) brightness(.5); }
-
-.tile__tag {
-  position: absolute;
-  left: 4px;
-  top: 4px;
-  height: 17px;
-  padding: 0 5px;
-  border-radius: 4px;
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+.opp__head {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--r) var(--r) 0 0;
+  background: var(--hd);
+  color: var(--hdTx);
+  font: 600 16px 'Pixelify Sans', sans-serif;
+  text-shadow: var(--hdSh, none);
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
-.tile__name {
-  position: absolute;
-  left: 5px;
-  right: 4px;
-  bottom: 3px;
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
-  color: #fff;
-  text-shadow: 1px 1px 0 #000, 0 0 3px #000;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.tile__unknown {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font: 600 20px 'Pixelify Sans', sans-serif;
-  color: var(--mu);
-}
-
-.info {
-  position: absolute;
-  right: calc(100% + 10px);
-  top: -8px;
-  width: 280px;
-  z-index: 50;
-  padding: 12px;
-  border-radius: var(--r);
-  background: var(--pn2);
-  box-shadow: var(--pnS), 0 16px 30px rgba(0, 0, 0, .45);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  animation: pop .15s both;
-}
-
-.info__head {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.info__name { flex: 1; font: 700 18px 'Pixelify Sans', sans-serif; }
-
-.info__line {
-  display: grid;
-  grid-template-columns: 70px 1fr;
-  gap: 8px;
-  font: 400 13px/1.35 'Atkinson Hyperlegible', sans-serif;
-}
-
-.info__line span { color: var(--mu); }
+.opp__summary { font: 700 11px 'Atkinson Hyperlegible', sans-serif; text-shadow: none; }
+.opp__grid { padding: 10px 12px 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.tile { position: relative; height: 60px; outline: none; cursor: default; }
+.tile__bg { position: absolute; inset: 0; border-radius: 8px; }
+.tile__sprite { position: absolute; right: 0; top: -6px; width: 52px; height: 52px; background: center / contain no-repeat; image-rendering: pixelated; }
+.tile__tag { position: absolute; left: 4px; top: 4px; height: 16px; padding: 0 5px; border-radius: 4px; font: 600 11px 'Pixelify Sans', sans-serif; display: flex; align-items: center; }
+.tile__name { position: absolute; left: 5px; right: 4px; bottom: 3px; font: 600 12px 'Pixelify Sans', sans-serif; color: #fff; text-shadow: 1px 1px 0 #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tip-head { display: flex; align-items: center; gap: 8px; }
+.tip-head b { flex: 1; font: 600 18px 'Pixelify Sans', sans-serif; }
+.tip-head span { font-size: 11px; color: var(--mu); }
+.tip-types { display: flex; gap: 4px; }
+.tip-row { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 8px; }
+.tip-row span:first-child { color: var(--mu); }
 </style>

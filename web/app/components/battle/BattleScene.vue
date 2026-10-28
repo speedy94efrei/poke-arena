@@ -1,6 +1,6 @@
 <template>
   <div ref="wrapper" class="scene-wrap">
-    <div class="scene" :style="{ transform: `scale(${scale})`, backgroundImage: `url(${stage.decor}), url(${FALLBACK_DECOR})` }">
+    <div class="scene" :class="{ 'scene--quake': quaking }" :style="{ transform: `scale(${scale})`, backgroundImage: `url(${stage.decor}), url(${FALLBACK_DECOR})` }">
       <div v-if="weatherClass" class="scene__weather" :class="weatherClass" />
 
       <div v-if="fieldLabel" class="scene__field">{{ fieldLabel }}</div>
@@ -52,6 +52,8 @@
         :style="{ color: item.color }"
       >{{ item.text }}</span>
 
+      <BattleFx v-for="effect in effects" :key="effect.id" :effect="effect" :from="center(effect.from ?? effect.to)" :to="center(effect.to ?? effect.from)" :origin="origin(effect.to)" />
+
       <div class="scene__message">
         <span aria-live="polite" class="scene__text">{{ battle.message }}</span>
         <span v-if="waiting" class="scene__cursor" />
@@ -95,12 +97,46 @@ const hazards = (side: SideId) => Object.entries(props.battle.sides[side].condit
 })
 
 /** Places des sprites et des cartes de PV quand plusieurs Pokémon sont actifs par camp (doubles, triples). */
-const spot = (side: 'me' | 'opp', index: number, count: number) => {
-  if (count < 2) return {}
+const box = (side: 'me' | 'opp', index: number, count: number) => {
+  if (count < 2) return null
   const width = side === 'opp' ? 150 : 190
   const left = side === 'opp' ? 450 - (count - 2) * 60 + index * (count > 2 ? 110 : 150) : 20 + index * (count > 2 ? 130 : 190)
-  return { left: `${left}px`, width: `${width}px`, ...(side === 'opp' ? { top: '40px', height: '176px' } : { top: '170px', height: '190px' }) }
+  return side === 'opp' ? { left, width, top: 40, height: 176 } : { left, width, top: 170, height: 190 }
 }
+
+const spot = (side: 'me' | 'opp', index: number, count: number) => {
+  const place = box(side, index, count)
+  return place ? { left: `${place.left}px`, width: `${place.width}px`, top: `${place.top}px`, height: `${place.height}px` } : {}
+}
+
+/** Centre d'un Pokémon actif, que visent les effets visuels. */
+const center = (target?: { side: SideId, position: number }) => {
+  if (!target) return { x: 410, y: 210 }
+  const opp = target.side === oppSide.value
+  const list = opp ? theirs.value : mine.value
+  const place = box(opp ? 'opp' : 'me', Math.max(0, list.findIndex(pokemon => pokemon.position === target.position)), list.length)
+  if (!place) return opp ? { x: 610, y: 170 } : { x: 200, y: 296 }
+  return { x: place.left + place.width / 2, y: place.top + place.height - (opp ? 52 : 62) }
+}
+
+/** Coin d'où le dresseur lance sa Poké Ball. */
+const origin = (target?: { side: SideId, position: number }) => target?.side === oppSide.value ? { x: 840, y: 10 } : { x: -20, y: 400 }
+
+/** Les effets déjà joués avant l'ouverture de la scène ne sont pas rejoués. */
+const shownAfter = ref(Number.POSITIVE_INFINITY)
+const effects = computed(() => props.battle.fx.filter(effect => effect.kind !== 'shake' && effect.id > shownAfter.value))
+const lastShake = computed(() => props.battle.fx.filter(effect => effect.kind === 'shake' && effect.id > shownAfter.value).at(-1)?.id)
+const quaking = ref(false)
+let quakeTimer: ReturnType<typeof setTimeout> | undefined
+watch(lastShake, (id) => {
+  if (!id) return
+  quaking.value = false
+  requestAnimationFrame(() => {
+    quaking.value = true
+    clearTimeout(quakeTimer)
+    quakeTimer = setTimeout(() => (quaking.value = false), 650)
+  })
+})
 
 const card = (side: 'me' | 'opp', index: number, count: number) => {
   if (count < 2) return {}
@@ -113,13 +149,17 @@ const hide = (event: Event) => {
 
 let observer: ResizeObserver | undefined
 onMounted(() => {
+  shownAfter.value = props.battle.fx.at(-1)?.id ?? 0
   observer = new ResizeObserver(() => {
     const element = wrapper.value
     if (element) scale.value = Math.max(.45, Math.min(1.35, element.clientWidth / 820, element.clientHeight / 470))
   })
   if (wrapper.value) observer.observe(wrapper.value)
 })
-onBeforeUnmount(() => observer?.disconnect())
+onBeforeUnmount(() => {
+  observer?.disconnect()
+  clearTimeout(quakeTimer)
+})
 </script>
 
 <style scoped>
@@ -146,6 +186,18 @@ onBeforeUnmount(() => observer?.disconnect())
   background-repeat: no-repeat;
   image-rendering: pixelated;
   box-shadow: var(--pnS);
+}
+
+.scene--quake { animation: quake .6s linear; }
+
+@keyframes quake {
+  0%, 100% { translate: 0 0; }
+  10%, 50%, 90% { translate: -10px 3px; }
+  30%, 70% { translate: 10px -3px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene--quake { animation: none; }
 }
 
 .scene__weather {

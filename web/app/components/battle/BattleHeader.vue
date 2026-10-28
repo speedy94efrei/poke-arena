@@ -2,15 +2,29 @@
   <header class="header">
     <AppLogo header />
     <div class="header__box">
-      <span class="header__pair"><span class="header__label">FORMAT</span><span class="header__value">{{ isPokedraft(battle) ? `PokéDraft · Saison ${roster.saison}` : formatLabel(battle.formatName) || '…' }}</span></span>
+      <span class="header__format">{{ isPokedraft(battle) ? `PokéDraft · Saison ${roster.saison}` : formatLabel(battle.formatName) || '…' }}</span>
       <span class="header__sep" />
-      <span class="header__pair"><span class="header__label">TOUR</span><span class="header__turn">{{ battle.turn || '—' }}</span></span>
+      <span class="header__label">TOUR</span><span class="header__turn">{{ battle.turn || '—' }}</span>
     </div>
-    <div class="header__box">
-      <span class="header__mode">{{ mode }}</span>
-      <span class="header__players">{{ battle.sides.p1.name || '…' }} contre {{ battle.sides.p2.name || '…' }}</span>
+    <div class="header__players">
+      <div v-for="player in players" :key="player.side" class="header__box header__player">
+        <span class="header__avatar" :style="{ background: player.color }">{{ player.initial }}</span>
+        <span class="header__who">
+          <span>{{ player.label }}</span>
+          <span class="header__balls">
+            <span v-for="(ball, index) in player.balls" :key="index" class="header__ball" :class="`header__ball--${ball}`" />
+          </span>
+        </span>
+      </div>
     </div>
-    <span class="header__spacer" />
+    <div class="header__box header__mode-box">
+      <span class="header__mode" :style="{ background: modeInfo.color }">{{ modeInfo.badge }}</span>
+      <span class="header__mode-text">{{ modeInfo.text }}</span>
+    </div>
+    <button type="button" class="header__box header__help" :aria-pressed="beginner" :title="beginner ? 'Efficacité, dégâts estimés et avertissements sur les boutons' : 'Boutons sobres comme sur Showdown ; le calcul reste au survol'" @click="help = beginner ? 'confirme' : 'debutant'">
+      <span class="header__label">AIDE</span>
+      <span class="header__help-value">{{ beginner ? 'Débutant' : 'Confirmé' }}</span>
+    </button>
     <label class="header__box header__decor">
       <span class="header__label">DÉCOR</span>
       <select v-model="choice" class="header__select">
@@ -23,74 +37,79 @@
 </template>
 
 <script setup lang="ts">
-import type { BattleState } from '~/utils/battleTracker'
+import type { BattleState, SideId } from '~/utils/battleTracker'
 
 const props = defineProps<{ battle: BattleState }>()
-const { store: draftStore } = useDraft()
-const mode = computed(() => {
-  const roomid = props.battle.roomid
-  if (draftStore.rankedBattles.includes(roomid)) return 'Classé · Draft'
-  if (draftStore.battles.includes(roomid)) return 'Draft amical'
-  const opponent = props.battle.sides[props.battle.mySide === 'p2' ? 'p1' : 'p2'].name
-  return toId(opponent).startsWith('botniveau') ? 'Entraînement' : 'Combat libre'
-})
 const emit = defineEmits<{ forfeit: [], leave: [] }>()
+const { store: draftStore } = useDraft()
+const { help, beginner } = useBattleHelp()
 const { choice, options } = useBattleStage(() => props.battle.roomid)
+
+const LEVELS = ['', 'Débutant', 'Facile', 'Moyen', 'Difficile', 'Expert']
+
+const modeInfo = computed(() => {
+  const roomid = props.battle.roomid
+  if (draftStore.rankedBattles.includes(roomid)) return { badge: 'CLASSÉ', text: 'Draft', color: '#c8362a' }
+  if (draftStore.battles.includes(roomid)) return { badge: 'DRAFT', text: 'Amical', color: '#3d6fc8' }
+  const opponent = props.battle.sides[props.battle.mySide === 'p2' ? 'p1' : 'p2'].name
+  const level = /^Bot Niveau (\d)/.exec(opponent)?.[1]
+  if (level) return { badge: 'BOT', text: `Niveau ${level} · ${LEVELS[Number(level)] ?? ''}`, color: '#48a860' }
+  if (props.battle.formatName.includes('Random') || !props.battle.mySide) return { badge: props.battle.mySide ? 'LIBRE' : 'SPECTATEUR', text: 'Combat', color: '#3d6fc8' }
+  return { badge: 'COMBAT', text: Object.keys(props.battle.ratings).length ? 'Classé' : 'En ligne', color: '#3d6fc8' }
+})
+
+/** Chaque joueur avec ses Pokémon : debout, K.O. ou pas encore vus. */
+const players = computed(() => {
+  const mine: SideId = props.battle.mySide ?? 'p1'
+  return ([mine, mine === 'p1' ? 'p2' : 'p1'] as SideId[]).map((side) => {
+    const data = props.battle.sides[side]
+    const size = Math.max(data.size ?? 6, data.team.length)
+    const balls = Array.from({ length: size }, (_, index) => {
+      const pokemon = data.team[index]
+      if (!pokemon) return 'unknown'
+      return pokemon.fainted ? 'fainted' : 'alive'
+    })
+    const name = data.name || '…'
+    const self = side === props.battle.mySide
+    return { side, label: self ? `${name} (toi)` : name, initial: name.charAt(0).toUpperCase(), color: self ? '#4a8fe0' : '#e05848', balls }
+  })
+})
 </script>
 
 <style scoped>
-.header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-}
+.header { display: flex; align-items: center; gap: 8px; min-width: 0; }
 
 .header__box {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   height: 48px;
   padding: 0 14px;
   border-radius: var(--r);
   background: var(--pn);
   box-shadow: var(--pnS);
   flex: none;
+  color: var(--tx);
 }
 
-.header__pair {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.05;
-}
-
-.header__label {
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
-  color: var(--mu);
-}
-
-.header__value { font: 700 15px 'Atkinson Hyperlegible', sans-serif; }
-.header__turn { font: 700 20px 'Pixelify Sans', sans-serif; }
-
-.header__sep {
-  width: 2px;
-  height: 28px;
-  background: var(--chip);
-}
-
-.header__mode {
-  height: 26px;
-  padding: 0 8px;
-  border-radius: 6px;
-  background: #3d6fc8;
-  color: #fff;
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
-  display: flex;
-  align-items: center;
-}
-
-.header__players { font: 700 14px 'Atkinson Hyperlegible', sans-serif; }
-.header__spacer { flex: 1; }
+.header__format { font: 600 16px 'Pixelify Sans', sans-serif; text-shadow: var(--sh); white-space: nowrap; }
+.header__sep { width: 2px; height: 24px; background: var(--chip); }
+.header__label { font: 600 12px 'Pixelify Sans', sans-serif; color: var(--mu); }
+.header__turn { font: 700 22px 'Pixelify Sans', sans-serif; text-shadow: var(--sh); }
+.header__players { flex: 1; min-width: 0; display: flex; justify-content: center; gap: 8px; }
+.header__player { padding-left: 8px; min-width: 0; }
+.header__avatar { flex: none; width: 32px; height: 32px; border-radius: 8px; color: #fff; display: grid; place-items: center; font: 700 16px 'Pixelify Sans', sans-serif; }
+.header__who { display: flex; flex-direction: column; gap: 3px; min-width: 0; font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.header__who > span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
+.header__balls { display: flex; gap: 3px; }
+.header__ball { width: 11px; height: 11px; border-radius: 50%; box-shadow: 0 0 0 1px var(--bd); }
+.header__ball--alive { background: linear-gradient(180deg, #e84838 0 46%, #222 46% 54%, #fff 54%); }
+.header__ball--fainted { background: #555; opacity: .6; }
+.header__ball--unknown { background: var(--chip); }
+.header__mode { height: 26px; padding: 0 8px; border-radius: 6px; color: #fff; display: grid; place-items: center; font: 600 13px 'Pixelify Sans', sans-serif; }
+.header__mode-text { font: 600 15px 'Pixelify Sans', sans-serif; text-shadow: var(--sh); white-space: nowrap; }
+.header__help { border: 0; cursor: pointer; gap: 8px; }
+.header__help-value { font: 600 15px 'Pixelify Sans', sans-serif; color: var(--sel); }
 .header__decor { gap: 8px; }
 
 .header__select {
@@ -104,6 +123,10 @@ const { choice, options } = useBattleStage(() => props.battle.roomid)
   color: var(--tx);
   box-shadow: inset 0 0 0 2px var(--chip);
   outline: none;
-  max-width: 200px;
+  max-width: 150px;
+}
+
+@media (max-width: 1400px) {
+  .header__mode-box, .header__decor .header__label { display: none; }
 }
 </style>
