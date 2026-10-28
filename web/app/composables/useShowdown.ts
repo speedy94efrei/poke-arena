@@ -145,15 +145,17 @@ function handleGlobal(line: string) {
       break
     case 'queryresponse': {
       const [type = '', ...rest] = args
+      // Le serveur répond dans l'ordre des requêtes : chaque réponse revient à la plus ancienne en attente de ce type.
       const waiters = queryWaiters.get(type) ?? []
-      queryWaiters.delete(type)
+      const resolve = waiters.shift()
+      if (!waiters.length) queryWaiters.delete(type)
       let data: unknown = null
       try {
         data = JSON.parse(rest.join('|'))
       } catch {
         data = null
       }
-      for (const resolve of waiters) resolve(data)
+      resolve?.(data)
       break
     }
     case 'pm': {

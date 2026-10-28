@@ -88,6 +88,8 @@ export interface BattleState {
   started: boolean
   ended: boolean
   winner: string
+  /** Elo avant et après le combat, par joueur (identifiant), annoncé par le serveur à la fin d'un combat classé. */
+  ratings: Record<string, { before: number, after: number }>
   error: string
   anims: Record<SideId, { name: string, key: number }>
   floats: { id: number, side: SideId, text: string, color: string }[]
@@ -106,9 +108,16 @@ export function createBattle(roomid: string): BattleState {
   return {
     roomid, format: '', formatName: '', gameType: 'singles', mySide: null, sides: { p1: side('p1'), p2: side('p2') }, turn: 0, weather: '', fieldEffects: [],
     log: [{ turn: 0, lines: [] }], message: 'Le combat va commencer…', request: null, pendingRequest: null,
-    choiceSent: false, started: false, ended: false, winner: '', error: '',
+    choiceSent: false, started: false, ended: false, winner: '', ratings: {}, error: '',
     anims: { p1: { name: '', key: 0 }, p2: { name: '', key: 0 } }, floats: [],
   }
+}
+
+const ENTITIES: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" }
+
+/** Texte d'un fragment HTML échappé par le serveur (`&#39;`, `&amp;`…). */
+function decodeEntities(text: string): string {
+  return text.replace(/&(#\d+|\w+);/g, (entity, code: string) => code.startsWith('#') ? String.fromCharCode(Number(code.slice(1))) : ENTITIES[code] ?? entity)
 }
 
 export function lineDelay(line: string): number {
@@ -483,6 +492,11 @@ export function applyLine(state: BattleState, line: string) {
       state.request = null
       addLine(state, 'win', 'Égalité !')
       break
+    case 'raw': {
+      const rating = /^(.+?)'s rating: (\d+) &rarr; <strong>(\d+)<\/strong>/.exec(args.join('|'))
+      if (rating) state.ratings[toId(decodeEntities(rating[1]!))] = { before: Number(rating[2]), after: Number(rating[3]) }
+      break
+    }
     case 'error':
       state.error = (args[0] ?? '').replace(/^\[[^\]]*\]\s*/, '')
       state.choiceSent = false

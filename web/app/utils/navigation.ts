@@ -36,8 +36,8 @@ export const NAVIGATION: Record<Universe, NavItem[]> = {
       children: [{ label: 'Pokédex', to: '/classique/pokedex' }, { label: 'Méta', to: '/classique/meta' }, { label: 'Guide', to: '/classique/guide' }],
     },
     {
-      icon: '●', label: 'Profil', color: '#2f6fc0',
-      children: [{ label: 'Classement Elo' }],
+      icon: '●', label: 'Profil', color: '#2f6fc0', to: '/classique/classement',
+      children: [{ label: 'Classement Elo', to: '/classique/classement' }],
     },
   ],
   pokedraft: [

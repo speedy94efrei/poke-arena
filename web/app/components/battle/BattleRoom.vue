@@ -43,11 +43,15 @@ const oppSide = computed<SideId>(() => battle.value?.mySide === 'p2' ? 'p1' : 'p
 const { stage } = useBattleStage(roomid)
 
 useHead({ title: () => battle.value ? `Combat · ${battle.value.sides.p1.name} contre ${battle.value.sides.p2.name}` : 'Combat' })
-const { record } = useBattleHistory()
+const { record, rate } = useBattleHistory()
 onMounted(loadPokedex)
 
 watch(() => battle.value?.ended, (ended) => {
   if (ended && battle.value) record(battle.value)
+})
+
+watch(() => battle.value && Object.keys(battle.value.ratings).length, () => {
+  if (battle.value) rate(battle.value)
 })
 
 const leaveBattle = async () => {
