@@ -29,4 +29,25 @@ export const Formats: import('../sim/dex-formats').FormatList = [
 			return budgetProblems(team, this.dex);
 		},
 	},
+	{
+		name: "[Gen 9] PokeDraft Roguelike",
+		desc: `Roguelike à étages : fiches PokéDraft au niveau 50. Les combats sont lancés par le serveur contre l'IA.`,
+		mod: 'pokedraft',
+		ruleset: ['Standard NatDex', 'Terastal Clause', 'PokeDraft Mod', 'Adjust Level = 50'],
+		searchShow: false,
+		challengeShow: false,
+		tournamentShow: false,
+		rated: false,
+	},
+	{
+		name: "[Gen 9] PokeDraft Roguelike Duo",
+		desc: `Roguelike à étages en coop : deux joueurs contre deux IA, chacun avec 3 Pokémon au plus.`,
+		mod: 'pokedraft',
+		gameType: 'multi',
+		ruleset: ['Standard NatDex', 'Terastal Clause', 'PokeDraft Mod', 'Adjust Level = 50', 'Max Team Size = 3'],
+		searchShow: false,
+		challengeShow: false,
+		tournamentShow: false,
+		rated: false,
+	},
 ];

@@ -17,4 +17,89 @@ export const Rulesets: import('../../../sim/dex-formats').ModdedFormatDataTable 
 			}
 		},
 	},
+	// Roguelike : les joueurs sont les camps pairs (p1, et p3 en coop), l'IA les camps impairs.
+	roguelikepv: {
+		effectType: 'Rule',
+		name: 'Roguelike PV',
+		desc: "PV (en %) et statut de départ de chaque Pokémon des joueurs, gardés du combat précédent : « 64brn.100/100.38par ».",
+		hasValue: true,
+		onValidateRule(value) {
+			if (!/^[0-9a-z./]+$/.test(value)) throw new Error(`Roguelike PV : valeur invalide « ${value} ».`);
+		},
+		onBegin() {
+			const value = this.ruleTable.valueRules.get('roguelikepv') ?? '';
+			const players = this.sides.filter(side => side.n % 2 === 0);
+			value.split('/').forEach((entry, index) => {
+				const side = players[index];
+				if (!side) return;
+				entry.split('.').forEach((slot, position) => {
+					const pokemon = side.pokemon[position];
+					const match = /^(\d+)(brn|par|psn|tox|slp|frz)?$/.exec(slot);
+					if (!pokemon || !match) return;
+					pokemon.hp = Math.max(1, Math.min(pokemon.maxhp, Math.ceil(pokemon.maxhp * Number(match[1]) / 100)));
+					const status = match[2] as ID | undefined;
+					if (!status) return;
+					pokemon.status = status;
+					pokemon.statusState = this.initEffectState({ id: status, target: pokemon });
+					if (status === 'slp') pokemon.statusState.startTime = pokemon.statusState.time = this.random(2, 5);
+					if (status === 'tox') pokemon.statusState.stage = 0;
+				});
+			});
+		},
+	},
+	roguelikeboss: {
+		effectType: 'Rule',
+		name: 'Roguelike Boss',
+		desc: "Règle d'un gros boss : « pieges » (Piège de Roc et Picots déjà posés chez les joueurs) ou « lead » (son Pokémon de tête commence à +1 partout).",
+		hasValue: true,
+		onValidateRule(value) {
+			if (!['pieges', 'lead'].includes(value)) throw new Error(`Roguelike Boss : règle inconnue « ${value} ».`);
+		},
+		onBegin() {
+			if (this.ruleTable.valueRules.get('roguelikeboss') !== 'pieges') return;
+			// Aucun Pokémon n'est encore sur le terrain : les pièges sont posés sans passer par leurs événements.
+			for (const side of this.sides) {
+				if (side.n % 2 !== 0) continue;
+				for (const [id, name] of [['stealthrock', 'Stealth Rock'], ['spikes', 'Spikes']]) {
+					side.sideConditions[id] = this.initEffectState({ id, target: side, layers: 1 });
+					this.add('-sidestart', side, `move: ${name}`);
+				}
+			}
+		},
+		onSwitchIn(pokemon) {
+			if (this.turn !== 0 || pokemon.side.n % 2 === 0 || this.ruleTable.valueRules.get('roguelikeboss') !== 'lead') return;
+			this.boost({ atk: 1, def: 1, spa: 1, spd: 1, spe: 1 }, pokemon, pokemon);
+		},
+	},
+	roguelikebonus: {
+		effectType: 'Rule',
+		name: 'Roguelike Bonus',
+		desc: "Bonus de stats des Pokémon de l'IA, en %, à partir de l'étage 30.",
+		hasValue: 'positive-integer',
+		onModifyAtkPriority: 1,
+		onModifyAtk(atk, pokemon) {
+			return roguelikeBonus(this, pokemon);
+		},
+		onModifyDefPriority: 1,
+		onModifyDef(def, pokemon) {
+			return roguelikeBonus(this, pokemon);
+		},
+		onModifySpAPriority: 1,
+		onModifySpA(spa, pokemon) {
+			return roguelikeBonus(this, pokemon);
+		},
+		onModifySpDPriority: 1,
+		onModifySpD(spd, pokemon) {
+			return roguelikeBonus(this, pokemon);
+		},
+		onModifySpe(spe, pokemon) {
+			if (pokemon.side.n % 2 === 0) return;
+			return this.modify(spe, 100 + Number(this.ruleTable.valueRules.get('roguelikebonus')), 100);
+		},
+	},
 };
+
+function roguelikeBonus(battle: Battle, pokemon: Pokemon) {
+	if (pokemon.side.n % 2 === 0) return;
+	return battle.chainModify([4096 + Math.round(40.96 * Number(battle.ruleTable.valueRules.get('roguelikebonus'))), 4096]);
+}

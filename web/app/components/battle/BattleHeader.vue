@@ -2,7 +2,7 @@
   <header class="header">
     <AppLogo header />
     <div class="header__box">
-      <span class="header__format">{{ isPokedraft(battle) ? `PokéDraft · Saison ${roster.saison}` : formatLabel(battle.formatName) || '…' }}</span>
+      <span class="header__format">{{ battle.format.includes('roguelike') ? `Roguelike · ${battle.gameType === 'multi' ? 'coop' : 'solo'}` : isPokedraft(battle) ? `PokéDraft · Saison ${roster.saison}` : formatLabel(battle.formatName) || '…' }}</span>
       <span class="header__sep" />
       <span class="header__label">TOUR</span><span class="header__turn">{{ battle.turn || '—' }}</span>
     </div>
@@ -51,6 +51,7 @@ const modeInfo = computed(() => {
   const roomid = props.battle.roomid
   if (draftStore.rankedBattles.includes(roomid)) return { badge: 'CLASSÉ', text: 'Draft', color: '#c8362a' }
   if (draftStore.battles.includes(roomid)) return { badge: 'DRAFT', text: 'Amical', color: '#3d6fc8' }
+  if (props.battle.format.includes('roguelike')) return { badge: 'ROGUELIKE', text: props.battle.gameType === 'multi' ? 'Coop' : 'Run', color: '#7a52c8' }
   const opponent = props.battle.sides[props.battle.mySide === 'p2' ? 'p1' : 'p2'].name
   const level = /^Bot Niveau (\d)/.exec(opponent)?.[1]
   if (level) return { badge: 'BOT', text: `Niveau ${level} · ${LEVELS[Number(level)] ?? ''}`, color: '#48a860' }

@@ -95,7 +95,7 @@ const labelOf = (id: string) => {
   return entry ? formatLabel(entry.name) : formatIdLabel(toId(id))
 }
 
-const incoming = computed(() => Object.values(store.challengesFrom).filter(entry => !toId(entry.format).endsWith('pokedraft')).map(entry => ({
+const incoming = computed(() => Object.values(store.challengesFrom).filter(entry => !toId(entry.format).includes('pokedraft')).map(entry => ({
   ...entry,
   generated: Boolean(allFormats.value.find(candidate => candidate.id === toId(entry.format))?.generatedTeam),
 })))
@@ -116,7 +116,7 @@ const loadBattles = async () => {
   const response = await query<{ rooms: Record<string, { p1: string, p2: string, minElo?: number }> }>('roomlist', '')
   battles.value = Object.entries(response?.rooms ?? {}).map(([roomid, room]) => ({
     roomid, p1: room.p1, p2: room.p2, minElo: room.minElo, format: roomid.split('-')[1] ?? '',
-  })).filter(battle => !battle.format.endsWith('pokedraft'))
+  })).filter(battle => !battle.format.includes('pokedraft'))
 }
 
 const loadRooms = async () => {

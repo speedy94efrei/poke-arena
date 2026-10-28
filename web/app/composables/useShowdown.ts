@@ -108,8 +108,15 @@ function handleBattle(roomid: string, lines: string[]) {
     store.challengeTo = null
     store.searching = false
     if (lines.some(line => line.startsWith('|turn|'))) {
-      // Combat rejoint en cours (spectateur) : l'historique s'applique d'un coup, seule la suite est animée.
-      for (const line of lines) if (line && !line.startsWith('|request|') && !line.startsWith('|t:|')) applyLine(store.battles[roomid], line)
+      // Combat rejoint en cours (spectateur, ou joueur qui revient) : l'historique s'applique d'un coup, seule la suite
+      // est animée ; un joueur reçoit aussi sa demande en cours.
+      const battle = store.battles[roomid]
+      for (const line of lines) if (line && !line.startsWith('|request|') && !line.startsWith('|t:|')) applyLine(battle, line)
+      const request = lines.filter(line => line.length > 9 && line.startsWith('|request|')).at(-1)
+      if (request) {
+        battle.pendingRequest = JSON.parse(request.slice(9))
+        applyPendingRequest(battle)
+      }
       return
     }
   }

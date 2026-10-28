@@ -161,11 +161,11 @@ export class TrainingAI {
 		this.team = team;
 	}
 
-	get foe() {
+	get foe(): string {
 		return this.me === 'p1' ? 'p2' : 'p1';
 	}
 
-	private side(id: string): SideTrack {
+	protected side(id: string): SideTrack {
 		const key = id.slice(0, 2);
 		return this.sides[key] ??= { team: new Map(), nicks: new Map(), active: null, boosts: {}, hazards: new Map(), teraUsed: false };
 	}
@@ -818,5 +818,57 @@ export class TrainingAI {
 			value = 0.3;
 		}
 		return value - taken;
+	}
+}
+
+/**
+ * IA d'un camp de combat multi (roguelike en coop) : chaque joueur n'a qu'un Pokémon sur le terrain, face à deux
+ * adversaires. Elle vise celui qu'elle abîme le plus (un KO d'abord), joue contre lui comme en simple, puis ajoute
+ * la position de la cible aux attaques qui en demandent une.
+ */
+export class MultiTrainingAI extends TrainingAI {
+	private focus: string | null = null;
+
+	override get foe() {
+		return this.focus ?? super.foe;
+	}
+
+	/** Les deux camps d'en face : p2 et p4 pour p1 et p3, et inversement. */
+	private foeSides() {
+		const half = (Number(this.me.slice(1)) - 1) % 2;
+		return [`p${2 - half}`, `p${4 - half}`];
+	}
+
+	override decide(request: ChoiceRequest): string {
+		this.me = request.side.id;
+		const sides = this.foeSides().filter(id => this.side(id).active);
+		this.focus = sides[0] ?? null;
+		const ourMon = request.side.pokemon.find(mon => mon.active);
+		if (sides.length > 1 && ourMon && 'active' in request && request.active && !request.forceSwitch) {
+			const ours = this.ourFighter(ourMon);
+			const moves = request.active[0].moves.filter(move => !move.disabled && (move.pp ?? 1) > 0).map(move => move.id);
+			let best = { id: sides[0], score: -1 };
+			for (const id of sides) {
+				const track = this.side(id);
+				const mon = track.team.get(track.active!);
+				if (!mon) continue;
+				this.focus = id;
+				const theirs = this.theirFighter(mon, true);
+				const damage = Math.max(0, ...moves.map(move => this.damage(ours, theirs, move)));
+				const score = Math.min(damage, theirs.hp) + (damage >= theirs.hp ? 1 : 0);
+				if (score > best.score) best = { id, score };
+			}
+			this.focus = best.id;
+		}
+		return this.withTarget(super.decide(request), request);
+	}
+
+	private withTarget(choice: string, request: ChoiceRequest) {
+		const match = /^move (\d+)( terastallize)?$/.exec(choice);
+		if (!match || !this.focus || !('active' in request) || !request.active) return choice;
+		const move = this.dex.moves.get(request.active[0].moves[Number(match[1]) - 1]?.id ?? '');
+		if (!['normal', 'any', 'adjacentFoe'].includes(move.target)) return choice;
+		const location = Number(this.focus.slice(1)) > 2 ? 2 : 1;
+		return `move ${match[1]} ${location}${match[2] ?? ''}`;
 	}
 }

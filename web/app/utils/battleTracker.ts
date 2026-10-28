@@ -5,6 +5,8 @@ export type SideId = 'p1' | 'p2'
 export type LogKind = 'move' | 'damage' | 'heal' | 'switch' | 'faint' | 'status' | 'boost' | 'unboost' | 'field' | 'hazard' | 'crit' | 'item' | 'info' | 'win'
 
 export interface BattlePokemon {
+  /** Pokémon du second joueur de la moitié du terrain, en combat multi. */
+  ally?: boolean
   name: string
   speciesId: string
   hp: number
@@ -93,6 +95,10 @@ export interface BattleState {
   formatName: string
   gameType: string
   mySide: SideId | null
+  /** Place du joueur dans sa moitié du terrain : 1 pour le second joueur d'un combat multi (p3, p4). */
+  myOffset: number
+  /** Pseudo de chaque joueur (p1 à p4), pour le nom des deux moitiés en combat multi. */
+  players: Record<string, string>
   sides: Record<SideId, BattleSide>
   turn: number
   weather: string
@@ -133,7 +139,7 @@ let animationCounter = 0
 export function createBattle(roomid: string): BattleState {
   const side = (id: SideId): BattleSide => ({ id, name: '', team: [], conditions: {}, since: {} })
   return {
-    roomid, format: '', formatName: '', gameType: 'singles', mySide: null, sides: { p1: side('p1'), p2: side('p2') }, turn: 0,
+    roomid, format: '', formatName: '', gameType: 'singles', mySide: null, myOffset: 0, players: {}, sides: { p1: side('p1'), p2: side('p2') }, turn: 0,
     weather: '', weatherSince: 0, weatherTurns: null, fieldEffects: [], fieldSince: {},
     log: [{ turn: 0, lines: [] }], message: 'Le combat va commencer…', request: null, pendingRequest: null,
     choiceSent: false, lastChoice: '', started: false, ended: false, winner: '', ratings: {}, rated: false, error: '',
@@ -200,8 +206,9 @@ export function activeCount(state: BattleState): number {
   return state.gameType === 'triples' ? 3 : state.gameType === 'doubles' || state.gameType === 'multi' ? 2 : 1
 }
 
+/** Combat avec les fiches PokéDraft : le draft, et les formats du roguelike (`gen9pokedraftroguelike`, `…duo`). */
 export function isPokedraft(state: BattleState): boolean {
-  return state.format.endsWith('pokedraft')
+  return state.format.includes('pokedraft')
 }
 
 export function displayName(state: BattleState, side: SideId, pokemon: BattlePokemon): string {
@@ -214,10 +221,26 @@ function ofName(name: string): string {
   return /^[aeiouyhàâéèêëîïôûü]/i.test(name) ? `d'${name}` : `de ${name}`
 }
 
+/** Marque invisible des Pokémon du second joueur d'une moitié du terrain (multi) : deux alliés peuvent porter le même nom. */
+const ALLY_MARK = '⁣'
+
+/** Camp d'un joueur : en combat multi, p3 joue avec p1 et p4 avec p2, à la seconde place de leur moitié du terrain. */
+export function sideOf(place: string): { side: SideId, offset: number } {
+  const player = Number(place.charAt(1))
+  return { side: player % 2 ? 'p1' : 'p2', offset: player > 2 ? 1 : 0 }
+}
+
+/** `p1a: Lamantine` ; en multi, la lettre donne déjà la place sur la moitié du terrain (`p3b` pour le second joueur). */
 function parseIdent(ident: string): { side: SideId, name: string, position: number } {
   const [place = '', ...name] = ident.split(': ')
   const letter = place.charAt(2)
-  return { side: place.slice(0, 2) as SideId, name: name.join(': ').normalize('NFC'), position: letter ? letter.charCodeAt(0) - 97 : 0 }
+  const { side, offset } = sideOf(place)
+  return { side, name: name.join(': ').normalize('NFC') + (offset ? ALLY_MARK : ''), position: letter ? letter.charCodeAt(0) - 97 : 0 }
+}
+
+/** Nom d'un Pokémon tel que le suivi le range, d'après son identifiant (`p3a: Lamantine`). */
+export function identName(ident: string): string {
+  return parseIdent(ident).name
 }
 
 function parseCondition(condition: string): { hp: number, maxHp: number, status: string, fainted: boolean } {
@@ -227,8 +250,8 @@ function parseCondition(condition: string): { hp: number, maxHp: number, status:
   return { hp: Number(hp), maxHp: Number(maxHp), status, fainted: false }
 }
 
-function blankPokemon(name: string, speciesId: string): BattlePokemon {
-  return { name, speciesId, hp: 100, maxHp: 100, status: '', fainted: false, active: false, position: 0, boosts: {}, item: '', ability: '', moves: [], level: 100, revealed: false, pp: {} }
+function blankPokemon(name: string, speciesId: string, ally = false): BattlePokemon {
+  return { ally, name, speciesId, hp: 100, maxHp: 100, status: '', fainted: false, active: false, position: 0, boosts: {}, item: '', ability: '', moves: [], level: 100, revealed: false, pp: {} }
 }
 
 /** Niveau lu dans les détails d'un Pokémon (« Great Tusk, L77, M ») ; 100 par défaut. */
@@ -239,10 +262,11 @@ function levelOf(details: string): number {
 function findOrAdd(state: BattleState, side: SideId, name: string, details = ''): BattlePokemon {
   const team = state.sides[side].team
   const speciesId = details ? toId(details.split(',')[0] ?? '') : ''
+  const ally = name.endsWith(ALLY_MARK)
   let pokemon = team.find(p => p.name === name)
-    ?? team.find(p => !p.name && speciesId && p.speciesId === speciesId)
+    ?? team.find(p => !p.name && speciesId && p.speciesId === speciesId && Boolean(p.ally) === ally)
   if (!pokemon) {
-    team.push(blankPokemon(name, speciesId))
+    team.push(blankPokemon(name, speciesId, ally))
     pokemon = team[team.length - 1]!
   }
   pokemon.name = name
@@ -331,8 +355,10 @@ function setHp(state: BattleState, side: SideId, pokemon: BattlePokemon, conditi
 }
 
 export function applyRequest(state: BattleState, request: ShowdownRequest) {
-  state.mySide = request.side.id
-  state.sides[request.side.id].name = request.side.name
+  const { side: mySide, offset } = sideOf(request.side.id)
+  state.mySide = mySide
+  state.myOffset = offset
+  if (state.gameType !== 'multi') state.sides[mySide].name = request.side.name
   for (const own of request.side.pokemon) {
     const { side, name } = parseIdent(own.ident)
     const pokemon = findOrAdd(state, side, name, own.details)
@@ -345,7 +371,7 @@ export function applyRequest(state: BattleState, request: ShowdownRequest) {
   request.active?.forEach((active, index) => {
     const member = request.side.pokemon[index]
     if (!member) return
-    const pokemon = findOrAdd(state, request.side.id, parseIdent(member.ident).name, member.details)
+    const pokemon = findOrAdd(state, mySide, parseIdent(member.ident).name, member.details)
     for (const move of active.moves) pokemon.pp[move.id] = { pp: move.pp, maxpp: move.maxpp }
   })
 }
@@ -358,9 +384,13 @@ export function applyLine(state: BattleState, line: string) {
   const tags = args.filter(arg => arg.startsWith('['))
 
   switch (command) {
-    case 'player':
-      if (args[1]) state.sides[args[0] as SideId].name = args[1]
+    case 'player': {
+      if (!args[1]) break
+      state.players[args[0] ?? ''] = args[1]
+      const { side } = sideOf(args[0] ?? '')
+      state.sides[side].name = (side === 'p1' ? ['p1', 'p3'] : ['p2', 'p4']).map(id => state.players[id]).filter(Boolean).join(' & ')
       break
+    }
     case 'tier':
       state.formatName = args[0] ?? ''
       state.format = showdownId(state.formatName)
@@ -371,18 +401,20 @@ export function applyLine(state: BattleState, line: string) {
     case 'rated':
       state.rated = true
       break
-    case 'teamsize':
-      state.sides[args[0] as SideId].size = Number(args[1] ?? 6)
+    case 'teamsize': {
+      const { side, offset } = sideOf(args[0] ?? '')
+      state.sides[side].size = (offset ? state.sides[side].size ?? 0 : 0) + Number(args[1] ?? 6)
       break
+    }
     case 'clearpoke':
       state.sides.p1.team = state.sides.p1.team.filter(p => p.name)
       state.sides.p2.team = state.sides.p2.team.filter(p => p.name)
       break
     case 'poke': {
-      const side = args[0] as SideId
+      const { side, offset } = sideOf(args[0] ?? '')
       const speciesId = toId(args[1]?.split(',')[0] ?? '')
-      if (!state.sides[side].team.some(p => p.speciesId === speciesId)) {
-        state.sides[side].team.push({ ...blankPokemon('', speciesId), level: levelOf(args[1] ?? '') })
+      if (!state.sides[side].team.some(p => p.speciesId === speciesId && Boolean(p.ally) === Boolean(offset))) {
+        state.sides[side].team.push({ ...blankPokemon('', speciesId, Boolean(offset)), level: levelOf(args[1] ?? '') })
       }
       break
     }
@@ -516,7 +548,7 @@ export function applyLine(state: BattleState, line: string) {
     }
     case '-sidestart':
     case '-sideend': {
-      const side = (args[0] ?? '').slice(0, 2) as SideId
+      const { side } = sideOf(args[0] ?? '')
       const id = toId((args[1] ?? '').replace(/^move: /, ''))
       const conditions = state.sides[side].conditions
       if (command === '-sidestart') {

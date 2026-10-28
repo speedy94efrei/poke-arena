@@ -30,8 +30,10 @@ watch(ranked, (result) => {
   if (result) refresh()
 }, { immediate: true })
 
-const won = computed(() => toId(props.battle.winner) === toId(props.me))
-const winnerSide = computed(() => (['p1', 'p2'] as const).find(side => toId(props.battle.sides[side].name) === toId(props.battle.winner)))
+/** En combat multi, le gagnant est une paire (« A & B »), dans un ordre qui n'est pas forcément celui des camps. */
+const names = (text: string) => text.split(' & ').map(toId).sort().join('+')
+const won = computed(() => props.battle.winner.split(' & ').some(name => toId(name) === toId(props.me)))
+const winnerSide = computed(() => (['p1', 'p2'] as const).find(side => names(props.battle.sides[side].name) === names(props.battle.winner)))
 const survivors = computed(() => winnerSide.value ? props.battle.sides[winnerSide.value].team.filter(p => !p.fainted) : [])
 const title = computed(() => !props.battle.winner ? 'Égalité' : won.value ? 'Victoire !' : 'Défaite…')
 const subtitle = computed(() => {

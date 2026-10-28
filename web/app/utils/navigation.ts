@@ -54,10 +54,8 @@ export const NAVIGATION: Record<Universe, NavItem[]> = {
   ],
   roguelike: [
     { icon: '▲', label: 'Accueil', color: '#7a52c8', to: '/roguelike' },
-    { icon: '★', label: 'Départ', color: '#7a52c8' },
-    { icon: '▤', label: 'Tour et portes', color: '#7a52c8' },
-    { icon: '◆', label: 'Récompenses', color: '#7a52c8' },
-    { icon: '●', label: 'Équipe', color: '#7a52c8' },
+    { icon: '▤', label: 'Ma run', color: '#7a52c8', to: '/roguelike/run' },
+    { icon: '●', label: 'Équipe', color: '#7a52c8', to: '/roguelike/equipe' },
   ],
   route: [
     { icon: '◉', label: 'Régions', color: '#2a7a40', to: '/route-des-ligues' },

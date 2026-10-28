@@ -56,7 +56,8 @@ const mine = computed(() => (props.battle.request?.side.pokemon ?? []).map((memb
 const habitat = (speciesId: string) => habitatBackground(speciesView(speciesId, isPokedraft(props.battle)).types[0])
 const picked = ref<number[]>([])
 const size = computed(() => Math.min(props.battle.request?.maxChosenTeamSize ?? mine.value.length, mine.value.length))
-const leads = computed(() => activeCount(props.battle))
+/** En combat multi, chaque joueur n'envoie qu'un Pokémon : son allié tient l'autre place. */
+const leads = computed(() => props.battle.gameType === 'multi' ? 1 : activeCount(props.battle))
 /** Formats où l'on choisit plusieurs Pokémon dans l'ordre : VGC (4 sur 6), doubles et triples. */
 const choosing = computed(() => size.value < mine.value.length || leads.value > 1)
 const needed = computed(() => size.value < mine.value.length ? size.value : leads.value)

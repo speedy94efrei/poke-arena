@@ -162,7 +162,7 @@ const mySide = computed<SideId>(() => props.battle.mySide ?? 'p1')
 const foeSide = computed<SideId>(() => mySide.value === 'p1' ? 'p2' : 'p1')
 const speciesOf = (member: RequestPokemon) => toId(member.details.split(',')[0] ?? '')
 const isFainted = (member?: RequestPokemon) => !member || member.condition.endsWith(' fnt') || member.condition.startsWith('0')
-const ownPokemon = (member: RequestPokemon) => props.battle.sides[mySide.value].team.find(pokemon => member.ident.endsWith(`: ${pokemon.name}`) || (!pokemon.name && pokemon.speciesId === speciesOf(member)))
+const ownPokemon = (member: RequestPokemon) => props.battle.sides[mySide.value].team.find(pokemon => pokemon.name === identName(member.ident) || (!pokemon.name && pokemon.speciesId === speciesOf(member)))
 const percentText = (value: number) => `${Math.round(value * 100)}`
 
 /** Places qui attendent un choix ce tour-ci ; les autres passent. */
@@ -361,8 +361,9 @@ const pickMove = (index: number, disabled: boolean) => {
   const move = moves.value[index]!
   const suffix = toggled.value ? ` ${toggled.value}` : ''
   const command = `move ${index + 1}`
-  if (slots.value.length > 1 && TARGETED.includes(move.target)) {
-    const allies = activePokemons(props.battle, mySide.value).filter(pokemon => !pokemon.fainted && (pokemon.position !== slot.value!.index || move.target === 'adjacentAllyOrSelf'))
+  if (activeCount(props.battle) > 1 && TARGETED.includes(move.target)) {
+    const self = slot.value!.index + props.battle.myOffset
+    const allies = activePokemons(props.battle, mySide.value).filter(pokemon => !pokemon.fainted && (pokemon.position !== self || move.target === 'adjacentAllyOrSelf'))
     const options = [
       ...(move.target === 'adjacentAlly' || move.target === 'adjacentAllyOrSelf' ? [] : foes.value.map(pokemon => ({ value: pokemon.position + 1, label: `${speciesName(pokemon.speciesId)} adverse`, speciesId: pokemon.speciesId }))),
       ...(move.target === 'adjacentFoe' ? [] : allies.map(pokemon => ({ value: -(pokemon.position + 1), label: speciesName(pokemon.speciesId), speciesId: pokemon.speciesId }))),

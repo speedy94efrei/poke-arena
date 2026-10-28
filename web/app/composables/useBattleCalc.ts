@@ -43,7 +43,7 @@ export function useBattleCalc(battle: Ref<BattleState | undefined>) {
   })
 
   watch(() => battle.value?.format, async (format) => {
-    usage.value = format && !format.endsWith('pokedraft') ? await loadUsage(format) : null
+    usage.value = format && !format.includes('pokedraft') ? await loadUsage(format) : null
   }, { immediate: true })
 
   const mySide = computed<SideId>(() => battle.value?.mySide ?? 'p1')

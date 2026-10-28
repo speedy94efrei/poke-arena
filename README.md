@@ -84,6 +84,14 @@ Chaque joueur a 100 points pour toute son équipe (1 à 6 Pokémon) ; chaque Pok
 
 Les coûts pourront s'ajuster chaque mois selon l'usage dans ce ladder : `server/config/budget-costs.json` (`{ "month": "2026-12", "costs": { "<id>": <coût> } }`), lu au démarrage du serveur, remplace le coût de départ des Pokémon qu'il liste. Le script qui le calcule viendra après un mois de combats classés.
 
+### Roguelike à étages
+
+Une run part d'un Pokémon tiré dans le roster PokéDraft (3 tirés, un gardé, avec le set de sa fiche ou son opposé offensif ou défensif) et monte une tour de combats contre des bots, au niveau 50. Les PV et les statuts restent d'un combat à l'autre, et un Pokémon K.O. est perdu pour la run. Après chaque victoire, une récompense : recruter un Pokémon (jusqu'à 6, en relâchant un membre au-delà), un objet pour le sac, une CT pour un Pokémon compatible, ou des jetons. Les boss reviennent tous les 5 étages, les gros boss tous les 10, avec deux récompenses, une équipe à thème (pluie, soleil, sable, neige, distorsion, monotype, stall, hyper offense) et une règle spéciale (pièges posés d'entrée, ou meneur boosté) ; les étages 2, 4, 7, 9… ouvrent deux portes parmi Centre Pokémon, boutique (objets et CT contre des jetons), combat d'élite, pension (nature et attaques dans tout le movepool) et événement mystère (Pokémon rare, objet maudit ou piège). La difficulté monte par tranches de 10 étages : Pokémon ZU et PU puis NU puis tout le roster, sets simples puis ceux des fiches puis optimisés, IA de niveau 2 à 5, et +5 % de stats ennemies tous les 10 étages à partir du 30.
+
+Le moteur est dans `server/server/chat-plugins/roguelike/` : `generateur.ts` tire tout à partir de la seed de la run (même seed, même tour : c'est ce qui fait le défi de la semaine, `weekly-AAAA-wSS`), `journal.ts` relit le journal du combat pour garder les PV et statuts de fin, et `index.ts` mène la run et l'enregistre dans `server/config/roguelike.json` après chaque étape, avec les records et le classement de la semaine (meilleur étage, puis moins de tours). Les formats `[Gen 9] PokeDraft Roguelike` et `[Gen 9] PokeDraft Roguelike Duo` (`server/config/custom-formats.ts`) sont cachés de la recherche ; leurs règles `Roguelike PV`, `Roguelike Boss` et `Roguelike Bonus` (`server/data/mods/pokedraft/rulesets.ts`) posent les PV de départ, la règle du boss et le bonus de stats. Le site parle au serveur par `/roguelike` (l'état) et `/roguelike action <json>`.
+
+En coop, deux joueurs montent la même tour en combat multi (2 contre 2 bots) : 3 Pokémon chacun, les jetons en commun, une récompense par joueur, et la run s'arrête quand l'un des deux n'a plus de Pokémon. Une invitation part de l'accueil du mode ; le combat commence quand les deux sont prêts. Les bots du multi (`MultiTrainingAI`, dans `entrainement/ia.ts`) visent l'adversaire qu'ils blessent le plus.
+
 ### Tournois et salons
 
 Le serveur de combat gère les tournois de l'Arène (`server/server/chat-plugins/arene-tournois.ts`). Chaque tournoi a son propre salon, ouvert aux inscriptions un quart d'heure avant le départ, et démarre seul à l'heure prévue.
@@ -224,7 +232,14 @@ Combat à budget (format `[Gen 9] Combat à Budget`) :
 - `/budget/bareme` : le coût de départ de chaque tier, les règles des ajustements mensuels et le coût de chaque Pokémon autorisé ;
 - `/budget/combat/<salle>` : l'écran de combat.
 
-Roguelike (`/roguelike`) et Route des Ligues (`/route-des-ligues`) ont pour l'instant une page de présentation.
+Roguelike à étages :
+
+- `/roguelike` : l'accueil. La run en cours, une run libre, le défi de la semaine, l'invitation en coop, et le classement de la semaine en solo et en coop ;
+- `/roguelike/run` : la run. La tour (étages passés, en cours, boss à venir), le tirage de départ, l'étage à combattre, les récompenses, les portes, la boutique, la pension, l'événement mystère et l'écran de fin ; en coop, l'équipe du partenaire ;
+- `/roguelike/equipe` : objets (pris dans le sac de la run) et attaques (parmi celles connues) à changer hors combat, et les Pokémon perdus ;
+- `/roguelike/combat/<salle>` : l'écran de combat, qui rejoint la salle si la page est rechargée.
+
+Route des Ligues (`/route-des-ligues`) a pour l'instant une page de présentation.
 
 Univers PokéDraft :
 

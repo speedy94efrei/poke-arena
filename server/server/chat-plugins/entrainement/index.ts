@@ -11,7 +11,7 @@ import { Teams } from '../../../sim/teams';
 import type { ChoiceRequest } from '../../../sim/side';
 import type { Pokemon as RosterPokemon, Roster } from '../../../../data/types/roster';
 import { Drafts, FORMAT, loadRoster } from '../pokedraft';
-import { TrainingAI } from './ia';
+import { MultiTrainingAI, TrainingAI, type Level } from './ia';
 import { BOTS, bansFor, pickFor, setsFor, teamFor, type BotProfile } from './equipes';
 import { smogonSets } from './smogon';
 
@@ -145,9 +145,16 @@ class TrainingBot {
 		const format = room.split('-')[1] ?? FORMAT;
 		if (!ai) {
 			if (!lines.includes('|init|battle')) return;
-			ai = format === FORMAT ?
-				new TrainingAI(this.profile.level, this.roster) :
-				new TrainingAI(this.profile.level, this.roster, Math.random, { format, sets: smogonSets(format) });
+			const imposed = Training.imposed.get(room);
+			if (imposed) {
+				ai = imposed.multi ?
+					new MultiTrainingAI(imposed.level, this.roster, Math.random, { format }) :
+					new TrainingAI(imposed.level, this.roster, Math.random, { format });
+			} else {
+				ai = format === FORMAT ?
+					new TrainingAI(this.profile.level, this.roster) :
+					new TrainingAI(this.profile.level, this.roster, Math.random, { format, sets: smogonSets(format) });
+			}
 			this.battles.set(room, ai);
 		}
 		for (const line of lines) {
@@ -156,6 +163,7 @@ class TrainingBot {
 			} else if (line.startsWith('|win|') || line === '|tie') {
 				this.battles.delete(room);
 				this.coaches.delete(room);
+				Training.imposed.delete(room);
 				setTimeout(() => this.send(`${room}|/leave`), 2_000);
 			} else if (line.startsWith('|error|[Invalid choice]') || line.startsWith('|error|[Unavailable choice]')) {
 				this.send(`${room}|/choose default`);
@@ -231,6 +239,17 @@ export const Training = new class {
 	bots: TrainingBot[] = [];
 	botUsers = new WeakSet<User>();
 	prepared = new Map<string, Preparation>();
+	/** Combats lancés par le serveur (roguelike) : le niveau d'IA à jouer, et s'il s'agit d'un combat multi. */
+	imposed = new Map<string, { level: Level, multi: boolean }>();
+
+	/** Bots en ligne pour un combat lancé par le serveur, les moins occupés d'abord ; ceux du thème demandé en tête. */
+	availableBots(count: number, theme?: string): User[] {
+		return this.bots
+			.filter(bot => bot.online && bot.battles.size < MAX_BATTLES)
+			.sort((a, b) => Number(b.profile.theme === theme) - Number(a.profile.theme === theme) || a.battles.size - b.battles.size)
+			.slice(0, count)
+			.map(bot => Users.get(bot.id)!);
+	}
 
 	/** Garde l'entraînement que le joueur va lancer contre ce bot, le temps de le défier. */
 	prepare(user: User, data: { bot?: unknown, format?: unknown, team?: unknown, mine?: unknown, coach?: unknown }) {
