@@ -23,12 +23,7 @@
 import type { DraftView } from '~/utils/draft'
 
 const props = defineProps<{ draft: DraftView, seconds: number }>()
-const { botNamed } = useTraining()
-
-const modeName = computed(() => {
-  if (props.draft.ranked) return 'Classé PokéDraft'
-  return botNamed(props.draft.opponent) ? 'Entraînement PokéDraft' : 'Draft amical'
-})
+const modeName = computed(() => props.draft.ranked ? 'Classé PokéDraft' : 'Draft amical')
 const emit = defineEmits<{ quit: [] }>()
 const step = computed(() => draftStep(props.draft.phase))
 </script>

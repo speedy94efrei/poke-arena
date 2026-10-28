@@ -3,6 +3,7 @@
 const assert = require('./../../assert');
 
 let Ai = null;
+let Engine = null;
 let Teams = null;
 let Draft = null;
 let roster = null;
@@ -50,14 +51,22 @@ function moveRequest(ai, active, moves, bench = []) {
 	};
 }
 
-function foe(ai, id, hp = 100) {
+function foe(ai, id, hp = 100, status = '') {
 	const name = rosterMon(id).nom;
-	ai.receiveLine(`|switch|p2a: ${name}|${ai.dex.species.get(id).name}, L100|${hp}/100`);
+	ai.receiveLine(`|switch|p2a: ${name}|${ai.dex.species.get(id).name}, L100|${hp}/100${status ? ` ${status}` : ''}`);
+}
+
+/** Un bot à moteur qui connaît son équipe : ses sets par défaut, avec les attaques données pour le premier. */
+function engineAI(team, moves, seed) {
+	const ai = new Ai.TrainingAI(5, roster, seeded(seed), { engine: true });
+	ai.setTeam(team.map((id, index) => ({ ...Draft.defaultSet(rosterMon(id)), ...(index === 0 ? { moves } : {}) })));
+	return ai;
 }
 
 describe('PokéDraft · bots d\'entraînement', () => {
 	before(() => {
 		Ai = require('./../../../dist/server/chat-plugins/entrainement/ia');
+		Engine = require('./../../../dist/server/chat-plugins/entrainement/moteur');
 		Teams = require('./../../../dist/server/chat-plugins/entrainement/equipes');
 		Draft = require('./../../../dist/server/chat-plugins/pokedraft');
 		roster = Draft.loadRoster();
@@ -89,6 +98,36 @@ describe('PokéDraft · bots d\'entraînement', () => {
 		assert.equal(ai.decide(moveRequest(ai, { id: 'bisharp', hp: 0.05 }, ['ironhead', 'suckerpunch'])), 'move 2');
 	});
 
+	it('le moteur reconstruit le combat tel que le bot le voit', () => {
+		const ai = engineAI(['flygon', 'mudsdale'], ['dragonclaw', 'earthquake'], 5);
+		foe(ai, 'luxray', 40, 'brn');
+		ai.receiveLine('|-sidestart|p1: Bot|move: Stealth Rock');
+		ai.receiveLine('|-weather|RainDance');
+		const input = ai.searchInput(moveRequest(ai, { id: 'flygon', hp: 0.5 }, ['dragonclaw', 'earthquake'], [{ id: 'mudsdale' }]));
+		const { battle } = Engine.buildBattle(input);
+		const theirs = battle.p2.active[0];
+		const ours = battle.p1.active[0];
+
+		assert.equal(theirs.species.id, 'luxray');
+		assert.equal(Math.round(theirs.hp / theirs.maxhp * 100), 40);
+		assert.equal(theirs.status, 'brn');
+		assert.equal(Math.round(ours.hp / ours.maxhp * 100), 50);
+		assert(battle.p1.sideConditions['stealthrock']);
+		assert.equal(battle.field.weather, 'raindance');
+	});
+
+	it('le moteur prend le KO super efficace et explique ses options', () => {
+		const ai = engineAI(['flygon', 'mudsdale'], ['dragonclaw', 'earthquake'], 6);
+		foe(ai, 'luxray', 30);
+		const request = moveRequest(ai, { id: 'flygon' }, ['dragonclaw', 'earthquake'], [{ id: 'mudsdale' }]);
+
+		assert.equal(ai.decide(request), 'move 2');
+		const chosen = ai.lastAnalysis.options.find(option => option.chosen);
+		assert.equal(chosen.id, 'earthquake');
+		assert(ai.lastAnalysis.options.length >= 3);
+		assert(ai.lastAnalysis.simulations > 0);
+	});
+
 	it('les équipes des bots sont valides pour le format', () => {
 		const validator = require('./../../../dist/sim/team-validator').TeamValidator.get(Draft.FORMAT);
 		for (const profile of Teams.BOTS) {
@@ -109,8 +148,8 @@ describe('PokéDraft · bots d\'entraînement', () => {
 		assert.equal(rosterMon(Teams.pickFor(profile, roster, ['bisharp', 'lanturn', 'weavile'], [], seeded(7))).archetypes.includes('Pluie'), true);
 	});
 
-	it('le niveau 5 bat le niveau 1 avec la même équipe', async function () {
-		this.timeout(60000);
+	it('le niveau 5, par règles ou par simulation, bat le niveau 1 avec la même équipe', async function () {
+		this.timeout(180000);
 		const { BattleStream, BattlePlayer, getPlayerStreams } = require('./../../../dist/sim/battle-stream');
 		const packer = require('./../../../dist/sim/teams').Teams;
 
@@ -135,10 +174,13 @@ describe('PokéDraft · bots d\'entraînement', () => {
 			}
 		}
 
-		async function play(seed) {
-			const team = packer.pack(Teams.teamFor(Teams.BOTS[2], roster, seeded(seed)));
+		async function play(seed, engine) {
+			const sets = Teams.teamFor(Teams.BOTS[2], roster, seeded(seed));
+			const team = packer.pack(sets);
 			const streams = getPlayerStreams(new BattleStream());
-			void new Player(streams.p1, new Ai.TrainingAI(5, roster, seeded(seed * 2))).start();
+			const expert = new Ai.TrainingAI(5, roster, seeded(seed * 2), { engine });
+			expert.setTeam(sets);
+			void new Player(streams.p1, expert).start();
 			void new Player(streams.p2, new Ai.TrainingAI(1, roster, seeded(seed * 3))).start();
 			void streams.omniscient.write([
 				`>start ${JSON.stringify({ formatid: Draft.FORMAT, seed: [seed, seed + 1, seed + 2, seed + 3] })}`,
@@ -154,9 +196,12 @@ describe('PokéDraft · bots d\'entraînement', () => {
 			return 'tie';
 		}
 
-		const winners = [];
-		for (let seed = 1; seed <= 6; seed++) winners.push(await play(seed));
-		const wins = winners.filter(name => name === 'Expert').length;
-		assert(wins >= 5, `le niveau 5 n'a gagné que ${wins} combats sur 6 (${winners.join(', ')})`);
+		const rules = [];
+		for (let seed = 1; seed <= 6; seed++) rules.push(await play(seed, false));
+		const ruleWins = rules.filter(name => name === 'Expert').length;
+		assert(ruleWins >= 5, `le niveau 5 par règles n'a gagné que ${ruleWins} combats sur 6 (${rules.join(', ')})`);
+
+		const simulated = [await play(1, true), await play(2, true)];
+		assert.deepEqual(simulated, ['Expert', 'Expert'], `le moteur a perdu contre le niveau 1 (${simulated.join(', ')})`);
 	});
 });

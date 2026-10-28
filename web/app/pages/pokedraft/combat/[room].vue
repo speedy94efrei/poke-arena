@@ -4,7 +4,7 @@
 
     <div class="battle__main">
       <div class="battle__stage">
-        <BattleEnd v-if="battle.ended" :battle="battle" :stage="stage" :me="store.name" @leave="leaveBattle" @replay="replay" />
+        <BattleEnd v-if="battle.ended" :battle="battle" :stage="stage" :me="store.name" @leave="leaveBattle" />
         <BattleScene :battle="battle" :stage="stage" />
         <BattleTeamPreview v-if="battle.request?.teamPreview" :battle="battle" @choose="choice => choose(roomid, choice)" />
         <div class="battle__turns">
@@ -47,11 +47,6 @@ useHead({ title: () => battle.value ? `Combat · ${battle.value.sides.p1.name} c
 const leaveBattle = async () => {
   leave(roomid.value)
   await navigateTo('/pokedraft/combat')
-}
-
-const replay = async (bot: string) => {
-  leave(roomid.value)
-  await navigateTo(`/pokedraft/entrainement?bot=${bot}`)
 }
 </script>
 

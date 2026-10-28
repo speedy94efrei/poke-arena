@@ -10,6 +10,10 @@ import type { Move } from '../../../sim/dex-moves';
 import type { ChoiceRequest, MoveRequest, PokemonSwitchRequestData } from '../../../sim/side';
 import type { Archetype, Pokemon as RosterPokemon, Roster } from '../../../../data/types/roster';
 import { FORMAT, defaultSet } from '../pokedraft';
+import { search, type Analysis, type OptionChoice, type SearchInput } from './moteur';
+
+const GENERIC_EVS = { hp: 84, atk: 84, def: 84, spa: 84, spd: 84, spe: 84 };
+const MAX_IVS = { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 };
 
 export type Level = 1 | 2 | 3 | 4 | 5;
 
@@ -54,6 +58,7 @@ interface Tracked {
 	status: string;
 	moves: Set<string>;
 	tera: string | null;
+	item: string | null;
 }
 
 interface SideTrack {
@@ -62,6 +67,7 @@ interface SideTrack {
 	active: string | null;
 	boosts: SparseBoostsTable;
 	hazards: Map<string, number>;
+	teraUsed: boolean;
 }
 
 interface Attack {
@@ -107,13 +113,31 @@ export class TrainingAI {
 	readonly byId: Map<string, RosterPokemon>;
 	readonly sides: { [side: string]: SideTrack } = {};
 	me = 'p1';
+	turnNumber = 0;
 	weather = '';
+	weatherSince = 0;
+	terrain = '';
+	terrainSince = 0;
 	trickRoom = false;
+	trickRoomSince = 0;
+	/** Raisonnement du moteur pour la dernière décision, montré au joueur une fois le tour joué. */
+	lastAnalysis: Analysis | null = null;
+	/** Erreurs du moteur ; le bot retombe alors sur ses règles. */
+	engineErrors: string[] = [];
 	private statsCache = new Map<string, StatsTable>();
+	/** Les sets que le bot a lui-même envoyés : le moteur en a besoin pour rejouer ses options. */
+	team: PokemonSet[] = [];
 
-	constructor(readonly level: Level, roster: Roster, readonly random: () => number = Math.random) {
+	constructor(
+		readonly level: Level, roster: Roster, readonly random: () => number = Math.random,
+		readonly options: { engine?: boolean } = {}
+	) {
 		this.dex = Dex.forFormat(FORMAT);
 		this.byId = new Map(roster.pokemon.map(pokemon => [pokemon.id, pokemon]));
+	}
+
+	setTeam(team: PokemonSet[]) {
+		this.team = team;
 	}
 
 	get foe() {
@@ -122,7 +146,7 @@ export class TrainingAI {
 
 	private side(id: string): SideTrack {
 		const key = id.slice(0, 2);
-		return this.sides[key] ??= { team: new Map(), nicks: new Map(), active: null, boosts: {}, hazards: new Map() };
+		return this.sides[key] ??= { team: new Map(), nicks: new Map(), active: null, boosts: {}, hazards: new Map(), teraUsed: false };
 	}
 
 	private tracked(ident: string): Tracked | undefined {
@@ -135,7 +159,7 @@ export class TrainingAI {
 	private ensure(side: SideTrack, species: string): Tracked {
 		let mon = side.team.get(species);
 		if (!mon) {
-			mon = { species, hp: 1, status: '', moves: new Set(), tera: null };
+			mon = { species, hp: 1, status: '', moves: new Set(), tera: null, item: null };
 			side.team.set(species, mon);
 		}
 		return mon;
@@ -146,6 +170,14 @@ export class TrainingAI {
 		const parts = line.slice(1).split('|');
 		const [command, target = '', value = ''] = parts;
 		switch (command) {
+		case 'turn':
+			this.turnNumber = Number(target) || this.turnNumber;
+			break;
+		case '-item': case '-enditem': {
+			const mon = this.tracked(target);
+			if (mon) mon.item = command === '-item' ? toID(value) : '';
+			break;
+		}
 		case 'poke':
 			this.ensure(this.side(target), speciesOf(value));
 			break;
@@ -219,6 +251,7 @@ export class TrainingAI {
 		case '-terastallize': {
 			const mon = this.tracked(target);
 			if (mon) mon.tera = value;
+			this.side(target).teraUsed = true;
 			break;
 		}
 		case '-sidestart': case '-sideend': {
@@ -228,18 +261,31 @@ export class TrainingAI {
 			else hazards.set(hazard, (hazards.get(hazard) ?? 0) + 1);
 			break;
 		}
-		case '-weather':
-			this.weather = target === 'none' ? '' : toID(target);
+		case '-weather': {
+			const weather = target === 'none' ? '' : toID(target);
+			if (weather !== this.weather) this.weatherSince = this.turnNumber;
+			this.weather = weather;
 			break;
-		case '-fieldstart': case '-fieldend':
-			if (toID(target.replace(/^move: /, '')) === 'trickroom') this.trickRoom = command === '-fieldstart';
+		}
+		case '-fieldstart': case '-fieldend': {
+			const effect = toID(target.replace(/^move: /, ''));
+			const starts = command === '-fieldstart';
+			if (effect === 'trickroom') {
+				this.trickRoom = starts;
+				this.trickRoomSince = this.turnNumber;
+			} else if (effect.endsWith('terrain')) {
+				this.terrain = starts ? effect : '';
+				this.terrainSince = this.turnNumber;
+			}
 			break;
+		}
 		}
 	}
 
 	/** Réponse à une requête du simulateur : `move 2`, `switch 3`, `team 213456`… ou chaîne vide s'il faut attendre. */
 	decide(request: ChoiceRequest): string {
 		this.me = request.side.id;
+		this.lastAnalysis = null;
 		if (request.wait) return '';
 		if (request.teamPreview) return this.teamOrder(request.side.pokemon);
 		if (request.forceSwitch) return this.forcedSwitch(request.side.pokemon);
@@ -468,10 +514,89 @@ export class TrainingAI {
 			threat: this.threat(theirs, ours),
 			alive: request.side.pokemon.filter(mon => !mon.condition.endsWith(' fnt')).length,
 		};
+		if (this.level === 5 && this.options.engine) {
+			const input = this.searchInput(request);
+			if (input) {
+				try {
+					const { best, analysis } = search(input, this.random);
+					this.lastAnalysis = analysis;
+					return this.toChoice(best, request);
+				} catch (error) {
+					this.engineErrors.push((error as Error).stack ?? String(error));
+				}
+			}
+		}
 		if (this.level === 5) return this.advancedChoice(situation) || this.expertChoice(situation);
 		return (this.level >= 4 && this.advancedChoice(situation)) ||
 			(this.level >= 3 && this.carefulChoice(situation)) ||
 			this.attack(situation);
+	}
+
+	/** État du combat tel que le bot le voit, pour le moteur ; `null` si le bot ne connaît pas encore son adversaire. */
+	searchInput(request: MoveRequest): SearchInput | null {
+		const theirs = this.side(this.foe);
+		const active = request.active?.[0];
+		if (!this.team.length || !theirs.active || !active) return null;
+		const ours = this.side(this.me);
+		const remaining = (since: number) => Math.max(1, 5 - (this.turnNumber - since));
+		const theirTeam = [...theirs.team.values()];
+		return {
+			format: FORMAT,
+			me: this.me as SideID,
+			turn: this.turnNumber,
+			ourSets: this.team,
+			theirSets: theirTeam.map(mon => this.probableSet(mon.species)),
+			ours: {
+				team: request.side.pokemon.map(mon => {
+					const condition = parseHp(mon.condition);
+					return {
+						species: speciesOf(mon.details), hp: condition.hp, status: condition.status === 'fnt' ? '' : condition.status,
+						moves: mon.moves, item: mon.item, tera: mon.terastallized || null, active: mon.active,
+					};
+				}),
+				boosts: ours.boosts,
+				hazards: Object.fromEntries(ours.hazards),
+				teraUsed: ours.teraUsed,
+			},
+			theirs: {
+				team: theirTeam.map(mon => ({
+					species: mon.species, hp: mon.hp, status: mon.status, moves: [...mon.moves],
+					item: mon.item, tera: mon.tera, active: mon.species === theirs.active,
+				})),
+				boosts: theirs.boosts,
+				hazards: Object.fromEntries(theirs.hazards),
+				teraUsed: theirs.teraUsed,
+			},
+			options: {
+				moves: active.moves.filter(move => !move.disabled && (move.pp ?? 1) > 0).map(move => move.id),
+				canTera: Boolean(active.canTerastallize),
+				switches: active.trapped ? [] : this.bench(request.side.pokemon).map(option => option.fighter.species),
+			},
+			field: {
+				weather: this.weather,
+				weatherTurns: remaining(this.weatherSince),
+				terrain: this.terrain,
+				terrainTurns: remaining(this.terrainSince),
+				trickRoom: this.trickRoom ? remaining(this.trickRoomSince) : 0,
+			},
+		};
+	}
+
+	/** Set supposé d'un Pokémon adverse : le set par défaut de sa fiche PokéDraft. */
+	probableSet(species: string): PokemonSet {
+		const rosterMon = this.byId.get(species);
+		if (rosterMon) return defaultSet(rosterMon);
+		return {
+			name: species, species, item: '', ability: '', moves: [], nature: 'serious', gender: '',
+			evs: GENERIC_EVS, ivs: MAX_IVS, level: 100,
+		};
+	}
+
+	/** Traduit une option du moteur dans les numéros de la vraie requête. */
+	toChoice(option: OptionChoice, request: MoveRequest) {
+		if (option.kind === 'switch') return `switch ${request.side.pokemon.findIndex(mon => speciesOf(mon.details) === option.id) + 1}`;
+		const slot = request.active[0].moves.findIndex(move => move.id === option.id) + 1;
+		return `move ${slot}${option.tera ? ' terastallize' : ''}`;
 	}
 
 	/** Niveau 2 et plus : l'attaque qui retire le plus de PV, au hasard parmi les quasi-égales. */
@@ -502,7 +627,7 @@ export class TrainingAI {
 	}
 
 	private sleepsToHeal(move: Move) {
-		return move.id === 'rest' || /s'endort/.test(move.shortDesc ?? '');
+		return move.id === 'rest' || /s'endort/.test((move as { shortDesc?: string }).shortDesc ?? '');
 	}
 
 	private asleep(fighter: Fighter, move: Move) {

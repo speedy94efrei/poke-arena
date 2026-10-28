@@ -27,14 +27,10 @@ import type { BattleState } from '~/utils/battleTracker'
 
 const props = defineProps<{ battle: BattleState }>()
 const { store: draftStore } = useDraft()
-const { botNamed } = useTraining()
-
 const mode = computed(() => {
   const roomid = props.battle.roomid
-  const training = [props.battle.sides.p1.name, props.battle.sides.p2.name].some(name => botNamed(name))
   if (draftStore.rankedBattles.includes(roomid)) return 'Classé · Draft'
-  if (draftStore.battles.includes(roomid)) return training ? 'Entraînement · Draft' : 'Draft amical'
-  return training ? 'Entraînement' : 'Combat libre'
+  return draftStore.battles.includes(roomid) ? 'Draft amical' : 'Combat libre'
 })
 const emit = defineEmits<{ forfeit: [], leave: [] }>()
 const { choice, options } = useBattleStage(() => props.battle.roomid)

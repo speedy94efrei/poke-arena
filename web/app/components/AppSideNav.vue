@@ -44,7 +44,6 @@ const items = [
   { icon: 'A', label: 'Atelier PokéDraft', color: '#5a8a3a', to: '/pokedraft/atelier' },
   { icon: 'D', label: 'Classé · Draft', color: '#c8362a', to: '/pokedraft/draft' },
   { icon: '⚔', label: 'Combat libre et défis', color: '#3d6fc8', to: '/pokedraft/combat' },
-  { icon: 'E', label: 'Entraînement', color: '#7a5ab0', to: '/pokedraft/entrainement' },
   { icon: '★', label: 'Classement et saison', color: '#3f8fa3', to: '/pokedraft/classement' },
 ]
 

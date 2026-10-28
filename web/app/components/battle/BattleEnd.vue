@@ -8,7 +8,6 @@
       </span>
       <div class="end__buttons">
         <button type="button" class="btn btn--primary" @click="emit('leave')">Retour au salon</button>
-        <button v-if="opponentBot" type="button" class="btn" @click="emit('replay', opponentBot.key)">↻ Rejouer contre ce bot</button>
       </div>
     </div>
     <div class="end__team">
@@ -22,12 +21,9 @@ import type { BattleState } from '~/utils/battleTracker'
 import type { Stage } from '~/utils/stages'
 
 const props = defineProps<{ battle: BattleState, stage: Stage, me: string }>()
-const emit = defineEmits<{ leave: [], replay: [bot: string] }>()
+const emit = defineEmits<{ leave: [] }>()
 const { store: draft } = useDraft()
 const { refresh } = useAccount()
-const { botNamed } = useTraining()
-
-const opponentBot = computed(() => botNamed(props.battle.sides[props.battle.mySide === 'p2' ? 'p1' : 'p2'].name))
 
 const ranked = computed(() => draft.results[props.battle.roomid])
 watch(ranked, (result) => {
