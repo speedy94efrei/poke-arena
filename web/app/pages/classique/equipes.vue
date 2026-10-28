@@ -7,7 +7,7 @@
       </div>
       <template v-if="team">
         <input :key="team.id" class="field workshop__name" maxlength="40" :value="team.name" aria-label="Nom de l'équipe" @change="event => rename((event.target as HTMLInputElement).value)">
-        <span class="workshop__format">{{ formatName }}</span>
+        <ClassiqueFormatPicker class="workshop__format" :model-value="team.format" usage="team" compact @update:model-value="setFormat" />
         <button type="button" class="btn btn--small" @click="duplicate">⧉ Dupliquer</button>
         <button type="button" class="btn btn--small" :class="{ 'btn--danger': confirming }" @click="removeCurrent">{{ confirming ? 'Confirmer ?' : '🗑 Supprimer' }}</button>
         <span class="verdict" :class="`verdict--${verdict}`" role="status">{{ VERDICTS[verdict] }}</span>
@@ -60,7 +60,7 @@ const { dex } = usePokedex()
 const { store } = useShowdown()
 const {
   teams, team, formatName, levelOf, index, set, pool, usage, size,
-  select, selectSlot, setSpecies, updateSet, removeSlot, applyTeam, rename, create, duplicate, removeTeam,
+  select, selectSlot, setSpecies, updateSet, removeSlot, applyTeam, setFormat, rename, create, duplicate, removeTeam,
 } = useTeamWorkshop()
 const { checks, server, verdict } = useTeamValidation(team, formatName)
 
@@ -134,17 +134,8 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
 .workshop__subtitle { font: 700 14px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
 .workshop__name { width: 220px; height: 34px; }
 
-.workshop__format {
-  height: 34px;
-  padding: 0 12px;
-  border-radius: 8px;
-  background: var(--dk);
-  box-shadow: var(--pnS);
-  font: 700 13px 'Atkinson Hyperlegible', sans-serif;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-}
+.workshop__format { width: 220px; }
+.workshop__format :deep(.picker__select) { min-width: 0; height: 34px; font-size: 13px; }
 
 .verdict {
   height: 34px;

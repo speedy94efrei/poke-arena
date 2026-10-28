@@ -1,6 +1,6 @@
 <template>
   <div class="picker">
-    <div class="picker__chips" role="radiogroup" aria-label="Formats courants">
+    <div v-if="!compact" class="picker__chips" role="radiogroup" aria-label="Formats courants">
       <button
         v-for="format in popular"
         :key="format.id"
@@ -15,15 +15,16 @@
       </button>
     </div>
     <label class="picker__all">
-      <span class="picker__label">Tous les formats</span>
+      <span class="picker__label" :class="{ 'picker__label--hidden': compact }">{{ compact ? 'Format' : 'Tous les formats' }}</span>
       <select class="field picker__select" :value="modelValue" @change="event => emit('update:modelValue', (event.target as HTMLSelectElement).value)">
         <option v-if="!sections.length" value="" disabled>Connecte-toi au serveur de combat pour voir les formats</option>
+        <option v-if="compact && !selected" :value="modelValue">{{ formatIdLabel(modelValue) }}</option>
         <optgroup v-for="section in sections" :key="section.name" :label="sectionLabel(section.name)">
           <option v-for="format in section.formats" :key="format.id" :value="format.id">{{ format.name }}</option>
         </optgroup>
       </select>
     </label>
-    <span v-if="selected" class="picker__info">
+    <span v-if="selected && !compact" class="picker__info">
       {{ gameTypeLabel(selected.gameType) }} · {{ selected.generatedTeam ? 'équipe fournie par le serveur' : 'avec ton équipe' }}<template v-if="selected.level50"> · niveau 50</template><template v-if="selected.bestOf"> · au meilleur des 3 possible</template>
     </span>
   </div>
@@ -32,7 +33,8 @@
 <script setup lang="ts">
 import type { BattleFormat, FormatSection } from '~/utils/formats'
 
-const props = defineProps<{ modelValue: string, usage: 'ladder' | 'challenge' | 'team' }>()
+/** `compact` : la liste seule, sans raccourcis, et sans remplacer un format absent du serveur (celui d'une équipe déjà faite). */
+const props = defineProps<{ modelValue: string, usage: 'ladder' | 'challenge' | 'team', compact?: boolean }>()
 const emit = defineEmits<{ 'update:modelValue': [format: string] }>()
 
 /** Formats proposés en raccourci, s'ils existent sur le serveur ; le VGC prend le règlement en cours. */
@@ -73,6 +75,7 @@ const popular = computed(() => POPULAR
 const selected = computed(() => all.value.find(format => format.id === props.modelValue))
 
 watch(all, (formats) => {
+  if (props.compact) return
   if (formats.length && !formats.some(format => format.id === props.modelValue)) emit('update:modelValue', popular.value[0]?.id ?? formats[0]!.id)
 }, { immediate: true })
 </script>
@@ -96,6 +99,14 @@ watch(all, (formats) => {
 .chip--on { background: var(--hd); color: var(--hdTx); }
 .picker__all { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .picker__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+
+.picker__label--hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
 .picker__select { flex: 1; min-width: 220px; }
 .picker__info { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
 </style>

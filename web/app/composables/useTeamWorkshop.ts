@@ -86,6 +86,12 @@ export function useTeamWorkshop() {
       write(species.slice(0, TEAM_SIZE).map(fromUsage))
       slot.value = 0
     },
+    /** Change le format de l'équipe ; le niveau des Pokémon suit (50 en VGC, 5 en Little Cup). */
+    setFormat: (formatId: string) => {
+      if (!team.value || !formatId || formatId === team.value.format) return
+      const level = levelOf(formatId)
+      write(team.value.sets.map(entry => ({ ...entry, level })), { format: formatId })
+    },
     rename: (name: string) => {
       if (team.value && name.trim()) write(team.value.sets, { name: name.trim() })
     },

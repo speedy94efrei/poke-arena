@@ -113,7 +113,21 @@ export function formatLabel(name: string): string {
 const FORMAT_NAMES: Record<string, string> = {
   ou: 'OU', uu: 'UU', ru: 'RU', nu: 'NU', pu: 'PU', zu: 'ZU', lc: 'LC', ubers: 'Ubers', ubersuu: 'Ubers UU', monotype: 'Monotype',
   anythinggoes: 'Anything Goes', doublesou: 'Doubles OU', doublesubers: 'Doubles Ubers', nationaldex: 'National Dex',
-  nationaldexubers: 'National Dex Ubers', randombattle: 'Random Battle', randomdoublesbattle: 'Random Doubles Battle', '1v1': '1v1',
+  nationaldexubers: 'National Dex Ubers', nationaldexuu: 'National Dex UU', nationaldexru: 'National Dex RU', nationaldexag: 'National Dex AG',
+  nationaldexmonotype: 'National Dex Monotype', nationaldexdoubles: 'National Dex Doubles', randombattle: 'Random Battle',
+  randomdoublesbattle: 'Random Doubles Battle', '1v1': '1v1', '2v2doubles': '2v2 Doubles', almostanyability: 'Almost Any Ability',
+  balancedhackmons: 'Balanced Hackmons', purehackmons: 'Pure Hackmons', stabmons: 'STABmons', mixandmega: 'Mix and Mega',
+  godlygift: 'Godly Gift', camomons: 'Camomons', partnersincrime: 'Partners in Crime', inheritance: 'Inheritance', cap: 'CAP',
+  battlestadiumsingles: 'Battle Stadium Singles', battlestadiumdoubles: 'Battle Stadium Doubles', battlespotsingles: 'Battle Spot Singles',
+  battlespotdoubles: 'Battle Spot Doubles', battlespottriples: 'Battle Spot Triples', letsgoou: "Let's Go OU", bdspou: 'BDSP OU',
+  tradebacksou: 'Tradebacks OU', stadiumou: 'Stadium OU', nc1997: 'Nintendo Cup 1997', nintendocup1997: 'Nintendo Cup 1997',
+}
+
+function tierName(rest: string): string {
+  if (FORMAT_NAMES[rest]) return FORMAT_NAMES[rest]
+  if (rest.startsWith('vgc')) return `VGC ${rest.slice(3).replace(/reg(\w)$/, (_, letter: string) => ` Règlement ${letter.toUpperCase()}`)}`
+  if (rest.startsWith('champions')) return `Champions ${tierName(rest.slice(9))}`
+  return rest
 }
 
 /** Libellé d'un format à partir de son seul identifiant, quand le serveur n'a pas encore envoyé la liste. */
@@ -121,8 +135,7 @@ export function formatIdLabel(id: string): string {
   const match = /^gen(\d)(.+)$/.exec(id)
   if (!match) return id
   const [, gen, rest] = match
-  const name = FORMAT_NAMES[rest!] ?? (rest!.startsWith('vgc') ? `VGC ${rest!.slice(3)}` : rest!)
-  return `${name} · Gen ${gen}`
+  return `${tierName(rest!)} · Gen ${gen}`
 }
 
 export function gameTypeLabel(type: GameType): string {
