@@ -10,16 +10,16 @@
         <input v-model="name" class="field step__name" maxlength="40" :placeholder="defaultName">
       </label>
 
-      <div class="step">
+      <div v-if="!fixedFormat" class="step">
         <span class="step__label">2 · Format</span>
         <ClassiqueFormatPicker v-model="format" usage="team" />
       </div>
 
       <div class="step">
-        <span class="step__label">3 · Point de départ</span>
+        <span class="step__label">{{ fixedFormat ? 2 : 3 }} · Point de départ</span>
         <div class="starts" role="radiogroup" aria-label="Point de départ">
           <button
-            v-for="option in STARTS"
+            v-for="option in starts"
             :key="option.id"
             type="button"
             role="radio"
@@ -48,7 +48,7 @@
 <script setup lang="ts">
 import type { TeamStart } from '~/utils/teamBuilder'
 
-const props = defineProps<{ closable: boolean, error: string, count: number }>()
+const props = defineProps<{ closable: boolean, error: string, count: number, fixedFormat?: string }>()
 const emit = defineEmits<{ create: [name: string, format: string, start: TeamStart, text: string], close: [] }>()
 
 const STARTS: { id: TeamStart, icon: string, title: string, text: string }[] = [
@@ -57,8 +57,10 @@ const STARTS: { id: TeamStart, icon: string, title: string, text: string }[] = [
   { id: 'import', icon: '⇩', title: 'Importer de Showdown', text: "Colle le texte exporté par Showdown." },
 ]
 
+/** L'assistant propose les Pokémon les plus joués, sans regarder un budget de points : il n'est pas proposé en Combat à budget. */
+const starts = computed(() => props.fixedFormat ? STARTS.filter(option => option.id !== 'assistant') : STARTS)
 const name = ref('')
-const format = ref('gen9ou')
+const format = ref(props.fixedFormat || 'gen9ou')
 const start = ref<TeamStart>('empty')
 const text = ref('')
 const defaultName = computed(() => `Nouvelle équipe ${props.count + 1}`)
@@ -85,7 +87,7 @@ const submit = () => {
 .create__close { margin-left: auto; border: 0; background: rgba(0, 0, 0, .25); color: inherit; border-radius: 5px; width: 24px; height: 24px; cursor: pointer; }
 .create__body { padding: 12px; display: flex; flex-direction: column; gap: 14px; }
 .step { display: flex; flex-direction: column; gap: 6px; }
-.step__label { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); text-transform: uppercase; letter-spacing: .04em; }
+.step__label { font: 700 12px 'Nunito', sans-serif; color: var(--mu); text-transform: uppercase; letter-spacing: .04em; }
 .step__name { max-width: 320px; }
 .starts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 
@@ -111,18 +113,18 @@ const submit = () => {
   height: 30px;
   border-radius: 7px;
   background: var(--dk);
-  color: var(--uA);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  color: var(--uT);
+  font: 700 12px 'Nunito', sans-serif;
   display: grid;
   place-items: center;
 }
 
-.start__text { display: flex; flex-direction: column; gap: 2px; font: 400 12px/1.35 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.start__text { display: flex; flex-direction: column; gap: 2px; font: 400 12px/1.35 'Nunito', sans-serif; color: var(--mu); }
 .start__text b { font-size: 14px; color: var(--tx); }
 .create__paste { height: auto; min-height: 150px; font: 400 13px/1.4 ui-monospace, monospace; resize: vertical; }
 .create__actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.create__hint { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.create__error { font: 700 13px 'Atkinson Hyperlegible', sans-serif; color: #ffb070; }
+.create__hint { font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
+.create__error { font: 700 13px 'Nunito', sans-serif; color: #ffb070; }
 
 @media (max-width: 760px) {
   .starts { grid-template-columns: minmax(0, 1fr); }

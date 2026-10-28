@@ -7,8 +7,8 @@ const TEAM_SIZE = 6
  * État de l'Atelier Classique : l'équipe ouverte, l'emplacement choisi, les statistiques Smogon et les attaques
  * apprises de son format. Chaque modification est enregistrée dans « Mes équipes ».
  */
-export function useTeamWorkshop() {
-  const { teams, save, remove } = useClassicTeams()
+export function useTeamWorkshop(onlyFormat = '') {
+  const { teams: allTeams, save, remove } = useClassicTeams()
   const { dex } = usePokedex()
   const { store } = useShowdown()
   const currentId = useState('workshop-team', () => '')
@@ -16,6 +16,8 @@ export function useTeamWorkshop() {
   const usage = shallowRef<UsageData | null>(null)
   const learnsets = shallowRef<Awaited<ReturnType<typeof loadLearnsets>> | null>(null)
 
+  /** Équipes de l'Atelier : toutes, ou seulement celles d'un format (le constructeur du Combat à budget). */
+  const teams = computed(() => onlyFormat ? allTeams.value.filter(entry => entry.format === onlyFormat) : allTeams.value)
   const team = computed(() => teams.value.find(entry => entry.id === currentId.value) ?? teams.value[0])
   const formats = computed(() => store.formats.flatMap(section => section.formats))
   const formatName = computed(() => {

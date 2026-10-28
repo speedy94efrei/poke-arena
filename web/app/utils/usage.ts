@@ -27,8 +27,12 @@ export function usageFormatIds(): string[] {
   return [...byFormat.keys()]
 }
 
+/** Formats sans statistiques Smogon qui prennent celles d'un autre : le Combat à budget joue avec les règles de l'OU. */
+const USAGE_SOURCES: Record<string, string> = { gen9combatbudget: 'gen9ou' }
+
 /** Format dont on a les statistiques : le même, ou le plus proche par préfixe (`gen9vgc2026regf` donne `gen9vgc2026`). */
 export function usageFormat(format: string): string | null {
+  if (USAGE_SOURCES[format]) return USAGE_SOURCES[format]
   if (byFormat.has(format)) return format
   let best: string | null = null
   for (const candidate of byFormat.keys()) {

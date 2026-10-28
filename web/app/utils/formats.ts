@@ -87,7 +87,7 @@ export function parseFormats(payload: string): FormatSection[] {
     const section = sections[sections.length - 1]
     if (!section) continue
     section.formats.push({
-      id: toId(name),
+      id: showdownId(name),
       name,
       section: section.name,
       generatedTeam: Boolean(code & 1),
@@ -111,7 +111,7 @@ export function formatLabel(name: string): string {
 }
 
 const FORMAT_NAMES: Record<string, string> = {
-  ou: 'OU', uu: 'UU', ru: 'RU', nu: 'NU', pu: 'PU', zu: 'ZU', lc: 'LC', ubers: 'Ubers', ubersuu: 'Ubers UU', monotype: 'Monotype',
+  combatbudget: 'Combat à budget', ou: 'OU', uu: 'UU', ru: 'RU', nu: 'NU', pu: 'PU', zu: 'ZU', lc: 'LC', ubers: 'Ubers', ubersuu: 'Ubers UU', monotype: 'Monotype',
   anythinggoes: 'Anything Goes', doublesou: 'Doubles OU', doublesubers: 'Doubles Ubers', nationaldex: 'National Dex',
   nationaldexubers: 'National Dex Ubers', nationaldexuu: 'National Dex UU', nationaldexru: 'National Dex RU', nationaldexag: 'National Dex AG',
   nationaldexmonotype: 'National Dex Monotype', nationaldexdoubles: 'National Dex Doubles', randombattle: 'Random Battle',

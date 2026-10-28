@@ -113,6 +113,8 @@ export interface BattleState {
   winner: string
   /** Elo avant et après le combat, par joueur (identifiant), annoncé par le serveur à la fin d'un combat classé. */
   ratings: Record<string, { before: number, after: number }>
+  /** Combat de ladder : il compte pour l'Elo. */
+  rated: boolean
   error: string
   anims: Record<SideId, { name: string, key: number }>
   floats: { id: number, side: SideId, text: string, color: string }[]
@@ -134,7 +136,7 @@ export function createBattle(roomid: string): BattleState {
     roomid, format: '', formatName: '', gameType: 'singles', mySide: null, sides: { p1: side('p1'), p2: side('p2') }, turn: 0,
     weather: '', weatherSince: 0, weatherTurns: null, fieldEffects: [], fieldSince: {},
     log: [{ turn: 0, lines: [] }], message: 'Le combat va commencer…', request: null, pendingRequest: null,
-    choiceSent: false, lastChoice: '', started: false, ended: false, winner: '', ratings: {}, error: '',
+    choiceSent: false, lastChoice: '', started: false, ended: false, winner: '', ratings: {}, rated: false, error: '',
     anims: { p1: { name: '', key: 0 }, p2: { name: '', key: 0 } }, floats: [], fx: [],
   }
 }
@@ -361,10 +363,13 @@ export function applyLine(state: BattleState, line: string) {
       break
     case 'tier':
       state.formatName = args[0] ?? ''
-      state.format = toId(state.formatName)
+      state.format = showdownId(state.formatName)
       break
     case 'gametype':
       state.gameType = args[0] ?? 'singles'
+      break
+    case 'rated':
+      state.rated = true
       break
     case 'teamsize':
       state.sides[args[0] as SideId].size = Number(args[1] ?? 6)

@@ -78,6 +78,12 @@ Les tests (`server/test/sim/pokedraft/entrainement.js`) vérifient les choix de 
 
 En production, avec un vrai serveur de connexion, ces pseudos devront correspondre à des comptes enregistrés.
 
+### Combat à budget
+
+Chaque joueur a 100 points pour toute son équipe (1 à 6 Pokémon) ; chaque Pokémon coûte selon son tier Smogon Gen 9 : OU 30, UUBL 26, UU 22, RUBL 19, RU 16, NUBL 14, NU 12, PUBL 10, PU 8, ZUBL 6, ZU 5, non classé 3. Ubers et AG sont interdits, et le reste suit les règles de l'OU. Le format est déclaré dans `server/config/custom-formats.ts` ; il refuse au lancement une équipe qui dépasse le budget, avec le détail des coûts. Le barème est dans `server/config/budget.ts`, et la commande `/budget` envoie au site le coût de chaque Pokémon autorisé.
+
+Les coûts pourront s'ajuster chaque mois selon l'usage dans ce ladder : `server/config/budget-costs.json` (`{ "month": "2026-12", "costs": { "<id>": <coût> } }`), lu au démarrage du serveur, remplace le coût de départ des Pokémon qu'il liste. Le script qui le calcule viendra après un mois de combats classés.
+
 ### Tournois et salons
 
 Le serveur de combat gère les tournois de l'Arène (`server/server/chat-plugins/arene-tournois.ts`). Chaque tournoi a son propre salon, ouvert aux inscriptions un quart d'heure avant le départ, et démarre seul à l'heure prévue.
@@ -181,9 +187,13 @@ npm run dev
 
 Le site répond sur http://localhost:3000, ou sur le port libre suivant si celui-ci est pris (le terminal l'affiche). `npm run typecheck` vérifie les types, y compris ceux du roster. Pour viser un autre serveur de combat, définis `NUXT_PUBLIC_SHOWDOWN_URL` (par défaut `ws://localhost:8100/showdown/websocket`).
 
+L'interface a deux styles, choisis dans le menu de gauche : Gen 4, clair comme les menus de Pokémon Platine, et Gen 5, sombre. Sous ce choix, une palette de onze couleurs change celle des menus (en-têtes des panneaux, cadre du texte de combat), comme les cadres des jeux DS ; les deux choix restent dans le navigateur. Le sélecteur de mode, en haut de chaque page, passe d'un mode à l'autre (Classique, PokéDraft, Roguelike, Route des Ligues, Combat à budget) avec un écran de transition.
+
+Les cartes des Pokémon (Atelier, aperçu des équipes, banc et équipe adverse en combat) ont pour fond un paysage pixel art animé, choisi selon le premier type. Ce sont des paysages de [Jeruu](https://jeruu.itch.io/) sous licence CC0 ([10 Pixel art Landscape](https://jeruu.itch.io/10-pixel-art-landscape) et [16+1 Pixel art Landscape Desert Edition](https://jeruu.itch.io/161-pixel-art-landscape-desert-edition)), réduits en WebP animé dans `web/public/habitats/`, avec une image fixe de chacun pour qui demande moins d'animations au système.
+
 Pages disponibles :
 
-- `/` : le hub, pour choisir son univers ; il rouvre le dernier univers visité au bout de 3 secondes, sauf si l'on reste.
+- `/` : le hub, pour choisir son univers ; il rouvre le dernier univers visité au bout de 3 secondes, sauf si l'on reste. Dessous, les modes à part.
 
 Univers Classique (Smogon, tous les formats du serveur de combat) :
 
@@ -206,6 +216,15 @@ Univers Classique (Smogon, tous les formats du serveur de combat) :
   Les attaques sont animées comme sur Showdown : le lanceur fonce sur sa cible ou envoie le projectile de son type, et quelques familles ont leur propre effet (séisme, chute de pierres, pièges, protection, soin, boosts). Les images des effets sont chargées depuis le serveur de Showdown (`play.pokemonshowdown.com/fx`). Les animations sont coupées quand le système demande moins de mouvement.
 
 Les équipes du Classique sont gardées dans le navigateur pour l'instant.
+
+Combat à budget (format `[Gen 9] Combat à Budget`) :
+
+- `/budget` : l'accueil. Les règles, le combat classé (équipe prise dans « Mes équipes », coût vérifié avant la recherche), les coûts du mois et le ladder du format ;
+- `/budget/constructeur` : l'Atelier, limité aux équipes du format, avec le compteur de points (vert, ambre au plus juste, rouge au-dessus de 100) et le coût de chaque Pokémon dans la recherche, triable par coût. Les statistiques sont celles de l'OU ;
+- `/budget/bareme` : le coût de départ de chaque tier, les règles des ajustements mensuels et le coût de chaque Pokémon autorisé ;
+- `/budget/combat/<salle>` : l'écran de combat.
+
+Roguelike (`/roguelike`) et Route des Ligues (`/route-des-ligues`) ont pour l'instant une page de présentation.
 
 Univers PokéDraft :
 

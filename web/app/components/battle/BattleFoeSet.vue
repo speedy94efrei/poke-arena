@@ -22,8 +22,13 @@ const calc = inject(BATTLE_CALC)
 const foe = computed(() => activePokemons(props.battle, props.side).find(pokemon => !pokemon.fainted))
 const name = computed(() => foe.value ? speciesName(foe.value.speciesId, foe.value.name) : '')
 const entry = computed(() => foe.value ? calc?.usage.value?.pokemon.find(candidate => candidate.id === foe.value!.speciesId) : undefined)
-const formatShort = computed(() => props.battle.formatName ? `en ${formatLabel(props.battle.formatName).split(' · ')[0]}` : '')
-const source = computed(() => isPokedraft(props.battle) ? 'fiche PokéDraft' : entry.value ? `usage ${formatLabel(props.battle.formatName).split(' · ')[0]}, estimé` : 'set inconnu')
+/** Format des statistiques : celui du combat, ou celui dont il les emprunte (l'OU pour le Combat à budget). */
+const usageName = computed(() => {
+  const source = usageFormat(props.battle.format)
+  return source && source !== props.battle.format ? formatIdLabel(source).split(' · ')[0] : formatLabel(props.battle.formatName).split(' · ')[0]
+})
+const formatShort = computed(() => props.battle.formatName ? `en ${usageName.value}` : '')
+const source = computed(() => isPokedraft(props.battle) ? 'fiche PokéDraft' : entry.value ? `usage ${usageName.value}, estimé` : 'set inconnu')
 
 const rows = computed(() => {
   const pokemon = foe.value
@@ -64,14 +69,14 @@ const rows = computed(() => {
 }
 
 .set__head span:first-child { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.set__source { flex: none; font: 700 10px 'Atkinson Hyperlegible', sans-serif; text-shadow: none; opacity: .9; }
+.set__source { flex: none; font: 700 10px 'Nunito', sans-serif; text-shadow: none; opacity: .9; }
 .set__body { padding: 8px 12px 10px; display: flex; flex-direction: column; gap: 4px; }
-.row { display: grid; grid-template-columns: 14px minmax(0, 1fr) 54px 34px; gap: 6px; align-items: center; font: 700 12px 'Atkinson Hyperlegible', sans-serif; }
+.row { display: grid; grid-template-columns: 14px minmax(0, 1fr) 54px 34px; gap: 6px; align-items: center; font: 700 12px 'Nunito', sans-serif; }
 .row__mark { color: var(--mu); }
-.row--seen .row__mark { color: #58d080; }
+.row--seen .row__mark { color: var(--good); }
 .row__label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .row__track { height: 6px; border-radius: 3px; background: var(--in); overflow: hidden; }
 .row__fill { display: block; height: 100%; }
 .row__value { font: 600 11px 'Pixelify Sans', sans-serif; text-align: right; color: var(--mu); }
-.set__note { font: 700 10px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.set__note { font: 700 10px 'Nunito', sans-serif; color: var(--mu); }
 </style>

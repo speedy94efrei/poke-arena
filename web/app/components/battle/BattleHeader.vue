@@ -55,7 +55,8 @@ const modeInfo = computed(() => {
   const level = /^Bot Niveau (\d)/.exec(opponent)?.[1]
   if (level) return { badge: 'BOT', text: `Niveau ${level} · ${LEVELS[Number(level)] ?? ''}`, color: '#48a860' }
   if (props.battle.formatName.includes('Random') || !props.battle.mySide) return { badge: props.battle.mySide ? 'LIBRE' : 'SPECTATEUR', text: 'Combat', color: '#3d6fc8' }
-  return { badge: 'COMBAT', text: Object.keys(props.battle.ratings).length ? 'Classé' : 'En ligne', color: '#3d6fc8' }
+  if (props.battle.rated || Object.keys(props.battle.ratings).length) return { badge: 'CLASSÉ', text: 'Ladder', color: '#c8362a' }
+  return { badge: 'COMBAT', text: 'En ligne', color: '#3d6fc8' }
 })
 
 /** Chaque joueur avec ses Pokémon : debout, K.O. ou pas encore vus. */
@@ -99,7 +100,7 @@ const players = computed(() => {
 .header__players { flex: 1; min-width: 0; display: flex; justify-content: center; gap: 8px; }
 .header__player { padding-left: 8px; min-width: 0; }
 .header__avatar { flex: none; width: 32px; height: 32px; border-radius: 8px; color: #fff; display: grid; place-items: center; font: 700 16px 'Pixelify Sans', sans-serif; }
-.header__who { display: flex; flex-direction: column; gap: 3px; min-width: 0; font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
+.header__who { display: flex; flex-direction: column; gap: 3px; min-width: 0; font: 700 12px 'Nunito', sans-serif; color: var(--mu); }
 .header__who > span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
 .header__balls { display: flex; gap: 3px; }
 .header__ball { width: 11px; height: 11px; border-radius: 50%; box-shadow: 0 0 0 1px var(--bd); }
@@ -109,7 +110,7 @@ const players = computed(() => {
 .header__mode { height: 26px; padding: 0 8px; border-radius: 6px; color: #fff; display: grid; place-items: center; font: 600 13px 'Pixelify Sans', sans-serif; }
 .header__mode-text { font: 600 15px 'Pixelify Sans', sans-serif; text-shadow: var(--sh); white-space: nowrap; }
 .header__help { border: 0; cursor: pointer; gap: 8px; }
-.header__help-value { font: 600 15px 'Pixelify Sans', sans-serif; color: var(--sel); }
+.header__help-value { font: 600 15px 'Pixelify Sans', sans-serif; color: var(--uT); }
 .header__decor { gap: 8px; }
 
 .header__select {

@@ -1,6 +1,6 @@
 <template>
   <section class="editor" aria-label="Pokémon sélectionné">
-    <header class="hero" :style="{ '--type': species ? TYPE_COLORS[species.types[0]!] : 'var(--chip)' }">
+    <header class="hero" :style="{ '--type': species ? TYPE_COLORS[species.types[0]!] : 'var(--chip)', '--habitat': species ? habitatBackground(species.types[0]) : undefined }">
       <div class="hero__text">
         <span class="hero__slot">Emplacement {{ index + 1 }} / {{ size }}</span>
         <h2 class="hero__name">{{ set ? (species?.nom ?? set.species) : 'Emplacement libre' }}</h2>
@@ -11,6 +11,7 @@
           <button v-if="set" type="button" class="btn btn--primary btn--small" :aria-expanded="picking" @click="picking = !picking">⇄ Changer de Pokémon</button>
           <NuxtLink v-if="set" :to="{ path: '/classique/pokedex', query: { id: set.species } }" class="btn btn--small">Fiche Pokédex</NuxtLink>
           <span v-if="share" class="hero__usage">Usage {{ shortFormat }} {{ percent(share, 1) }}</span>
+          <span v-if="cost !== null" class="hero__usage">Coût {{ cost }} pts</span>
         </span>
       </div>
       <span v-if="set" class="hero__sprite" :style="{ backgroundImage: `url(${sprite(set.species, 'face')})` }" />
@@ -23,6 +24,7 @@
         :format-name="formatName"
         :usage="usage"
         :closable="Boolean(set)"
+        :budget-left="budgetLeft"
         @pick="pick"
         @close="picking = false"
       />
@@ -54,15 +56,20 @@ const props = defineProps<{
   formatName: string
   usage: UsageData | null
   pool: string[]
+  /** Points restants pour cet emplacement, en Combat à budget. */
+  budgetLeft?: number | null
 }>()
 const emit = defineEmits<{ update: [patch: Partial<ClassicSet>], species: [species: string], reset: [] }>()
 const { dex, sprite } = usePokedex()
+const { costOf } = useBudget()
 
 const picking = ref(false)
 const species = computed(() => props.set ? dex.value?.pokemon[props.set.species] : undefined)
 const setUsage = computed(() => props.set ? usageOf(props.usage, props.set.species) : undefined)
 const share = computed(() => setUsage.value?.usage ?? 0)
-const shortFormat = computed(() => props.formatName.split(' · ')[0])
+/** Le Combat à budget n'a pas de statistiques Smogon : il prend celles de l'OU. */
+const shortFormat = computed(() => props.format === BUDGET_FORMAT ? 'OU' : props.formatName.split(' · ')[0])
+const cost = computed(() => props.set && props.format === BUDGET_FORMAT ? costOf(props.set.species) : null)
 
 watch(() => props.index, () => {
   picking.value = false
@@ -82,8 +89,8 @@ const pick = (id: string) => {
   min-height: 120px;
   padding: 12px 14px;
   background:
-    repeating-linear-gradient(135deg, rgba(255, 255, 255, .06) 0 12px, transparent 12px 24px),
-    linear-gradient(110deg, color-mix(in srgb, var(--type) 35%, #0b0f16), var(--type));
+    linear-gradient(110deg, rgba(0, 0, 0, .65), rgba(0, 0, 0, .05) 75%),
+    var(--habitat, linear-gradient(110deg, color-mix(in srgb, var(--type) 35%, #0b0f16), var(--type)));
   display: flex;
   align-items: center;
   gap: 12px;
@@ -91,7 +98,7 @@ const pick = (id: string) => {
 }
 
 .hero__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
-.hero__slot { font: 700 12px 'Atkinson Hyperlegible', sans-serif; opacity: .85; }
+.hero__slot { font: 700 12px 'Nunito', sans-serif; opacity: .85; }
 .hero__name { margin: 0; font: 700 28px/1 'Pixelify Sans', sans-serif; text-shadow: 2px 2px 0 rgba(0, 0, 0, .6); }
 .hero__types { display: flex; gap: 4px; }
 
@@ -99,7 +106,7 @@ const pick = (id: string) => {
   height: 20px;
   padding: 0 7px;
   border-radius: 4px;
-  font: 700 11px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 11px 'Nunito', sans-serif;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, .6);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, .4);
   display: flex;
@@ -114,7 +121,7 @@ const pick = (id: string) => {
   padding: 0 10px;
   border-radius: 8px;
   background: rgba(0, 0, 0, .4);
-  font: 700 12px 'Atkinson Hyperlegible', sans-serif;
+  font: 700 12px 'Nunito', sans-serif;
   display: flex;
   align-items: center;
 }
@@ -129,7 +136,7 @@ const pick = (id: string) => {
 }
 
 .editor__body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 16px; }
-.nickname { display: flex; align-items: center; gap: 8px; font: 700 13px 'Atkinson Hyperlegible', sans-serif; }
+.nickname { display: flex; align-items: center; gap: 8px; font: 700 13px 'Nunito', sans-serif; }
 .nickname__input { width: 200px; height: 32px; font-size: 13px; }
 .editor__foot { display: flex; gap: 6px; }
 

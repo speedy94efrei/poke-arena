@@ -45,7 +45,8 @@ const TAGS = {
 
 const pokedraft = computed(() => isPokedraft(props.battle))
 const team = computed(() => props.battle.sides[props.side].team)
-const size = computed(() => Math.max(props.battle.sides[props.side].size ?? 6, team.value.length))
+/** Taille de l'équipe : le serveur ne l'envoie qu'au début du combat ; pendant l'aperçu, ce sont les Pokémon montrés. */
+const size = computed(() => Math.max(props.battle.sides[props.side].size ?? (team.value.length || 6), team.value.length))
 
 const rowsOf = (member: BattlePokemon) => {
   const set = calc?.setOf(member)
@@ -74,7 +75,7 @@ const tiles = computed(() => Array.from({ length: size.value }, (_, index) => {
   const color = TYPE_COLORS[types[0] ?? 'Normal'] ?? '#555'
   return {
     name: speciesName(member.speciesId, member.name), speciesId: member.speciesId, tag, types, rows: rowsOf(member),
-    background: `linear-gradient(160deg, ${color}, color-mix(in srgb, ${color} 45%, #0b0f16))`, fainted: member.fainted, active: member.active,
+    background: `linear-gradient(180deg, rgba(0, 0, 0, .05), rgba(0, 0, 0, .5)), ${habitatBackground(types[0]) || color}`, fainted: member.fainted, active: member.active,
   }
 }))
 
@@ -101,7 +102,7 @@ const summary = computed(() => {
   justify-content: space-between;
 }
 
-.opp__summary { font: 700 11px 'Atkinson Hyperlegible', sans-serif; text-shadow: none; }
+.opp__summary { font: 700 11px 'Nunito', sans-serif; text-shadow: none; }
 .opp__grid { padding: 10px 12px 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
 .tile { position: relative; height: 60px; outline: none; cursor: default; }
 .tile__bg { position: absolute; inset: 0; border-radius: 8px; }
