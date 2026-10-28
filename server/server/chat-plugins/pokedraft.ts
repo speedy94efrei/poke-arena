@@ -299,6 +299,8 @@ export const Drafts = new class {
 		if (!Arene.enabled) throw new DraftError("Le classement n'est pas branché sur ce serveur.");
 		const account = await Arene.request<{ name: string }>('POST', '/showdown-sessions', { token, showdown_id: user.id });
 		this.verified.set(user.id, account.name);
+		// Un compte Arène vérifié vaut un compte confirmé de Showdown : il peut envoyer et recevoir des messages privés.
+		user.autoconfirmed = user.id;
 		this.send(user.id, { type: 'account', ranked: true, verified: true, name: account.name });
 	}
 

@@ -19,7 +19,7 @@
           :key="child.label"
           :to="child.to"
           class="sidenav__child"
-          :class="{ 'sidenav__child--active': isActive(child.to), 'sidenav__item--soon': !child.to }"
+          :class="{ 'sidenav__child--active': Boolean(child.to) && child.to === activeChild(item), 'sidenav__item--soon': !child.to }"
         >
           {{ child.label }}<span v-if="!child.to" class="sidenav__soon">bientôt</span>
         </component>
@@ -56,6 +56,8 @@ const items = computed(() => NAVIGATION[universe.value])
 const roots = ['/pokedraft', '/classique']
 
 const isActive = (to?: string) => Boolean(to) && (route.path === to || (!roots.includes(to!) && route.path.startsWith(`${to}/`)))
+/** Le lien enfant le plus précis qui correspond à la page (« Créer un tournoi » plutôt que « Tournois »). */
+const activeChild = (item: NavItem) => (item.children ?? []).map(child => child.to).filter(to => isActive(to)).sort((a, b) => b!.length - a!.length)[0]
 const isOpen = (item: NavItem) => Boolean(item.children?.some(child => isActive(child.to))) || isActive(item.to)
 </script>
 

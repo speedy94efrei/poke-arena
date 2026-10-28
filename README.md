@@ -76,6 +76,17 @@ Les tests (`server/test/sim/pokedraft/entrainement.js`) vérifient les choix de 
 
 En production, avec un vrai serveur de connexion, ces pseudos devront correspondre à des comptes enregistrés.
 
+### Tournois et salons
+
+Le serveur de combat gère les tournois de l'Arène (`server/server/chat-plugins/arene-tournois.ts`). Chaque tournoi a son propre salon, ouvert aux inscriptions un quart d'heure avant le départ, et démarre seul à l'heure prévue.
+
+- Tournois réguliers, chaque semaine (heure du serveur) : Tournoi hebdo (OU, lundi 21h), Random du mercredi (20h30), Doubles du vendredi (21h), Monotype du samedi (18h), National Dex du dimanche (17h, toutes rondes).
+- Tournois de la communauté : n'importe quel joueur avec un pseudo en propose un depuis le site (nom, format, élimination directe, double élimination ou toutes rondes, 4 à 64 places, date, clauses ajoutées ou retirées). Trois tournois à venir au plus par joueur, départ entre un quart d'heure et 30 jours. Ils sont publiés tout de suite, sans validation par la modération pour l'instant.
+
+Les tournois proposés et les derniers résultats sont gardés dans `server/config/arene-tournois.json`. Le module crée aussi les salons publics du site s'ils manquent : Stratégie, Aide aux débutants et Tournois, à côté du Lobby. Les messages privés sont réservés aux comptes confirmés, comme sur Showdown : un compte Arène relié au serveur de combat l'est.
+
+Les tests (`server/test/sim/pokedraft/tournois.js`) vérifient la validation des propositions, la limite par joueur, le calendrier des tournois réguliers, l'ouverture du salon et du tournoi, et l'enregistrement du vainqueur.
+
 ### Effets des fiches
 
 Dans `server/data/mods/pokedraft/`, `pokedex.ts`, `abilities.ts`, `moves.ts` et `movepool.ts` sont générés depuis le roster (voir [data/README.md](data/README.md)). Les effets des talents et des signatures s'écrivent à la main dans `effets-talents.ts` et `effets-attaques.ts`, avec un test par effet dans `server/test/sim/pokedraft/`. Pour lancer ces tests seuls, depuis `server/` :
@@ -182,6 +193,9 @@ Univers Classique (Smogon, tous les formats du serveur de combat) :
 - `/classique/pokedex` : le Pokédex. La liste des Pokémon du format par usage (ou tout le Pokédex en cherchant, en français ou en anglais), et pour chacun la fiche (stats, faiblesses, talents), ce que joue la communauté (attaques, objets, types Téra, répartitions, coéquipiers et contres, d'après Smogon) et toutes les attaques qu'il apprend ; un bouton l'ajoute à l'équipe ouverte dans l'Atelier ;
 - `/classique/meta` : la méta d'un format. Les Pokémon les plus utilisés avec leur objet, type Téra et attaque n°1, la répartition des styles d'équipe, l'équipe type (le n°1 et ses coéquipiers les plus fréquents, à copier dans l'Atelier) et les duos les plus joués ;
 - `/classique/guide` : le guide. Les objets et talents incontournables (avec leur part dans la méta du format), le tableau des natures, les IV et EV expliqués avec un calculateur de statistiques ;
+- `/classique/tournois` : les tournois et événements. Le calendrier de deux semaines (réguliers et proposés par les joueurs), le tableau du tournoi choisi (arbre d'élimination ou tableau des toutes rondes, en direct), sa fiche avec l'inscription, puis le bouton « Je suis prêt » avec ton équipe quand ton match arrive, et les derniers vainqueurs ;
+- `/classique/tournois/creer` : créer un tournoi, avec l'aperçu de son annonce ;
+- `/classique/chat` : le chat. Les salons publics du serveur, les messages privés, les joueurs présents dans le salon (écrire, défier) ;
 - `/classique/combat/<salle>` : l'écran de combat, partagé avec PokéDraft. Simple, double et triple (un choix par Pokémon et le choix de la cible), Téracristal, Méga-Évolution, Dynamax et capacités Z selon la génération. Les noms viennent du Pokédex français (`data/references/dex.json`).
 
 Les équipes du Classique sont gardées dans le navigateur pour l'instant.

@@ -28,8 +28,12 @@ export const NAVIGATION: Record<Universe, NavItem[]> = {
       children: [{ label: 'Mes équipes', to: '/classique/equipes' }],
     },
     {
-      icon: '✉', label: 'Communauté', color: '#8a4ac8',
-      children: [{ label: 'Tournois et événements' }, { label: 'Créer un tournoi' }, { label: 'Chat et social' }],
+      icon: '✉', label: 'Communauté', color: '#8a4ac8', to: '/classique/tournois',
+      children: [
+        { label: 'Tournois et événements', to: '/classique/tournois' },
+        { label: 'Créer un tournoi', to: '/classique/tournois/creer' },
+        { label: 'Chat et social', to: '/classique/chat' },
+      ],
     },
     {
       icon: '?', label: 'Apprendre', color: '#1f8a82', to: '/classique/pokedex',

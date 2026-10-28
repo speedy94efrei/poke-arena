@@ -1,6 +1,7 @@
 <template>
   <div class="battle-layout">
     <slot />
+    <ShowdownNotices />
   </div>
 </template>
 

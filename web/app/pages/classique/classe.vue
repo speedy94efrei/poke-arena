@@ -77,9 +77,6 @@
       </section>
     </div>
 
-    <div class="notices" aria-live="polite">
-      <div v-for="notice in store.notices" :key="notice.id" class="notice">{{ notice.text }}</div>
-    </div>
   </div>
 </template>
 
@@ -263,18 +260,6 @@ onBeforeUnmount(() => clearInterval(timer))
 .player__stat span { font: 700 11px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
 .player__me { font: 700 13px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
 .empty { padding: 14px 12px; font: 700 13px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.notices { position: fixed; right: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 8px; z-index: 100; max-width: 420px; }
-
-.notice {
-  padding: 12px 14px;
-  border-radius: var(--r);
-  background: var(--pn2);
-  box-shadow: var(--pnS), 0 12px 30px rgba(0, 0, 0, .45);
-  font: 700 14px/1.4 'Atkinson Hyperlegible', sans-serif;
-  white-space: pre-line;
-  animation: pop .2s both;
-}
-
 @keyframes wobble { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-18deg); } 75% { transform: rotate(18deg); } }
 
 @media (max-width: 1100px) {

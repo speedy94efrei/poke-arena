@@ -34,7 +34,7 @@
 import type { BattleFormat, FormatSection } from '~/utils/formats'
 
 /** `compact` : la liste seule, sans raccourcis, et sans remplacer un format absent du serveur (celui d'une équipe déjà faite). */
-const props = defineProps<{ modelValue: string, usage: 'ladder' | 'challenge' | 'team', compact?: boolean }>()
+const props = defineProps<{ modelValue: string, usage: 'ladder' | 'challenge' | 'team' | 'tournament', compact?: boolean }>()
 const emit = defineEmits<{ 'update:modelValue': [format: string] }>()
 
 /** Formats proposés en raccourci, s'ils existent sur le serveur ; le VGC prend le règlement en cours. */
@@ -45,6 +45,7 @@ const { store } = useShowdown()
 /** Formats jouables selon l'usage ; pour préparer une équipe, ceux où elle n'est pas fournie par le serveur. */
 const usable = (format: BattleFormat) => {
   if (props.usage === 'team') return format.challenge && !format.generatedTeam
+  if (props.usage === 'tournament') return format.tournament
   return props.usage === 'ladder' ? format.ladder : format.challenge
 }
 

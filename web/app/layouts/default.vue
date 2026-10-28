@@ -9,6 +9,7 @@
         </main>
       </div>
     </div>
+    <ShowdownNotices />
   </div>
 </template>
 

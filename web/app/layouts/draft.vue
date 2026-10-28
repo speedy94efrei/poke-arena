@@ -1,6 +1,7 @@
 <template>
   <div class="draft-layout">
     <slot />
+    <ShowdownNotices />
   </div>
 </template>
 

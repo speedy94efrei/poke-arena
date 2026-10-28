@@ -85,6 +85,8 @@ export interface BattleState {
   request: ShowdownRequest | null
   pendingRequest: ShowdownRequest | null
   choiceSent: boolean
+  /** Dernier choix envoyé (« move 2 terastallize », « switch 3 »), pour le comparer au conseil du coach. */
+  lastChoice: string
   started: boolean
   ended: boolean
   winner: string
@@ -108,7 +110,7 @@ export function createBattle(roomid: string): BattleState {
   return {
     roomid, format: '', formatName: '', gameType: 'singles', mySide: null, sides: { p1: side('p1'), p2: side('p2') }, turn: 0, weather: '', fieldEffects: [],
     log: [{ turn: 0, lines: [] }], message: 'Le combat va commencer…', request: null, pendingRequest: null,
-    choiceSent: false, started: false, ended: false, winner: '', ratings: {}, error: '',
+    choiceSent: false, lastChoice: '', started: false, ended: false, winner: '', ratings: {}, error: '',
     anims: { p1: { name: '', key: 0 }, p2: { name: '', key: 0 } }, floats: [],
   }
 }

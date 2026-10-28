@@ -1,4 +1,5 @@
 import type { BattleState } from '~/utils/battleTracker'
+import type { ChatRoomState } from '~/utils/chatRooms'
 import type { FormatSection } from '~/utils/formats'
 import type { TeamSet } from '~/utils/showdownTeam'
 
@@ -17,6 +18,16 @@ interface ShowdownStore {
   notices: { id: number, text: string }[]
   battles: Record<string, BattleState>
   latestBattle: string
+  /** Salons de discussion rejoints (hors combats), avec leur tournoi s'il y en a un. */
+  rooms: Record<string, ChatRoomState>
+  /** Conversations privées, par identifiant de l'autre joueur. */
+  pms: Record<string, PrivateChat>
+}
+
+export interface PrivateChat {
+  name: string
+  messages: { id: number, from: string, text: string, at: number }[]
+  unread: number
 }
 
 /** Équipe à envoyer : sets PokéDraft, ou équipe déjà au format compact de Showdown (vide pour une équipe générée). */
@@ -24,6 +35,7 @@ type OutgoingTeam = TeamSet[] | string
 
 const store = reactive<ShowdownStore>({
   status: 'deconnecte', name: '', challengesFrom: {}, challengeTo: null, searching: false, searchingFormats: [], formats: [], notices: [], battles: {}, latestBattle: '',
+  rooms: {}, pms: {},
 })
 const queues = new Map<string, string[]>()
 const playing = new Set<string>()
@@ -31,16 +43,18 @@ const globalHandlers = new Map<string, (payload: string) => void>()
 const queryWaiters = new Map<string, ((data: unknown) => void)[]>()
 let validationWaiter: ((text: string) => void) | null = null
 const QUERY_TIMEOUT = 6000
+const LOBBY = 'lobby'
 let socket: WebSocket | null = null
 let wantedName = ''
 let noticeCounter = 0
+let pmCounter = 0
 
 function cleanName(raw = ''): string {
   return raw.replace(/^[^\p{L}\p{N}]/u, '').trim()
 }
 
 function notify(text: string) {
-  const notice = { id: ++noticeCounter, text: text.replace(/\|\|/g, '\n') }
+  const notice = { id: ++noticeCounter, text: frenchNotice(text.replace(/\|\|/g, '\n')) }
   store.notices.push(notice)
   setTimeout(() => {
     store.notices = store.notices.filter(n => n.id !== notice.id)
@@ -173,11 +187,47 @@ function handleGlobal(line: string) {
         notify(message.slice(7))
       } else if (message.startsWith('/text ') || message.startsWith('/log ')) {
         notify(message.replace(/^\/(text|log) /, ''))
+      } else if (message.startsWith('/raw ') || message.startsWith('/html ')) {
+        notify(htmlText(message.replace(/^\/(raw|html) /, '')))
+      } else if (!message.startsWith('/') || message.startsWith('//')) {
+        recordPm(sender, receiver, message.replace(/^\/\//, '/'))
       }
       break
     }
     default:
       globalHandlers.get(command)?.(args.join('|'))
+  }
+}
+
+function recordPm(sender: string, receiver: string, text: string) {
+  const mine = toId(sender) === toId(store.name)
+  const other = mine ? receiver : sender
+  const id = toId(other)
+  const chat = store.pms[id] ?? (store.pms[id] = { name: other, messages: [], unread: 0 })
+  chat.messages.push({ id: ++pmCounter, from: sender, text, at: Date.now() })
+  if (!mine) chat.unread++
+}
+
+function handleRoom(roomid: string, lines: string[]) {
+  if (!store.rooms[roomid]) {
+    if (!lines.some(line => line.startsWith('|init|chat'))) {
+      lines.forEach(handleGlobal)
+      return
+    }
+    store.rooms[roomid] = createChatRoom(roomid)
+  }
+  const room = store.rooms[roomid]!
+  for (const line of lines) {
+    if (line.startsWith('|deinit') || line.startsWith('|expire')) {
+      delete store.rooms[roomid]
+      return
+    }
+    if (line.startsWith('|noinit')) {
+      notify(`Impossible de rejoindre le salon ${roomid}.`)
+      delete store.rooms[roomid]
+      return
+    }
+    if (!applyRoomLine(room, line, notify)) handleGlobal(line)
   }
 }
 
@@ -189,6 +239,9 @@ function handleData(data: string) {
     lines = lines.slice(1)
   }
   if (roomid.startsWith('battle-')) handleBattle(roomid, lines)
+  else if (roomid) handleRoom(roomid, lines)
+  // Le Lobby est le salon par défaut du protocole : ses messages arrivent sans préfixe de salon.
+  else if (store.rooms[LOBBY] || lines.some(line => line.startsWith('|init|chat'))) handleRoom(LOBBY, lines)
   else lines.forEach(handleGlobal)
 }
 
@@ -253,6 +306,7 @@ export function useShowdown() {
       if (!battle?.request) return
       send(`${roomid}|/choose ${choice}|${battle.request.rqid ?? ''}`)
       battle.choiceSent = true
+      battle.lastChoice = choice
       battle.error = ''
       battle.message = "En attente de l'adversaire…"
     },
@@ -289,6 +343,26 @@ export function useShowdown() {
     },
     join(roomid: string) {
       send(`|/join ${roomid}`)
+    },
+    leaveRoom(roomid: string) {
+      send(`|/leave ${roomid}`)
+      delete store.rooms[roomid]
+    },
+    /** Message dans un salon ; un texte qui commence par « / » est envoyé tel quel, pas comme une commande. */
+    say(roomid: string, text: string) {
+      send(`${roomid}|${text.startsWith('/') ? `/${text}` : text}`)
+    },
+    sendPm(to: string, text: string) {
+      send(`|/pm ${to}, ${text.startsWith('/') ? `/${text}` : text}`)
+    },
+    readPm(userid: string) {
+      const chat = store.pms[userid]
+      if (chat) chat.unread = 0
+    },
+    /** Commande de tournoi dans son salon ; avec une équipe, elle est envoyée d'abord (pour `ready`). */
+    tournament(roomid: string, command: 'join' | 'leave' | 'ready' | 'cancelready', team?: OutgoingTeam) {
+      if (team !== undefined) sendTeam(team)
+      send(`${roomid}|/tour ${command}`)
     },
     leave(roomid: string) {
       send(`|/leave ${roomid}`)

@@ -52,18 +52,15 @@
         <header class="panel__head">Salons du serveur</header>
         <div class="panel__body">
           <p v-if="!rooms.length" class="empty">{{ connected ? 'Aucun salon public.' : 'Connecte-toi pour voir les salons.' }}</p>
-          <div v-for="room in rooms" :key="room.title" class="room">
+          <NuxtLink v-for="room in rooms" :key="room.title" :to="{ path: '/classique/chat', query: { salon: serverRoomId(room.title) } }" class="room">
             <span class="room__name"># {{ room.title }}</span>
             <span class="room__count">{{ room.userCount }} en ligne</span>
-          </div>
+          </NuxtLink>
           <span v-if="serverCounts" class="room__total">{{ serverCounts }}</span>
         </div>
       </section>
     </div>
 
-    <div class="notices" aria-live="polite">
-      <div v-for="notice in store.notices" :key="notice.id" class="notice">{{ notice.text }}</div>
-    </div>
   </div>
 </template>
 
@@ -83,7 +80,7 @@ if (typeof route.query.format === 'string') format.value = route.query.format
 const teamId = ref('')
 const answers = reactive<Record<string, string>>({})
 const battles = ref<{ roomid: string, p1: string, p2: string, format: string, minElo?: number }[]>([])
-const rooms = ref<{ title: string, userCount: number }[]>([])
+const rooms = ref<{ title: string, userCount: number, privacy?: string }[]>([])
 const serverCounts = ref('')
 const pending = ref(false)
 const watching = ref('')
@@ -123,8 +120,8 @@ const loadBattles = async () => {
 }
 
 const loadRooms = async () => {
-  const response = await query<{ official?: { title: string, userCount: number }[], chat?: { title: string, userCount: number }[], userCount?: number, battleCount?: number }>('rooms', '')
-  rooms.value = [...(response?.official ?? []), ...(response?.chat ?? [])]
+  const response = await query<{ official?: { title: string, userCount: number, privacy?: string }[], chat?: { title: string, userCount: number, privacy?: string }[], userCount?: number, battleCount?: number }>('rooms', '')
+  rooms.value = [...(response?.official ?? []), ...(response?.chat ?? [])].filter(room => !room.privacy)
   serverCounts.value = response ? `${response.userCount ?? 0} joueurs connectés · ${response.battleCount ?? 0} combats en cours` : ''
 }
 
@@ -200,21 +197,10 @@ onBeforeUnmount(() => clearInterval(timer))
 .live__players { font: 700 14px 'Atkinson Hyperlegible', sans-serif; }
 .live__vs { color: var(--mu); font-weight: 400; }
 .live__meta { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.room { display: flex; justify-content: space-between; gap: 8px; padding: 8px 10px; border-radius: 8px; background: var(--in); font: 700 14px 'Atkinson Hyperlegible', sans-serif; }
+.room { display: flex; justify-content: space-between; gap: 8px; padding: 8px 10px; border-radius: 8px; background: var(--in); color: var(--tx); text-decoration: none; font: 700 14px 'Atkinson Hyperlegible', sans-serif; }
+.room:hover { background: var(--chip); text-decoration: none; }
 .room__count, .room__total { font: 700 12px 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
 .empty { margin: 0; font: 700 13px/1.45 'Atkinson Hyperlegible', sans-serif; color: var(--mu); }
-.notices { position: fixed; right: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 8px; z-index: 100; max-width: 420px; }
-
-.notice {
-  padding: 12px 14px;
-  border-radius: var(--r);
-  background: var(--pn2);
-  box-shadow: var(--pnS), 0 12px 30px rgba(0, 0, 0, .45);
-  font: 700 14px/1.4 'Atkinson Hyperlegible', sans-serif;
-  white-space: pre-line;
-  animation: pop .2s both;
-}
-
 @media (max-width: 1100px) {
   .grid { grid-template-columns: minmax(0, 1fr); }
 }
