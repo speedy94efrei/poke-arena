@@ -7,7 +7,7 @@
       <span class="header__pair"><span class="header__label">TOUR</span><span class="header__turn">{{ battle.turn || '—' }}</span></span>
     </div>
     <div class="header__box">
-      <span class="header__mode">{{ fromDraft ? 'Classé · Draft' : 'Combat libre' }}</span>
+      <span class="header__mode">{{ mode }}</span>
       <span class="header__players">{{ battle.sides.p1.name || '…' }} contre {{ battle.sides.p2.name || '…' }}</span>
     </div>
     <span class="header__spacer" />
@@ -27,7 +27,15 @@ import type { BattleState } from '~/utils/battleTracker'
 
 const props = defineProps<{ battle: BattleState }>()
 const { store: draftStore } = useDraft()
-const fromDraft = computed(() => draftStore.battles.includes(props.battle.roomid))
+const { botNamed } = useTraining()
+
+const mode = computed(() => {
+  const roomid = props.battle.roomid
+  const training = [props.battle.sides.p1.name, props.battle.sides.p2.name].some(name => botNamed(name))
+  if (draftStore.rankedBattles.includes(roomid)) return 'Classé · Draft'
+  if (draftStore.battles.includes(roomid)) return training ? 'Entraînement · Draft' : 'Draft amical'
+  return training ? 'Entraînement' : 'Combat libre'
+})
 const emit = defineEmits<{ forfeit: [], leave: [] }>()
 const { choice, options } = useBattleStage(() => props.battle.roomid)
 </script>

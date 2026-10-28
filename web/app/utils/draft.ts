@@ -16,6 +16,7 @@ export interface DraftView {
   picks: { id: string, mine: boolean, random: boolean }[]
   preselection: string | null
   ready: { mine: boolean, theirs: boolean }
+  ranked: boolean
 }
 
 export interface DraftAlert {

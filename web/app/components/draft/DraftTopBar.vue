@@ -2,7 +2,7 @@
   <div class="top">
     <div class="top__title">
       <span class="top__diamond" />
-      <span class="top__name">Classé PokéDraft</span>
+      <span class="top__name">{{ modeName }}</span>
       <span class="top__season">Saison {{ roster.saison }} · {{ draft.you }} contre {{ draft.opponent }}</span>
     </div>
     <ol aria-label="Étapes" class="steps">
@@ -23,6 +23,12 @@
 import type { DraftView } from '~/utils/draft'
 
 const props = defineProps<{ draft: DraftView, seconds: number }>()
+const { botNamed } = useTraining()
+
+const modeName = computed(() => {
+  if (props.draft.ranked) return 'Classé PokéDraft'
+  return botNamed(props.draft.opponent) ? 'Entraînement PokéDraft' : 'Draft amical'
+})
 const emit = defineEmits<{ quit: [] }>()
 const step = computed(() => draftStep(props.draft.phase))
 </script>

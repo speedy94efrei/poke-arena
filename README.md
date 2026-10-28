@@ -44,6 +44,25 @@ ARENE_API_URL=http://localhost:8088/api ARENE_API_SECRET=<le secret de api/.env>
 
 Sans ces variables, tout fonctionne mais aucun draft n'est compté.
 
+### Bots d'entraînement
+
+Le serveur de combat lance lui-même ses bots d'entraînement, quelques secondes après son démarrage : des joueurs connectés en local, comme n'importe quel client, qui acceptent les défis de combat libre et de draft. Leurs pseudos sont réservés (personne d'autre ne peut les prendre), et `ARENE_TRAINING_BOTS=0` les désactive. Rien n'est classé.
+
+| Bot | Ce qu'il fait |
+|---|---|
+| Bot Niveau 1 | attaque au hasard, ne change jamais de Pokémon |
+| Bot Niveau 2 | choisit l'attaque qui fait le plus de dégâts |
+| Bot Niveau 3 | change de Pokémon avant de tomber ou face à un mur, pose les pièges, se soigne, garde la Téra pour la fin |
+| Bot Niveau 4 | prend les KO (attaques prioritaires comprises), se booste quand il est tranquille, inflige des statuts, pose la météo ou Distorsion qui sert son équipe, anticipe les changements |
+| Bot Niveau 5 | les règles du niveau 4, puis compare chaque attaque et chaque changement avec la meilleure riposte probable |
+| Bot Pluie, Bot Stall, Bot Distorsion, Bot Hyper Offense | niveau 4, avec une équipe piochée d'abord dans l'archétype du roster ; ils ajoutent Danse Pluie ou Distorsion aux sets qui l'apprennent |
+
+L'IA (`server/server/chat-plugins/entrainement/`) suit le journal du combat et estime les dégâts avec les données du format ; elle suppose que l'adversaire joue le set par défaut de sa fiche, corrigé au fil des attaques révélées. En draft, les bots bannissent et piquent selon leur niveau. Un bot ne peut être que dans un draft à la fois, mais joue jusqu'à 10 combats libres en même temps.
+
+Les tests (`server/test/sim/pokedraft/entrainement.js`) font notamment jouer de vrais combats au simulateur : le niveau 5 doit battre le niveau 1. Sur 30 combats miroirs avec la même équipe, chaque niveau bat le précédent plus souvent qu'il ne perd (niveau 5 contre niveau 4 : environ 19 sur 30).
+
+En production, avec un vrai serveur de connexion, ces pseudos devront correspondre à des comptes enregistrés.
+
 ### Effets des fiches
 
 Dans `server/data/mods/pokedraft/`, `pokedex.ts`, `abilities.ts`, `moves.ts` et `movepool.ts` sont générés depuis le roster (voir [data/README.md](data/README.md)). Les effets des talents et des signatures s'écrivent à la main dans `effets-talents.ts` et `effets-attaques.ts`, avec un test par effet dans `server/test/sim/pokedraft/`. Pour lancer ces tests seuls, depuis `server/` :
@@ -144,6 +163,7 @@ Pages disponibles :
 - `/pokedraft/codex` : le Codex, les 50 fiches de la saison lues dans `data/rosters/roster-saison-1.json`. Vue par génération ou par archétype, filtres, comparaison de deux fiches, movepool complet et infobulle sur chaque attaque. « Copier dans l'Atelier » y crée une variante à partir du set par défaut ;
 - `/pokedraft/atelier` : l'Atelier, jusqu'à 3 variantes par Pokémon. Le talent est fixe ; on choisit les 4 attaques dans le movepool (les attaques refusées par le format sont grisées) et l'objet parmi 96, avec une recherche sur le nom et l'effet, des filtres par usage et les objets recommandés par Smogon en tête. Un tableau règle la nature (▲ et ▼ sur les stats), les EV (curseur ou saisie, 510 au plus) et l'IV de chaque stat (31 ou 0), avec les stats finales au niveau 100. Sans compte, les variantes sont gardées dans le navigateur (`localStorage`). Connecté, elles sont enregistrées sur le compte peu après chaque modification, et l'indicateur en haut de page dit où elles en sont ; à la connexion, celles du navigateur rejoignent le compte (le compte garde sa version pour les Pokémon qu'il a déjà réglés) ;
 - `/pokedraft/draft` : le salon du draft (recherche d'une partie classée, défis amicaux), puis `/pokedraft/draft/<id>` pour le draft lui-même : bans, picks avec aide (archétypes, menaces, lanceurs indisponibles), préparation des sets, puis lancement du combat ;
+- `/pokedraft/entrainement` : l'entraînement contre les bots du serveur de combat. Combat libre (ton équipe de l'Atelier) ou draft complet, niveau 1 à 5 ou bot à thème ; « Rejouer contre ce bot » en fin de combat y ramène ;
 - `/pokedraft/combat` : le combat libre contre le serveur local (voir plus bas). Chaque Pokémon de l'équipe part avec sa variante favorite, ou le set par défaut s'il n'en a pas ; un menu par Pokémon permet d'en choisir une autre.
 
 ### Tester un combat ou un draft
@@ -153,7 +173,7 @@ Pages disponibles :
 3. Dans chacune, choisis un pseudo. En combat libre, choisis aussi une équipe de 6 parmi le roster (variantes de l'Atelier ou sets par défaut des fiches).
 4. Défie l'autre pseudo, ou lance la recherche dans les deux fenêtres.
 
-Pour tester seul, lance le bot depuis `web/` puis défie **Bot Test** :
+Pour tester seul, le plus simple est l'entraînement (`/pokedraft/entrainement`). Le bot de test reste utile pour le draft classé : lance-le depuis `web/` puis défie **Bot Test** :
 
 ```bash
 npm run bot

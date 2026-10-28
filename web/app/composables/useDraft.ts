@@ -24,6 +24,7 @@ interface DraftStore {
   challengedBy: string[]
   battle: string
   battles: string[]
+  rankedBattles: string[]
   cancelled: string
   event: DraftEvent | null
 }
@@ -31,7 +32,7 @@ interface DraftStore {
 const store = reactive<DraftStore>({
   account: { ranked: false, verified: false, name: null },
   results: {},
-  draft: null, deadline: 0, searching: false, challengeTo: null, challengedBy: [], battle: '', battles: [], cancelled: '', event: null,
+  draft: null, deadline: 0, searching: false, challengeTo: null, challengedBy: [], battle: '', battles: [], rankedBattles: [], cancelled: '', event: null,
 })
 let eventCounter = 0
 let registered = false
@@ -99,6 +100,7 @@ function handle(payload: string) {
     case 'battle':
       store.battle = message.roomid
       store.battles.push(message.roomid)
+      if (message.ranked) store.rankedBattles.push(message.roomid)
       store.draft = null
       break
   }

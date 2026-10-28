@@ -8,6 +8,7 @@
       </span>
       <div class="end__buttons">
         <button type="button" class="btn btn--primary" @click="emit('leave')">Retour au salon</button>
+        <button v-if="opponentBot" type="button" class="btn" @click="emit('replay', opponentBot.key)">↻ Rejouer contre ce bot</button>
       </div>
     </div>
     <div class="end__team">
@@ -21,9 +22,12 @@ import type { BattleState } from '~/utils/battleTracker'
 import type { Stage } from '~/utils/stages'
 
 const props = defineProps<{ battle: BattleState, stage: Stage, me: string }>()
-const emit = defineEmits<{ leave: [] }>()
+const emit = defineEmits<{ leave: [], replay: [bot: string] }>()
 const { store: draft } = useDraft()
 const { refresh } = useAccount()
+const { botNamed } = useTraining()
+
+const opponentBot = computed(() => botNamed(props.battle.sides[props.battle.mySide === 'p2' ? 'p1' : 'p2'].name))
 
 const ranked = computed(() => draft.results[props.battle.roomid])
 watch(ranked, (result) => {
@@ -36,7 +40,7 @@ const survivors = computed(() => winnerSide.value ? props.battle.sides[winnerSid
 const title = computed(() => !props.battle.winner ? 'Égalité' : won.value ? 'Victoire !' : 'Défaite…')
 const subtitle = computed(() => {
   const remaining = survivors.value.length
-  return `${props.battle.winner || 'Personne'} gagne en ${props.battle.turn} tours · ${remaining} Pokémon debout`
+  return `${props.battle.winner || 'Personne'} gagne en ${props.battle.turn} tour${props.battle.turn > 1 ? 's' : ''} ·${remaining} Pokémon debout`
 })
 </script>
 
