@@ -37,6 +37,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return HasMany<AtelierVariant, $this>
+     */
+    public function atelierVariants(): HasMany
+    {
+        return $this->hasMany(AtelierVariant::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

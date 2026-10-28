@@ -183,6 +183,43 @@ export function normalizeVariant(pokemon: Pokemon, raw: unknown, index: number):
   }
 }
 
+export interface ApiVariant {
+  name: string
+  item: string
+  nature: string
+  moves: (string | null)[]
+  evs: Evs
+  ivs: Evs
+  favorite: boolean
+  preset: PresetId | null
+}
+
+export function toApiVariant(variant: Variante): ApiVariant {
+  return {
+    name: variant.nom.slice(0, 30),
+    item: variant.objetId,
+    nature: variant.natureId,
+    moves: variant.attaquesIds,
+    evs: variant.evs,
+    ivs: variant.ivs,
+    favorite: variant.favorite,
+    preset: variant.preset,
+  }
+}
+
+export function fromApiVariant(variant: ApiVariant): Partial<Variante> {
+  return {
+    nom: variant.name,
+    objetId: variant.item,
+    natureId: variant.nature,
+    attaquesIds: variant.moves,
+    evs: variant.evs,
+    ivs: variant.ivs,
+    favorite: variant.favorite,
+    preset: variant.preset,
+  }
+}
+
 export function finalStat(pokemon: Pokemon, variant: Variante, stat: StatId): number {
   const base = pokemon.stats[STATS.find(s => s.id === stat)!.key]
   const core = 2 * base + variant.ivs[stat] + Math.floor(variant.evs[stat] / 4)

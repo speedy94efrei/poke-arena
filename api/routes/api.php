@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AtelierVariantController;
 use App\Http\Controllers\Auth\RegisteredPlayerController;
 use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\CurrentSeasonController;
@@ -30,6 +31,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [MeController::class, 'show'])->name('me.show');
     Route::put('/me/banner', [EquippedBannerController::class, 'update'])->name('me.banner.update');
     Route::post('/me/showdown-tokens', [ShowdownTokenController::class, 'store'])->name('me.showdown-tokens.store');
+    Route::get('/me/atelier-variants', [AtelierVariantController::class, 'index'])->name('me.atelier-variants.index');
+    Route::post('/me/atelier-variants/import', [AtelierVariantController::class, 'import'])->name('me.atelier-variants.import');
+    Route::put('/me/atelier-variants/{pokemon}', [AtelierVariantController::class, 'update'])->where('pokemon', '[a-z0-9]{1,40}')->name('me.atelier-variants.update');
 });
 
 Route::prefix('internal')->name('internal.')->middleware(EnsureInternalRequest::class)->group(function () {

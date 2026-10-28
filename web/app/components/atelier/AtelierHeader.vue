@@ -39,7 +39,7 @@
         <button v-if="saved" type="button" class="tab tab--danger" @click="emit('remove')">Supprimer</button>
       </div>
       <span class="head__note">
-        {{ saved ? 'Les modifications sont enregistrées automatiquement dans ce navigateur.' : 'Set par défaut de la fiche, prérempli. Toute modification crée la variante 1.' }}
+        {{ saved ? 'Les modifications sont enregistrées automatiquement.' : 'Set par défaut de la fiche, prérempli. Toute modification crée la variante 1.' }}
       </span>
     </div>
   </div>

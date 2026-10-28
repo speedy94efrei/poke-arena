@@ -5,7 +5,13 @@
         <h1 class="atelier__title">Atelier PokéDraft</h1>
         <span class="atelier__subtitle">Jusqu'à {{ MAX_VARIANTES }} variantes par Pokémon. La favorite est prise par défaut dans ton équipe de combat.</span>
       </div>
+      <AtelierSync />
       <span class="atelier__ready"><span class="atelier__check">✓</span><b>{{ readyCount }}</b>/{{ roster.pokemon.length }} prêts</span>
+    </div>
+
+    <div v-if="notice" role="status" class="notice">
+      <span>{{ notice }}</span>
+      <button type="button" class="notice__close" aria-label="Fermer" @click="notice = ''">✕</button>
     </div>
 
     <div class="atelier__body">
@@ -63,7 +69,7 @@ import type { Variante } from '~/utils/atelier'
 
 const route = useRoute()
 const router = useRouter()
-const { store, variants, update: save, addVariant, duplicate, remove, setFavorite } = useAtelier()
+const { store, notice, variants, update: save, addVariant, duplicate, remove, setFavorite } = useAtelier()
 
 useHead({ title: 'Atelier · PokéDraft' })
 
@@ -178,6 +184,21 @@ onBeforeUnmount(() => clearTimeout(toastTimer))
   align-items: center;
   gap: 6px;
 }
+
+.notice {
+  padding: 8px 8px 8px 14px;
+  border-radius: var(--r);
+  background: #16301f;
+  box-shadow: inset 0 0 0 2px #58d080, 0 0 0 2px var(--bd);
+  font: 700 13px/1.4 'Atkinson Hyperlegible', sans-serif;
+  color: #d8f5e0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.notice span { flex: 1; }
+.notice__close { border: 0; background: none; color: inherit; font-size: 14px; cursor: pointer; padding: 4px 6px; }
 
 .atelier__ready b { font: 600 15px 'Pixelify Sans', sans-serif; }
 .atelier__check { color: #58d080; }
