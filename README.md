@@ -288,6 +288,10 @@ Sans eux, le site se rabat sur les décors en ligne de Showdown.
 
 Voir [data/README.md](data/README.md).
 
+## Tests automatiques
+
+À chaque push sur `main` et à chaque pull request, GitHub Actions (`.github/workflows/tests.yml`) lance trois jobs en parallèle : le serveur de combat (build, typecheck, tests de `test/sim/pokedraft/`), le site (`nuxi typecheck`) et l'API (`php artisan test`, avec SQLite en mémoire). Le workflow se relance aussi à la main depuis l'onglet Actions du dépôt.
+
 ## Mettre à jour Showdown
 
 `server/` suit le dépôt officiel `smogon/pokemon-showdown` par un subtree git :
