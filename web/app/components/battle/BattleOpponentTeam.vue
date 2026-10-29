@@ -1,6 +1,6 @@
 <template>
-  <section class="opp" aria-label="Équipe adverse">
-    <header class="opp__head"><span>Équipe adverse</span><span class="opp__summary">{{ summary }}</span></header>
+  <section class="opp" :aria-label="title ?? 'Équipe adverse'">
+    <header class="opp__head"><span>{{ title ?? 'Équipe adverse' }}</span><span class="opp__summary">{{ summary }}</span></header>
     <div class="opp__grid">
       <div
         v-for="(tile, index) in tiles"
@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import type { BattlePokemon, BattleState, SideId } from '~/utils/battleTracker'
 
-const props = defineProps<{ battle: BattleState, side: SideId }>()
+const props = defineProps<{ battle: BattleState, side: SideId, title?: string }>()
 const calc = inject(BATTLE_CALC)
 const hovered = ref(-1)
 

@@ -68,7 +68,7 @@
           <p v-if="!history.length" class="empty">Tes combats Classique apparaîtront ici.</p>
           <div v-for="entry in history.slice(0, 5)" :key="entry.roomid" class="played">
             <span class="played__result" :class="`played__result--${entry.result}`">{{ RESULTS[entry.result] }}</span>
-            <span class="played__text"><b>contre {{ entry.opponent }}</b><span>{{ formatLabel(entry.formatName) }} · {{ relativeDate(entry.at) }} · {{ entry.turns }} tour{{ entry.turns > 1 ? 's' : '' }}</span></span>
+            <span class="played__text"><b>contre {{ entry.opponent }}</b><span>{{ formatLabel(entry.formatName) }} · {{ relativeDate(entry.at) }} · {{ entry.turns }} tour{{ entry.turns > 1 ? 's' : '' }} · <NuxtLink :to="replayLink(entry.roomid)" class="played__replay">▶ Revoir</NuxtLink></span></span>
           </div>
         </div>
       </section>
@@ -217,6 +217,7 @@ watch([format, connected], async () => {
 .played__result--egalite { background: #6a7080; }
 .played__text { display: flex; flex-direction: column; min-width: 0; font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
 .played__text b { font: 700 13px 'Nunito', sans-serif; color: var(--tx); }
+.played__replay { color: var(--ac); }
 .empty { margin: 0; font: 700 13px/1.45 'Nunito', sans-serif; color: var(--mu); }
 
 @media (max-width: 1000px) {

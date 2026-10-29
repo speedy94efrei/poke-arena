@@ -33,6 +33,7 @@ export const NAVIGATION: Record<Universe, NavItem[]> = {
         { label: 'Tournois et événements', to: '/classique/tournois' },
         { label: 'Créer un tournoi', to: '/classique/tournois/creer' },
         { label: 'Chat et social', to: '/classique/chat' },
+        { label: 'Replays', to: '/classique/replays' },
       ],
     },
     {
@@ -51,6 +52,7 @@ export const NAVIGATION: Record<Universe, NavItem[]> = {
     { icon: 'D', label: 'Classé · Draft', color: '#c8362a', to: '/pokedraft/draft' },
     { icon: '⚔', label: 'Combat libre et défis', color: '#3d6fc8', to: '/pokedraft/combat' },
     { icon: '★', label: 'Classement et saison', color: '#3f8fa3', to: '/pokedraft/classement' },
+    { icon: '▶', label: 'Replays', color: '#7a52c8', to: '/pokedraft/replays' },
   ],
   roguelike: [
     { icon: '▲', label: 'Accueil', color: '#7a52c8', to: '/roguelike' },

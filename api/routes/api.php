@@ -9,6 +9,7 @@ use App\Http\Controllers\Internal;
 use App\Http\Controllers\LadderController;
 use App\Http\Controllers\MeController;
 use App\Http\Controllers\PlayerController;
+use App\Http\Controllers\ReplayController;
 use App\Http\Controllers\SeasonDuoController;
 use App\Http\Controllers\SeasonPokemonStatController;
 use App\Http\Controllers\ShowdownTokenController;
@@ -25,6 +26,8 @@ Route::get('/seasons/current/pokemon-stats', [SeasonPokemonStatController::class
 Route::get('/seasons/current/duos', [SeasonDuoController::class, 'index'])->name('seasons.current.duos');
 Route::get('/seasons/current/ladder', [LadderController::class, 'index'])->name('seasons.current.ladder');
 Route::get('/players/{user:showdown_id}', [PlayerController::class, 'show'])->name('players.show');
+Route::get('/replays', [ReplayController::class, 'index'])->name('replays.index');
+Route::get('/replays/{replay}', [ReplayController::class, 'show'])->name('replays.show');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/session', [SessionController::class, 'destroy'])->name('session.destroy');
@@ -41,4 +44,5 @@ Route::prefix('internal')->name('internal.')->middleware(EnsureInternalRequest::
     Route::get('/players/{user:showdown_id}/queue-status', [Internal\QueueStatusController::class, 'show'])->name('players.queue-status');
     Route::post('/battles', [Internal\BattleController::class, 'store'])->name('battles.store');
     Route::post('/abandons', [Internal\AbandonController::class, 'store'])->name('abandons.store');
+    Route::post('/replays', [Internal\ReplayController::class, 'store'])->name('replays.store');
 });

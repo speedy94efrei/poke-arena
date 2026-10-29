@@ -6,8 +6,9 @@
       <span v-if="ranked" class="end__ranked" :class="ranked.points_delta >= 0 ? 'end__ranked--up' : 'end__ranked--down'">
         Classé : {{ ranked.points_delta >= 0 ? '+' : '−' }}{{ Math.abs(ranked.points_delta) }} PL<template v-if="ranked.note"> · {{ ranked.note }}</template>
       </span>
-      <div class="end__buttons">
+      <div v-if="!replay" class="end__buttons">
         <button type="button" class="btn btn--primary" @click="emit('leave')">Retour au salon</button>
+        <NuxtLink :to="replayLink(battle.roomid)" class="btn">Revoir le combat</NuxtLink>
       </div>
     </div>
     <div class="end__team">
@@ -20,7 +21,7 @@
 import type { BattleState } from '~/utils/battleTracker'
 import type { Stage } from '~/utils/stages'
 
-const props = defineProps<{ battle: BattleState, stage: Stage, me: string }>()
+const props = defineProps<{ battle: BattleState, stage: Stage, me: string, replay?: boolean }>()
 const emit = defineEmits<{ leave: [] }>()
 const { store: draft } = useDraft()
 const { refresh } = useAccount()
@@ -35,10 +36,14 @@ const names = (text: string) => text.split(' & ').map(toId).sort().join('+')
 const won = computed(() => props.battle.winner.split(' & ').some(name => toId(name) === toId(props.me)))
 const winnerSide = computed(() => (['p1', 'p2'] as const).find(side => names(props.battle.sides[side].name) === names(props.battle.winner)))
 const survivors = computed(() => winnerSide.value ? props.battle.sides[winnerSide.value].team.filter(p => !p.fainted) : [])
-const title = computed(() => !props.battle.winner ? 'Égalité' : won.value ? 'Victoire !' : 'Défaite…')
+const title = computed(() => {
+  if (!props.battle.winner) return 'Égalité'
+  if (!props.battle.mySide) return 'Fin du combat'
+  return won.value ? 'Victoire !' : 'Défaite…'
+})
 const subtitle = computed(() => {
   const remaining = survivors.value.length
-  return `${props.battle.winner || 'Personne'} gagne en ${props.battle.turn} tour${props.battle.turn > 1 ? 's' : ''} ·${remaining} Pokémon debout`
+  return `${props.battle.winner || 'Personne'} gagne en ${props.battle.turn} tour${props.battle.turn > 1 ? 's' : ''} · ${remaining} Pokémon debout`
 })
 </script>
 

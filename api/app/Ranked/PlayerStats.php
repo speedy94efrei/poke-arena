@@ -81,6 +81,7 @@ class PlayerStats
                 },
                 'points_delta' => $event?->points_delta,
                 'note' => $event?->note,
+                'room_id' => $battle->room_id,
                 'turns' => $battle->turns,
                 'opponent' => ['name' => $opponent->name, 'showdown_id' => $opponent->showdown_id],
                 'team' => $battle->draftChoices->where('user_id', $userId)->pluck('pokemon')->values(),

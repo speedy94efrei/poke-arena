@@ -71,7 +71,7 @@
             <span class="draft__result" :style="{ color: draft.color }">{{ draft.label }}</span>
             <span class="draft__who">
               <span>contre <NuxtLink :to="playerPath(draft.opponent.showdown_id)" class="draft__opponent">{{ draft.opponent.name }}</NuxtLink></span>
-              <span class="draft__when">{{ relativeDate(draft.at) }} · {{ draft.turns }} tour{{ draft.turns > 1 ? 's' : '' }}<template v-if="draft.note"> · {{ draft.note }}</template></span>
+              <span class="draft__when">{{ relativeDate(draft.at) }} · {{ draft.turns }} tour{{ draft.turns > 1 ? 's' : '' }}<template v-if="draft.note"> · {{ draft.note }}</template> · <NuxtLink :to="replayLink(draft.room_id)" class="draft__replay">▶ Revoir</NuxtLink></span>
             </span>
             <span class="draft__teams">
               <span class="draft__team">
@@ -308,6 +308,7 @@ watch(() => String(route.params.id), load, { immediate: true })
 .draft__who { display: flex; flex-direction: column; min-width: 0; font: 700 13px 'Nunito', sans-serif; }
 .draft__opponent { color: var(--tx); }
 .draft__when { font: 700 11px 'Nunito', sans-serif; color: var(--mu); }
+.draft__replay { color: var(--ac); }
 .draft__teams { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; min-width: 0; }
 .draft__team { flex: none; display: flex; gap: 2px; }
 .draft__team--opponent { opacity: .75; }

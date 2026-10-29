@@ -52,6 +52,7 @@ export interface Profile extends PlayerCard {
 }
 
 export interface PlayerDraft {
+  room_id: string
   result: 'victoire' | 'defaite' | 'egalite'
   points_delta: number | null
   note: string | null

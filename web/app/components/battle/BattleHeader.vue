@@ -32,14 +32,14 @@
       </select>
     </label>
     <button v-if="!battle.ended && battle.mySide" type="button" class="btn btn--danger" @click="emit('forfeit')">Abandonner</button>
-    <button v-else type="button" class="btn" @click="emit('leave')">Retour au salon</button>
+    <button v-else type="button" class="btn" @click="emit('leave')">{{ replay ? 'Retour' : 'Retour au salon' }}</button>
   </header>
 </template>
 
 <script setup lang="ts">
 import type { BattleState, SideId } from '~/utils/battleTracker'
 
-const props = defineProps<{ battle: BattleState }>()
+const props = defineProps<{ battle: BattleState, replay?: boolean }>()
 const emit = defineEmits<{ forfeit: [], leave: [] }>()
 const { store: draftStore } = useDraft()
 const { help, beginner } = useBattleHelp()
@@ -49,6 +49,7 @@ const LEVELS = ['', 'Débutant', 'Facile', 'Moyen', 'Difficile', 'Expert']
 
 const modeInfo = computed(() => {
   const roomid = props.battle.roomid
+  if (props.replay) return { badge: 'REPLAY', text: 'Combat terminé', color: '#7a52c8' }
   if (draftStore.rankedBattles.includes(roomid)) return { badge: 'CLASSÉ', text: 'Draft', color: '#c8362a' }
   if (draftStore.battles.includes(roomid)) return { badge: 'DRAFT', text: 'Amical', color: '#3d6fc8' }
   if (props.battle.format.includes('roguelike')) return { badge: 'ROGUELIKE', text: props.battle.gameType === 'multi' ? 'Coop' : 'Run', color: '#7a52c8' }
