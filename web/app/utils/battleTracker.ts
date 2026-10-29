@@ -86,6 +86,8 @@ export interface ShowdownRequest {
   forceSwitch?: boolean[]
   active?: RequestActive[]
   side: { name: string, id: SideId, pokemon: RequestPokemon[] }
+  /** Route des Ligues : objets du sac encore utilisables ce combat (`item <objet> <emplacement>`). */
+  bag?: { id: string, name: string, kind: 'potion' | 'revive', count: number }[]
 }
 
 export interface BattleState {
@@ -657,6 +659,14 @@ export function applyLine(state: BattleState, line: string) {
     case '-message':
       addLine(state, 'info', args[0] ?? '')
       break
+    case 'bagitem': {
+      // Route des Ligues : objet du sac utilisé (« |bagitem|p1|Potion|p1a: Pikachu »), son effet suit en -heal.
+      const { side: player } = sideOf(args[0] ?? 'p1')
+      const { side, pokemon } = pokemonFrom(state, args[2] ?? '')
+      const item = Object.values(BAG_ITEMS).find(entry => entry.anglais === args[1])?.nom ?? args[1] ?? ''
+      addLine(state, 'item', `${state.sides[player].name || 'Le joueur'} utilise ${item} sur ${displayName(state, side, pokemon)} !`)
+      break
+    }
     case 'turn': {
       state.turn = Number(args[0] ?? 0)
       state.log.push({ turn: state.turn, lines: [] })

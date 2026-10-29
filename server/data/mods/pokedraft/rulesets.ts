@@ -2,6 +2,37 @@
 // Elle est posée à la première entrée en jeu, quand tous les Pokémon de départ sont sur le terrain.
 const TALENTS_D_EQUIPE = ['sagedelaforet', 'majordome'];
 
+/**
+ * PV (en %) et statut de départ des Pokémon des joueurs (camps p1 et p3), gardés du combat précédent :
+ * « 64brn.100/100.38par », un groupe par joueur, un code par Pokémon dans l'ordre de l'équipe ; 0 pour un Pokémon K.O.
+ */
+export function applyKeptHp(battle: Battle, value: string) {
+	const players = battle.sides.filter(side => side.n % 2 === 0);
+	value.split('/').forEach((entry, index) => {
+		const side = players[index];
+		if (!side) return;
+		entry.split('.').forEach((slot, position) => {
+			const pokemon = side.pokemon[position];
+			const match = /^(\d+)(brn|par|psn|tox|slp|frz)?$/.exec(slot);
+			if (!pokemon || !match) return;
+			if (Number(match[1]) === 0) {
+				// K.O. au combat précédent (Ligue de la Route des Ligues) : il reste K.O., jamais en tête d'équipe.
+				pokemon.hp = 0;
+				pokemon.fainted = true;
+				side.pokemonLeft--;
+				return;
+			}
+			pokemon.hp = Math.max(1, Math.min(pokemon.maxhp, Math.ceil(pokemon.maxhp * Number(match[1]) / 100)));
+			const status = match[2] as ID | undefined;
+			if (!status) return;
+			pokemon.status = status;
+			pokemon.statusState = battle.initEffectState({ id: status, target: pokemon });
+			if (status === 'slp') pokemon.statusState.startTime = pokemon.statusState.time = battle.random(2, 5);
+			if (status === 'tox') pokemon.statusState.stage = 0;
+		});
+	});
+}
+
 export const Rulesets: import('../../../sim/dex-formats').ModdedFormatDataTable = {
 	pokedraftmod: {
 		effectType: 'Rule',
@@ -27,24 +58,7 @@ export const Rulesets: import('../../../sim/dex-formats').ModdedFormatDataTable 
 			if (!/^[0-9a-z./]+$/.test(value)) throw new Error(`Roguelike PV : valeur invalide « ${value} ».`);
 		},
 		onBegin() {
-			const value = this.ruleTable.valueRules.get('roguelikepv') ?? '';
-			const players = this.sides.filter(side => side.n % 2 === 0);
-			value.split('/').forEach((entry, index) => {
-				const side = players[index];
-				if (!side) return;
-				entry.split('.').forEach((slot, position) => {
-					const pokemon = side.pokemon[position];
-					const match = /^(\d+)(brn|par|psn|tox|slp|frz)?$/.exec(slot);
-					if (!pokemon || !match) return;
-					pokemon.hp = Math.max(1, Math.min(pokemon.maxhp, Math.ceil(pokemon.maxhp * Number(match[1]) / 100)));
-					const status = match[2] as ID | undefined;
-					if (!status) return;
-					pokemon.status = status;
-					pokemon.statusState = this.initEffectState({ id: status, target: pokemon });
-					if (status === 'slp') pokemon.statusState.startTime = pokemon.statusState.time = this.random(2, 5);
-					if (status === 'tox') pokemon.statusState.stage = 0;
-				});
-			});
+			applyKeptHp(this, this.ruleTable.valueRules.get('roguelikepv') ?? '');
 		},
 	},
 	roguelikeboss: {

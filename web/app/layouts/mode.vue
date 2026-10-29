@@ -2,7 +2,9 @@
   <div class="shell">
     <div class="shell__frame">
       <AppTopBar />
-      <ModeTabs />
+      <ModeTabs>
+        <RouteStatusChip v-if="onRoute" />
+      </ModeTabs>
       <main class="shell__main">
         <slot />
       </main>
@@ -10,6 +12,11 @@
     <ShowdownNotices />
   </div>
 </template>
+
+<script setup lang="ts">
+const route = useRoute()
+const onRoute = computed(() => route.path.startsWith('/route-des-ligues'))
+</script>
 
 <style scoped>
 .shell {

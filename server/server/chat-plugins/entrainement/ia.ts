@@ -7,7 +7,7 @@
  */
 import { Dex, toID, type ModdedDex } from '../../../sim/dex';
 import type { Move } from '../../../sim/dex-moves';
-import type { ChoiceRequest, MoveRequest, PokemonSwitchRequestData } from '../../../sim/side';
+import { BAG_ITEMS, type BagRequestData, type ChoiceRequest, type MoveRequest, type PokemonSwitchRequestData } from '../../../sim/side';
 import type { Archetype, Pokemon as RosterPokemon, Roster } from '../../../../data/types/roster';
 import { FORMAT, defaultSet } from '../pokedraft';
 import { search, type Analysis, type OptionChoice, type SearchInput } from './moteur';
@@ -57,10 +57,13 @@ export interface Fighter {
 	ability: string;
 	tera: string | null;
 	moves: string[];
+	/** Niveau du Pokémon (100 hors Route des Ligues et Roguelike). */
+	level?: number;
 }
 
 interface Tracked {
 	species: string;
+	level: number;
 	hp: number;
 	status: string;
 	moves: Set<string>;
@@ -113,6 +116,11 @@ function parseHp(condition: string) {
 
 function speciesOf(details: string) {
 	return toID(details.split(',')[0]);
+}
+
+/** Niveau dans les détails d'un Pokémon (« Pikachu, L38, M ») ; 100 quand il n'est pas précisé. */
+function levelOf(details: string) {
+	return Number(details.split(', ').find(part => /^L\d+$/.test(part))?.slice(1)) || 100;
 }
 
 export class TrainingAI {
@@ -180,7 +188,7 @@ export class TrainingAI {
 	private ensure(side: SideTrack, species: string): Tracked {
 		let mon = side.team.get(species);
 		if (!mon) {
-			mon = { species, hp: 1, status: '', moves: new Set(), tera: null, item: null };
+			mon = { species, level: 100, hp: 1, status: '', moves: new Set(), tera: null, item: null };
 			side.team.set(species, mon);
 		}
 		return mon;
@@ -200,13 +208,14 @@ export class TrainingAI {
 			break;
 		}
 		case 'poke':
-			this.ensure(this.side(target), speciesOf(value));
+			this.ensure(this.side(target), speciesOf(value)).level = levelOf(value);
 			break;
 		case 'switch': case 'drag': case 'replace': {
 			const side = this.side(target);
 			const species = speciesOf(value);
 			side.nicks.set(target.slice(target.indexOf(':') + 1).trim(), species);
 			const mon = this.ensure(side, species);
+			mon.level = levelOf(value);
 			const condition = parseHp(parts[3] ?? '100/100');
 			mon.hp = condition.hp;
 			mon.status = condition.status === 'fnt' ? '' : condition.status;
@@ -313,36 +322,39 @@ export class TrainingAI {
 		return this.turn(request);
 	}
 
-	statsFor(species: string): StatsTable {
-		const cached = this.statsCache.get(species);
+	statsFor(species: string, level = 100): StatsTable {
+		const key = `${species}:${level}`;
+		const cached = this.statsCache.get(key);
 		if (cached) return cached;
 		const data = this.dex.species.get(species);
 		const set = this.referenceSet(species) ?? this.referenceSet(toID(data.baseSpecies));
 		const nature = this.dex.natures.get(set?.nature ?? 'serious');
 		const stats = {} as StatsTable;
 		for (const stat of Object.keys(data.baseStats) as StatID[]) {
-			const core = 2 * data.baseStats[stat] + 31 + Math.floor((set?.evs[stat] ?? 84) / 4);
+			const core = Math.floor((2 * data.baseStats[stat] + 31 + Math.floor((set?.evs[stat] ?? 84) / 4)) * level / 100);
 			if (stat === 'hp') {
-				stats.hp = core + 110;
+				stats.hp = core + level + 10;
 			} else {
 				const modifier = nature.plus === stat ? 1.1 : nature.minus === stat ? 0.9 : 1;
 				stats[stat] = Math.floor((core + 5) * modifier);
 			}
 		}
-		this.statsCache.set(species, stats);
+		this.statsCache.set(key, stats);
 		return stats;
 	}
 
 	ourFighter(pokemon: PokemonSwitchRequestData): Fighter {
 		const species = speciesOf(pokemon.details);
+		const level = levelOf(pokemon.details);
 		const condition = parseHp(pokemon.condition);
 		const types = [...this.dex.species.get(species).types];
 		const tera = pokemon.terastallized || null;
 		return {
 			species,
+			level,
 			types: tera ? [tera] : types,
 			stabTypes: tera ? [...types, tera] : types,
-			stats: { hp: condition.max || this.statsFor(species).hp, ...pokemon.stats },
+			stats: { hp: condition.max || this.statsFor(species, level).hp, ...pokemon.stats },
 			hp: condition.hp,
 			status: condition.status === 'fnt' ? '' : condition.status,
 			boosts: pokemon.active ? this.side(this.me).boosts : {},
@@ -360,9 +372,10 @@ export class TrainingAI {
 		const moves = mon.moves.size >= 4 ? [...mon.moves] : [...new Set([...mon.moves, ...probable])];
 		return {
 			species: mon.species,
+			level: mon.level,
 			types: mon.tera ? [mon.tera] : types,
 			stabTypes: mon.tera ? [...types, mon.tera] : types,
-			stats: this.statsFor(mon.species),
+			stats: this.statsFor(mon.species, mon.level),
 			hp: mon.hp,
 			status: mon.status,
 			boosts: active ? this.side(this.foe).boosts : {},
@@ -392,7 +405,7 @@ export class TrainingAI {
 		if (!this.dex.getImmunity(type, defender.types)) return 0;
 		if (IMMUNE_ABILITIES[defender.ability] === type) return 0;
 		if (type === 'Ground' && defender.item === 'airballoon') return 0;
-		if (move?.damage === 'level') return 100 / defender.stats.hp;
+		if (move?.damage === 'level') return (attacker.level ?? 100) / defender.stats.hp;
 		if (typeof move?.damage === 'number') return move.damage / defender.stats.hp;
 		if (move && ['superfang', 'ruination', 'naturesmadness'].includes(move.id)) return defender.hp / 2;
 
@@ -409,7 +422,8 @@ export class TrainingAI {
 		if (this.weather === 'sandstorm' && defender.types.includes('Rock') && !physical) guard *= 1.5;
 		if (this.weather === 'snowscape' && defender.types.includes('Ice') && physical) guard *= 1.5;
 
-		let damage = Math.floor(Math.floor(42 * power * attack / guard) / 50) + 2;
+		const levelFactor = Math.floor(2 * (attacker.level ?? 100) / 5) + 2;
+		let damage = Math.floor(Math.floor(levelFactor * power * attack / guard) / 50) + 2;
 		if (attacker.stabTypes.includes(type)) {
 			damage *= attacker.tera === type && attacker.stabTypes.indexOf(type) !== attacker.stabTypes.lastIndexOf(type) ? 2 : 1.5;
 		}
@@ -870,5 +884,37 @@ export class MultiTrainingAI extends TrainingAI {
 		if (!['normal', 'any', 'adjacentFoe'].includes(move.target)) return choice;
 		const location = Number(this.focus.slice(1)) > 2 ? 2 : 1;
 		return `move ${match[1]} ${location}${match[2] ?? ''}`;
+	}
+}
+
+/** Sous ce seuil de PV, un Champion soigne son Pokémon actif avec une potion. */
+const POTION_THRESHOLD = 0.33;
+/** Un Champion n'utilise son Rappel que si son Pokémon actif peut encaisser le tour perdu. */
+const REVIVE_THRESHOLD = 0.7;
+
+/**
+ * Champion de la Route des Ligues : il joue comme l'IA de son niveau, et garde ses objets de sac pour le bon moment
+ * (2 potions et 1 Rappel par combat, comme le joueur) : une potion quand son Pokémon actif est bas, le Rappel quand
+ * un de ses Pokémon est K.O. et que l'actif est en forme.
+ */
+export class LeaderAI extends TrainingAI {
+	override decide(request: ChoiceRequest): string {
+		const choice = super.decide(request);
+		if (request.wait || request.teamPreview || request.forceSwitch) return choice;
+		return this.bagChoice(request, request.bag ?? []) ?? choice;
+	}
+
+	private bagChoice(request: MoveRequest, bag: BagRequestData[]): string | null {
+		if (!bag.length) return null;
+		const team = request.side.pokemon;
+		const active = team.findIndex(pokemon => pokemon.active);
+		if (active < 0) return null;
+		const condition = parseHp(team[active].condition);
+		const potions = bag.filter(item => item.kind === 'potion').sort((a, b) => BAG_ITEMS[b.id].amount - BAG_ITEMS[a.id].amount);
+		if (potions.length && condition.hp > 0 && condition.hp <= POTION_THRESHOLD) return `item ${potions[0].id} ${active + 1}`;
+		const revive = bag.find(item => item.kind === 'revive');
+		const fainted = team.findIndex(pokemon => parseHp(pokemon.condition).status === 'fnt');
+		if (revive && fainted >= 0 && condition.hp >= REVIVE_THRESHOLD) return `item ${revive.id} ${fainted + 1}`;
+		return null;
 	}
 }

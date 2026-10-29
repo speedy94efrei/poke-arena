@@ -1925,9 +1925,9 @@ export const Chat = new class {
 		for (const file of FS(dir).readdirSync()) {
 			const path = pathModule.join(dir, file);
 			if (FS(path).isDirectorySync()) {
-				depth++;
-				if (depth > MAX_PLUGIN_LOADING_DEPTH) continue;
-				this.loadPluginDirectory(path, depth);
+				// Arène : la profondeur compte les dossiers imbriqués, pas les dossiers voisins (le 4e dossier de plugins était ignoré).
+				if (depth + 1 > MAX_PLUGIN_LOADING_DEPTH) continue;
+				this.loadPluginDirectory(path, depth + 1);
 			} else {
 				try {
 					this.loadPluginFile(path);

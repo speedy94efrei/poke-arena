@@ -22,6 +22,9 @@
         <span v-if="mechanic.key === 'terastallize'" class="mechanic__gem" />
         {{ toggled === mechanic.key && mechanic.key === 'terastallize' ? `Téra ${frenchType(active?.canTerastallize ?? '')} activé` : mechanic.label }}
       </button>
+      <button v-if="bag.length && canMove" type="button" class="mechanic mechanic--bag" :aria-pressed="bagOpen" @click="bagOpen = !bagOpen; targeting = null">
+        🎒 Sac
+      </button>
     </div>
 
     <div v-if="targeting" class="targets">
@@ -33,6 +36,17 @@
         </button>
       </div>
       <button type="button" class="btn btn--small" @click="targeting = null">Retour</button>
+    </div>
+
+    <div v-else-if="bagOpen" class="targets">
+      <span class="targets__title">Sac · un objet prend ton tour (2 potions et 1 Rappel par combat)</span>
+      <div class="targets__list">
+        <button v-for="item in bag" :key="item.id" type="button" class="target" :disabled="!bagTargets(item.kind).length" @click="pickItem(item)">
+          <ItemIcon :id="item.id" :size="24" />
+          {{ BAG_ITEMS[item.id]?.nom ?? item.name }} ×{{ item.count }}
+        </button>
+      </div>
+      <button type="button" class="btn btn--small" @click="bagOpen = false">Retour aux attaques</button>
     </div>
 
     <div v-else class="moves" :class="{ 'moves--off': !canMove }">
@@ -192,7 +206,29 @@ watch(() => request.value?.rqid ?? request.value, () => {
   choices.value = []
   toggled.value = ''
   targeting.value = null
+  bagOpen.value = false
 })
+
+/** Route des Ligues : le sac, puis le Pokémon à soigner (debout et blessé) ou à ranimer (K.O.). */
+const bagOpen = ref(false)
+const bag = computed(() => request.value?.bag ?? [])
+const bagTargets = (kind: 'potion' | 'revive') => (request.value?.side.pokemon ?? [])
+  .map((member, index) => ({ member, index }))
+  .filter(({ member }) => {
+    if (kind === 'revive') return isFainted(member)
+    const [hp = '0'] = member.condition.split(' ')
+    const [currentHp = '0', max = '0'] = hp.split('/')
+    return !isFainted(member) && Number(currentHp) < Number(max)
+  })
+  .map(({ member, index }) => ({
+    value: index + 1,
+    label: `${speciesName(speciesOf(member), member.ident.split(': ')[1] ?? '')} · ${isFainted(member) ? 'K.O.' : member.condition.split(' ')[0]}`,
+    speciesId: speciesOf(member),
+  }))
+const pickItem = (item: { id: string, name: string, kind: 'potion' | 'revive' }) => {
+  if (!canMove.value) return
+  targeting.value = { name: BAG_ITEMS[item.id]?.nom ?? item.name, command: `item ${item.id}`, suffix: '', options: bagTargets(item.kind) }
+}
 
 const mechanics = computed(() => {
   const data = active.value
@@ -412,6 +448,7 @@ const pickMove = (index: number, disabled: boolean) => {
 
 .mechanic--tera { background: var(--sel); color: var(--selTx); }
 .mechanic--on { background: #60a1b8; color: #fff; }
+.mechanic--bag[aria-pressed="true"] { background: #4cc46a; color: #06210f; }
 .mechanic__gem { width: 14px; height: 14px; transform: rotate(45deg); background: linear-gradient(135deg, #bfe6f2, #60a1b8); border: 2px solid #fff; box-sizing: border-box; }
 .moves { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .moves--off, .bench--off { opacity: .45; pointer-events: none; }

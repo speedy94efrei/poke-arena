@@ -12,6 +12,8 @@ export interface BotProfile {
 	name: string;
 	level: Level;
 	theme?: Archetype;
+	/** Champion de la Route des Ligues : il ne joue que les combats lancés par le serveur et refuse les défis. */
+	leader?: boolean;
 }
 
 export const BOTS: BotProfile[] = [

@@ -92,6 +92,14 @@ Le moteur est dans `server/server/chat-plugins/roguelike/` : `generateur.ts` tir
 
 En coop, deux joueurs montent la même tour en combat multi (2 contre 2 bots) : 3 Pokémon chacun, les jetons en commun, une récompense par joueur, et la run s'arrête quand l'un des deux n'a plus de Pokémon. Une invitation part de l'accueil du mode ; le combat commence quand les deux sont prêts. Les bots du multi (`MultiTrainingAI`, dans `entrainement/ia.ts`) visent l'adversaire qu'ils blessent le plus.
 
+### Route des Ligues
+
+Le joueur traverse les régions dans l'ordre et y affronte les 8 Champions d'Arène, le Conseil 4 et le Maître, d'après le document de design (Kanto pour commencer). En arrivant dans une région, il reçoit 12 Pokémon tirés dans le Pokédex de la région (numéros nationaux de la région, formes de base, au moins un starter, ni légendaire ni fabuleux, 2 par type principal au plus, seulement des Pokémon qui évoluent ou qui sont déjà forts) et en garde 6. C'est le badge qui fait monter le niveau (15, 21, 26… 50, 60 pour le Conseil 4, 65 pour le Maître) ; après chaque badge, les Pokémon qui ont atteint leur niveau d'évolution évoluent (le joueur peut refuser), les pierres viennent des récompenses, et les évolutions par échange ou par bonheur arrivent aux badges 6 et 5. Un Pokémon connaît les attaques de sa lignée jusqu'à son niveau, plus les CT débloquées qu'il peut apprendre ; le joueur en choisit 4 avant chaque combat.
+
+Les Pokédollars (1 000 × n pour l'arène n, 5 000 par membre du Conseil, 15 000 pour le Maître, gardés pour la région suivante) servent à la boutique. En combat, 2 potions et 1 Rappel au plus, comme les Champions, qui les gardent pour le bon moment. L'équipe est soignée entre deux combats, sauf pendant le Conseil 4, joué à la suite (elle l'est avant le Maître). Une défaite contre un Champion, le Conseil ou le Maître fait recommencer la région avec un nouveau banc et 0 Pokédollar ; le Maître laisse un essai de plus. Une région terminée reste validée.
+
+Côté serveur, `server/server/chat-plugins/route/` mène la Route (`donnees.ts` : règles pures et tirage d'après une seed ; `index.ts` : progression, combats, boutique, échanges) et l'enregistre dans `server/config/route-des-ligues.json`. Les données d'une région sont dans `data/route-des-ligues/<région>.json` : niveaux, Champions (équipes en vrais sets, stratégie, IA, sac, récompense), Conseil 4, Maître et ses trois starters (il prend celui qui contre l'équipe gardée), boutique. Le format `[Gen 9] Route des Ligues : Kanto` utilise le mod `routedesligues` : les données officielles de la 9e génération, sans les fiches PokéDraft, avec deux règles, `Route Sac` (le sac de chaque camp) et `Route PV` (les PV gardés pendant le Conseil 4). Chaque Champion est joué par un bot à son nom (« Champion Pierre », « Conseil Olga », « Maître Blue »), connecté à la première demande, avec l'IA d'entraînement de son niveau ; il connaît les sets du joueur, comme dans les jeux. L'IA calcule ses dégâts au vrai niveau des Pokémon.
+
 ### Replays
 
 À la fin de chaque combat, le serveur envoie son journal public à l'API (`server/server/chat-plugins/replays.ts`, `POST /api/internal/replays`) : celui d'un spectateur, avec les PV en %, sans le chat ni les arrivées. L'API le garde avec les joueurs, le format, le vainqueur et le nombre de tours ; un combat déjà reçu n'est pas enregistré deux fois. Les combats privés ne sont pas gardés, et rien n'est envoyé sans `ARENE_API_URL` ni `ARENE_API_SECRET`. L'identifiant d'un replay est celui de la salle sans `battle-` (`battle-gen9ou-12` → `gen9ou-12`).
@@ -246,7 +254,15 @@ Roguelike à étages :
 - `/roguelike/equipe` : objets (pris dans le sac de la run) et attaques (parmi celles connues) à changer hors combat, et les Pokémon perdus ;
 - `/roguelike/combat/<salle>` : l'écran de combat, qui rejoint la salle si la page est rechargée.
 
-Route des Ligues (`/route-des-ligues`) a pour l'instant une page de présentation.
+Route des Ligues :
+
+- `/route-des-ligues` : les régions, de Kanto à Paldea (ouverte, en cours, terminée ou bientôt), la région en cours avec ses badges et la tentative, et la dernière défaite ;
+- `/route-des-ligues/tirage` : les 12 Pokémon du banc, leurs types et leur façon d'évoluer ; le joueur en garde 6 ;
+- `/route-des-ligues/carte` : les 8 arènes, le Conseil 4 et le Maître (faits, en cours, verrouillés), l'équipe au niveau du moment, ce qui est débloqué (CT, pierres, objets, échanges) et le journal de la région ;
+- `/route-des-ligues/arene` : le prochain combat (Champion, stratégie, équipe, niveau, objets en combat, récompense, prime) et la préparation de l'équipe : 4 attaques parmi celles connues au niveau, l'objet tenu, le Pokémon de tête ;
+- `/route-des-ligues/boutique` : potions, Rappels, objets tenus et CT selon l'arène atteinte, le sac, et les 2 échanges à l'aveugle ;
+- `/route-des-ligues/evolution` : l'évolution après un badge (à accepter ou refuser), les pierres utilisables, et les prochaines évolutions ;
+- `/route-des-ligues/combat/<salle>` : l'écran de combat, avec le bouton « Sac » pour utiliser une potion ou un Rappel (ça prend le tour).
 
 Univers PokéDraft :
 
@@ -307,7 +323,9 @@ Voir [data/README.md](data/README.md).
 git subtree pull --prefix server https://github.com/smogon/pokemon-showdown.git master --squash
 ```
 
-Pour que ces mises à jour passent sans conflit, le code d'Arène dans `server/` se limite à `data/mods/pokedraft/` et `config/custom-formats.ts`. Ce dernier est ignoré par le `.gitignore` de Showdown : il a été ajouté avec `git add -f`, et Git le suit ensuite normalement.
+Pour que ces mises à jour passent sans conflit, le code d'Arène dans `server/` vit surtout dans ses propres fichiers : `data/mods/pokedraft/`, `data/mods/routedesligues/`, les plugins d'Arène de `server/chat-plugins/`, `config/custom-formats.ts` et `config/budget.ts`. Ces deux derniers sont ignorés par le `.gitignore` de Showdown : ils ont été ajoutés avec `git add -f`, et Git les suit ensuite normalement.
+
+Quelques fichiers de Showdown lui-même sont modifiés, chaque fois avec un commentaire qui commence par « Arène : » : `sim/side.ts`, `sim/battle.ts` et `sim/battle-queue.ts` (le sac de la Route des Ligues : l'action `item`, l'objet dans la requête, son effet en combat) et `server/chat.ts` (le chargeur de plugins comptait les dossiers voisins comme des niveaux d'imbrication, et ignorait le 4e dossier). Ce sont les endroits à surveiller lors d'un `git subtree pull`.
 
 ## Licence
 

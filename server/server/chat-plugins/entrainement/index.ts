@@ -11,7 +11,7 @@ import { Teams } from '../../../sim/teams';
 import type { ChoiceRequest } from '../../../sim/side';
 import type { Pokemon as RosterPokemon, Roster } from '../../../../data/types/roster';
 import { Drafts, FORMAT, loadRoster } from '../pokedraft';
-import { MultiTrainingAI, TrainingAI, type Level } from './ia';
+import { LeaderAI, MultiTrainingAI, TrainingAI, type Level } from './ia';
 import { BOTS, bansFor, pickFor, setsFor, teamFor, type BotProfile } from './equipes';
 import { smogonSets } from './smogon';
 
@@ -22,6 +22,8 @@ const DRAFT_DELAY = 1_200;
 const MAX_BATTLES = 10;
 const PREPARATION_TTL = 10 * 60_000;
 const MAX_TEAM_LENGTH = 6000;
+/** Temps laissé au bot d'un Champion pour se connecter avant son combat. */
+const LEADER_WAIT = 8_000;
 /** Prouve au filtre de pseudos qu'une connexion est bien un bot : lui seul peut prendre un nom de bot. */
 const SECRET = crypto.randomBytes(24).toString('hex');
 
@@ -120,6 +122,10 @@ class TrainingBot {
 	challenged(from: string, text: string) {
 		const format = toID(text.slice('/challenge'.length).trim().split('|')[0]);
 		if (!format) return;
+		if (this.profile.leader) {
+			this.send(`|/reject ${from}`);
+			return;
+		}
 		if (this.battles.size >= MAX_BATTLES) {
 			this.send(`|/reject ${from}`);
 			return;
@@ -146,7 +152,12 @@ class TrainingBot {
 		if (!ai) {
 			if (!lines.includes('|init|battle')) return;
 			const imposed = Training.imposed.get(room);
-			if (imposed) {
+			if (imposed?.sets) {
+				const sets = imposed.sets;
+				ai = new LeaderAI(imposed.level, this.roster, Math.random, {
+					format, sets: species => sets.find(set => toID(set.species) === species) ?? null,
+				});
+			} else if (imposed) {
 				ai = imposed.multi ?
 					new MultiTrainingAI(imposed.level, this.roster, Math.random, { format }) :
 					new TrainingAI(imposed.level, this.roster, Math.random, { format });
@@ -239,8 +250,35 @@ export const Training = new class {
 	bots: TrainingBot[] = [];
 	botUsers = new WeakSet<User>();
 	prepared = new Map<string, Preparation>();
-	/** Combats lancés par le serveur (roguelike) : le niveau d'IA à jouer, et s'il s'agit d'un combat multi. */
-	imposed = new Map<string, { level: Level, multi: boolean }>();
+	/**
+	 * Combats lancés par le serveur (Roguelike, Route des Ligues) : le niveau d'IA à jouer, s'il s'agit d'un combat multi,
+	 * et pour un Champion de la Route les sets du joueur, qu'il connaît comme dans les jeux.
+	 */
+	imposed = new Map<string, { level: Level, multi: boolean, sets?: PokemonSet[] }>();
+	/** Champions de la Route des Ligues : un bot par Champion, connecté à la première demande. */
+	leaders = new Map<ID, TrainingBot>();
+	reserved = new Set<ID>();
+
+	/** Pseudos réservés aux Champions, que personne d'autre ne peut prendre. */
+	reserve(names: string[]) {
+		for (const name of names) this.reserved.add(toID(name));
+	}
+
+	/** Le bot qui joue ce Champion, connecté au besoin ; null s'il ne se connecte pas à temps. */
+	async leader(name: string): Promise<User | null> {
+		const id = toID(name);
+		this.reserved.add(id);
+		let bot = this.leaders.get(id);
+		if (!bot) {
+			bot = new TrainingBot({ key: `route-${id}`, name, level: 5, leader: true }, loadRoster());
+			this.leaders.set(id, bot);
+			bot.start();
+		}
+		for (let wait = 0; wait < LEADER_WAIT / 100 && !bot.online; wait++) {
+			await new Promise(resolve => setTimeout(resolve, 100));
+		}
+		return bot.online ? Users.get(bot.id) ?? null : null;
+	}
 
 	/** Bots en ligne pour un combat lancé par le serveur, les moins occupés d'abord ; ceux du thème demandé en tête. */
 	availableBots(count: number, theme?: string): User[] {
@@ -303,13 +341,14 @@ export const Training = new class {
 	}
 
 	stop() {
-		for (const bot of this.bots) bot.stop();
+		for (const bot of [...this.bots, ...this.leaders.values()]) bot.stop();
 		this.bots = [];
+		this.leaders.clear();
 	}
 
 	isReserved(name: string) {
 		const id = toID(name);
-		return BOTS.some(profile => toID(profile.name) === id);
+		return this.reserved.has(id) || BOTS.some(profile => toID(profile.name) === id);
 	}
 
 	send(user: User) {

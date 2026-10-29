@@ -50,6 +50,10 @@ const LEVELS = ['', 'Débutant', 'Facile', 'Moyen', 'Difficile', 'Expert']
 const modeInfo = computed(() => {
   const roomid = props.battle.roomid
   if (props.replay) return { badge: 'REPLAY', text: 'Combat terminé', color: '#7a52c8' }
+  if (props.battle.format.startsWith('gen9routedesligues')) {
+    const region = props.battle.format.slice('gen9routedesligues'.length)
+    return { badge: 'ROUTE', text: region.charAt(0).toUpperCase() + region.slice(1), color: '#2a7a40' }
+  }
   if (draftStore.rankedBattles.includes(roomid)) return { badge: 'CLASSÉ', text: 'Draft', color: '#c8362a' }
   if (draftStore.battles.includes(roomid)) return { badge: 'DRAFT', text: 'Amical', color: '#3d6fc8' }
   if (props.battle.format.includes('roguelike')) return { badge: 'ROGUELIKE', text: props.battle.gameType === 'multi' ? 'Coop' : 'Run', color: '#7a52c8' }

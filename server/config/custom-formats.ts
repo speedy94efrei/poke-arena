@@ -30,6 +30,17 @@ export const Formats: import('../sim/dex-formats').FormatList = [
 		},
 	},
 	{
+		name: "[Gen 9] Route des Ligues : Kanto",
+		desc: `Route des Ligues : les Champions, le Conseil 4 et le Maître de Kanto, données officielles de la 9e génération. ` +
+			`Les combats sont lancés par le serveur contre le bot du Champion ; le sac (potions, Rappel) passe par la règle Route Sac.`,
+		mod: 'routedesligues',
+		ruleset: ['Terastal Clause', 'Sleep Clause Mod', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod'],
+		searchShow: false,
+		challengeShow: false,
+		tournamentShow: false,
+		rated: false,
+	},
+	{
 		name: "[Gen 9] PokeDraft Roguelike",
 		desc: `Roguelike à étages : fiches PokéDraft au niveau 50. Les combats sont lancés par le serveur contre l'IA.`,
 		mod: 'pokedraft',

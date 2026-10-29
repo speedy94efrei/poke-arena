@@ -28,7 +28,7 @@ import { type Move } from './dex-moves';
 
 /** A single action that can be chosen. Choices will have one Action for each pokemon. */
 export interface ChosenAction {
-	choice: 'move' | 'switch' | 'instaswitch' | 'revivalblessing' | 'team' | 'shift' | 'pass';// action type
+	choice: 'move' | 'switch' | 'instaswitch' | 'revivalblessing' | 'team' | 'shift' | 'pass' | 'useitem';// action type
 	pokemon?: Pokemon; // the pokemon doing the action
 	targetLoc?: number; // relative location of the target to pokemon (move action only)
 	moveid?: string; // a move to use (move action only)
@@ -44,6 +44,7 @@ export interface ChosenAction {
 	maxMove?: string; // if dynamaxed, the name of the max move
 	terastallize?: string; // if terastallizing, tera type
 	priority?: number; // priority of the action
+	item?: ID; // Arène : objet du sac utilisé (useitem only)
 }
 
 /** One single turn's choice for one single player. */
@@ -153,6 +154,28 @@ export interface MoveRequest {
 	ally?: SideRequestData;
 	noCancel?: boolean;
 	update?: boolean;
+	/** Arène : objets du sac encore utilisables ce combat (Route des Ligues). */
+	bag?: BagRequestData[];
+}
+
+/**
+ * Arène : objets de sac utilisables en combat (Route des Ligues), avec `item <objet> <emplacement>`.
+ * Une potion soigne une part des PV max d'un Pokémon debout ; un Rappel ramène un Pokémon K.O. du banc à 50 %.
+ */
+export const BAG_ITEMS: { [id: string]: { name: string, kind: 'potion' | 'revive', amount: number } } = {
+	potion: { name: 'Potion', kind: 'potion', amount: 0.25 },
+	superpotion: { name: 'Super Potion', kind: 'potion', amount: 0.5 },
+	hyperpotion: { name: 'Hyper Potion', kind: 'potion', amount: 1 },
+	revive: { name: 'Revive', kind: 'revive', amount: 0.5 },
+};
+/** Arène : au plus 2 potions (tous types confondus) et 1 Rappel par combat. */
+export const BAG_LIMITS = { potion: 2, revive: 1 };
+
+export interface BagRequestData {
+	id: ID;
+	name: string;
+	kind: 'potion' | 'revive';
+	count: number;
 }
 export interface WaitRequest {
 	wait: true;
@@ -218,6 +241,10 @@ export class Side {
 	 * lastSelectedMoveSlot (wPlayerMoveListIndex) resets on every switch
 	 */
 	lastSelectedMoveSlot = 0;
+	/** Arène : sac de la Route des Ligues (objet → quantité), posé par la règle du format ; null sans sac. */
+	bag: { [item: string]: number } | null = null;
+	/** Arène : objets du sac déjà utilisés ce combat, par sorte (potions, Rappels). */
+	bagUsed = { potion: 0, revive: 0 };
 	/**
 	 * Same as lastSelectedMove but from the opponent's POV (wEnemySelectedMove).
 	 * There can be discrepancies between this and lastSelectedMove:
@@ -1094,6 +1121,37 @@ export class Side {
 		return true;
 	}
 
+	/** Arène : objets du sac encore utilisables ce combat, compte tenu des limites par combat. */
+	bagRequest(): BagRequestData[] {
+		if (!this.bag) return [];
+		return Object.entries(this.bag)
+			.filter(([id, count]) => count > 0 && BAG_ITEMS[id] && this.bagUsed[BAG_ITEMS[id].kind] < BAG_LIMITS[BAG_ITEMS[id].kind])
+			.map(([id, count]) => ({ id: id as ID, name: BAG_ITEMS[id].name, kind: BAG_ITEMS[id].kind, count }));
+	}
+
+	/** Arène : `item <objet> <emplacement>` utilise un objet du sac sur un Pokémon de l'équipe, à la place d'une attaque. */
+	chooseItem(data: string) {
+		const index = this.getChoiceIndex();
+		if (this.requestState !== 'move') return this.emitChoiceError(`Can't use an item: You can only use items during a move phase`);
+		if (index >= this.active.length) return this.emitChoiceError(`Can't use an item: You sent more choices than active Pokémon`);
+		const [itemText = '', slotText = ''] = data.split(' ');
+		const item = toID(itemText);
+		const usable = this.bagRequest().find(entry => entry.id === item);
+		if (!usable) return this.emitChoiceError(`Can't use an item: No ${itemText || 'item'} left in your bag for this battle`);
+		const slot = parseInt(slotText) - 1;
+		const target = this.pokemon[slot];
+		if (!target) return this.emitChoiceError(`Can't use an item: You do not have a Pokémon in slot ${slotText}`);
+		if (usable.kind === 'revive' && !target.fainted) return this.emitChoiceError(`Can't use an item: ${target.name} is not fainted`);
+		if (usable.kind === 'potion' && (target.fainted || target.hp >= target.maxhp)) {
+			return this.emitChoiceError(`Can't use an item: ${target.name} can't be healed`);
+		}
+		if (this.choice.actions.some(action => action.choice === 'useitem')) {
+			return this.emitChoiceError(`Can't use an item: Only one item per turn`);
+		}
+		this.choice.actions.push({ choice: 'useitem', pokemon: this.active[index], target, item });
+		return true;
+	}
+
 	chooseShift() {
 		const index = this.getChoiceIndex();
 		if (index >= this.active.length) {
@@ -1282,6 +1340,9 @@ export class Side {
 			case 'shift':
 				if (data) return this.emitChoiceError(`Unrecognized data after "shift": ${data}`);
 				if (!this.chooseShift()) return false;
+				break;
+			case 'item':
+				if (!this.chooseItem(data)) return false;
 				break;
 			case 'team':
 				if (!this.chooseTeam(data)) return false;

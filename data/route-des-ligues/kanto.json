@@ -1,0 +1,202 @@
+{
+  "id": "kanto",
+  "name": "Kanto",
+  "dex": [1, 151],
+  "mechanic": "Aucune",
+  "tagline": "La région tutoriel",
+  "starters": ["bulbasaur", "charmander", "squirtle"],
+  "levels": { "gyms": [15, 21, 26, 32, 38, 43, 47, 50], "league": 60, "champion": 65 },
+  "evolutionBadges": { "friendship": 5, "trade": 6 },
+  "gyms": [
+    {
+      "id": "pierre", "name": "Pierre", "type": "Rock", "city": "Argenta", "badge": "Badge Roche", "sprite": "brock", "ai": 3,
+      "strategy": "Racaillou pose Boul'Armure puis Roulade ; Onix encaisse et lance Jet-Pierres.",
+      "bag": "potion.2",
+      "reward": { "tms": ["stealthrock"] },
+      "team": [
+        { "species": "geodude", "level": 15, "ability": "sturdy", "item": "oranberry", "moves": ["defensecurl", "rollout", "rockthrow", "tackle"] },
+        { "species": "omanyte", "level": 15, "ability": "shellarmor", "moves": ["watergun", "mudshot", "withdraw", "bite"] },
+        { "species": "onix", "level": 16, "ability": "sturdy", "item": "sitrusberry", "moves": ["rockthrow", "rocktomb", "bind", "harden"] }
+      ]
+    },
+    {
+      "id": "ondine", "name": "Ondine", "type": "Water", "city": "Azuria", "badge": "Badge Cascade", "sprite": "misty", "ai": 3,
+      "strategy": "Staross, rapide, alterne Rafale Psy et Pistolet à O ; Psykokwak endort avec Bâillement et se protège par Amnésie.",
+      "bag": "potion.2",
+      "reward": { "stones": ["waterstone"] },
+      "team": [
+        { "species": "staryu", "level": 21, "ability": "naturalcure", "moves": ["watergun", "swift", "rapidspin", "recover"] },
+        { "species": "psyduck", "level": 21, "ability": "cloudnine", "item": "oranberry", "moves": ["confusion", "waterpulse", "yawn", "amnesia"] },
+        { "species": "starmie", "level": 22, "ability": "naturalcure", "item": "mysticwater", "moves": ["psybeam", "waterpulse", "swift", "recover"] }
+      ]
+    },
+    {
+      "id": "majorbob", "name": "Major Bob", "type": "Electric", "city": "Carmin sur Mer", "badge": "Badge Foudre", "sprite": "ltsurge", "ai": 3,
+      "strategy": "Voltorbe ouvre avec Étincelle puis Destruction ; Magnéti piège les Acier ; Raichu nettoie.",
+      "bag": "superpotion.2",
+      "reward": { "tms": ["voltswitch"], "stones": ["thunderstone"] },
+      "team": [
+        { "species": "voltorb", "level": 26, "ability": "aftermath", "moves": ["spark", "selfdestruct", "thunderwave", "swift"] },
+        { "species": "magnemite", "level": 27, "ability": "magnetpull", "item": "sitrusberry", "moves": ["spark", "flashcannon", "thunderwave", "supersonic"] },
+        { "species": "raichu", "level": 28, "ability": "static", "item": "magnet", "moves": ["thunderbolt", "quickattack", "irontail", "nuzzle"] }
+      ]
+    },
+    {
+      "id": "erika", "name": "Érika", "type": "Grass", "city": "Céladopole", "badge": "Badge Prisme", "sprite": "erika", "ai": 4,
+      "strategy": "Des statuts partout (Poudre Dodo, Para-Spore) puis Méga-Sangsue et Giga-Sangsue pour tenir.",
+      "bag": "superpotion.2",
+      "reward": { "stones": ["leafstone"], "items": ["leftovers"] },
+      "team": [
+        { "species": "tangela", "level": 33, "ability": "regenerator", "item": "leftovers", "moves": ["sleeppowder", "megadrain", "ancientpower", "stunspore"] },
+        { "species": "victreebel", "level": 33, "ability": "chlorophyll", "moves": ["razorleaf", "sludgebomb", "sleeppowder", "knockoff"] },
+        { "species": "vileplume", "level": 34, "ability": "effectspore", "item": "sitrusberry", "moves": ["stunspore", "gigadrain", "sludgebomb", "moonlight"] },
+        { "species": "exeggutor", "level": 34, "ability": "harvest", "item": "sitrusberry", "moves": ["hypnosis", "gigadrain", "psyshock", "leechseed"] }
+      ]
+    },
+    {
+      "id": "koga", "name": "Koga", "type": "Poison", "city": "Parmanie", "badge": "Badge Âme", "sprite": "koga", "ai": 4,
+      "strategy": "Stall poison : Pics Toxik, Toxik et Abri. Smogo explose à la fin.",
+      "bag": "superpotion.2+revive.1",
+      "reward": { "tms": ["toxic"], "items": ["heavydutyboots"] },
+      "team": [
+        { "species": "koffing", "level": 39, "ability": "levitate", "moves": ["toxicspikes", "sludge", "willowisp", "explosion"] },
+        { "species": "venomoth", "level": 39, "ability": "shielddust", "moves": ["toxic", "protect", "psybeam", "bugbuzz"] },
+        { "species": "muk", "level": 40, "ability": "stickyhold", "item": "leftovers", "moves": ["toxic", "protect", "sludgebomb", "rest"] },
+        { "species": "weezing", "level": 40, "ability": "levitate", "item": "blacksludge", "moves": ["toxic", "protect", "willowisp", "sludgebomb"] }
+      ]
+    },
+    {
+      "id": "morgane", "name": "Morgane", "type": "Psychic", "city": "Safrania", "badge": "Badge Marais", "sprite": "sabrina", "ai": 4,
+      "strategy": "M. Mime pose Mur Lumière et Protection ; Hypnomade endort ; Alakazam sweep.",
+      "bag": "hyperpotion.2+revive.1",
+      "reward": { "tms": ["psychic"], "stones": ["moonstone"] },
+      "team": [
+        { "species": "mrmime", "level": 44, "ability": "filter", "item": "lightclay", "moves": ["lightscreen", "reflect", "psychic", "dazzlinggleam"] },
+        { "species": "jynx", "level": 43, "ability": "dryskin", "moves": ["icebeam", "psychic", "lovelykiss", "drainingkiss"] },
+        { "species": "hypno", "level": 44, "ability": "insomnia", "item": "sitrusberry", "moves": ["hypnosis", "psychic", "thunderpunch", "nastyplot"] },
+        { "species": "alakazam", "level": 45, "ability": "magicguard", "item": "focussash", "moves": ["psychic", "shadowball", "calmmind", "recover"] }
+      ]
+    },
+    {
+      "id": "auguste", "name": "Auguste", "type": "Fire", "city": "Cramois'Île", "badge": "Badge Volcan", "sprite": "blaine", "ai": 5,
+      "strategy": "Arcanin Intimidation et Vitesse Extrême ; Feunard pose Zénith ; Galopa nettoie.",
+      "bag": "hyperpotion.2+revive.1",
+      "reward": { "stones": ["firestone"], "items": ["lifeorb"] },
+      "team": [
+        { "species": "ponyta", "level": 47, "ability": "flashfire", "moves": ["flamecharge", "flareblitz", "stomp", "morningsun"] },
+        { "species": "ninetales", "level": 48, "ability": "flashfire", "item": "heatrock", "moves": ["sunnyday", "flamethrower", "solarbeam", "willowisp"] },
+        { "species": "magmar", "level": 48, "ability": "flamebody", "moves": ["flamethrower", "thunderpunch", "crosschop", "confuseray"] },
+        { "species": "arcanine", "level": 49, "ability": "intimidate", "item": "sitrusberry", "moves": ["extremespeed", "flareblitz", "wildcharge", "morningsun"] },
+        { "species": "rapidash", "level": 49, "ability": "flashfire", "item": "lifeorb", "moves": ["flareblitz", "highhorsepower", "wildcharge", "agility"] }
+      ]
+    },
+    {
+      "id": "giovanni", "name": "Giovanni", "type": "Ground", "city": "Jadielle", "badge": "Badge Terre", "sprite": "giovanni", "ai": 5,
+      "strategy": "Triopikeur pose Piège de Roc ; Nidoking et Nidoqueen couvrent large ; Rhinoféros finit.",
+      "bag": "hyperpotion.2+revive.1",
+      "reward": { "tms": ["earthquake"], "items": ["focussash"] },
+      "team": [
+        { "species": "dugtrio", "level": 50, "ability": "arenatrap", "item": "focussash", "moves": ["stealthrock", "earthquake", "suckerpunch", "rockslide"] },
+        { "species": "marowak", "level": 51, "ability": "rockhead", "item": "thickclub", "moves": ["bonemerang", "rockslide", "swordsdance", "firepunch"] },
+        { "species": "nidoqueen", "level": 51, "ability": "sheerforce", "item": "leftovers", "moves": ["earthpower", "sludgewave", "icebeam", "toxicspikes"] },
+        { "species": "nidoking", "level": 51, "ability": "sheerforce", "item": "lifeorb", "moves": ["earthpower", "sludgewave", "icebeam", "thunderbolt"] },
+        { "species": "rhydon", "level": 52, "ability": "lightningrod", "item": "eviolite", "moves": ["earthquake", "stoneedge", "megahorn", "swordsdance"] }
+      ]
+    }
+  ],
+  "elite": [
+    {
+      "id": "olga", "name": "Olga", "type": "Ice", "sprite": "lorelei-gen3", "ai": 5,
+      "strategy": "Crustabri Exuviation ; Lokhlass encaisse et pose Brume ; Lamantine pivote.",
+      "bag": "hyperpotion.2+revive.1",
+      "team": [
+        { "species": "dewgong", "level": 57, "ability": "thickfat", "item": "leftovers", "moves": ["icebeam", "surf", "protect", "toxic"] },
+        { "species": "cloyster", "level": 58, "ability": "skilllink", "item": "focussash", "moves": ["shellsmash", "iciclespear", "rockblast", "iceshard"] },
+        { "species": "slowbro", "level": 57, "ability": "regenerator", "item": "leftovers", "moves": ["surf", "psychic", "slackoff", "thunderwave"] },
+        { "species": "jynx", "level": 57, "ability": "dryskin", "moves": ["icebeam", "psychic", "lovelykiss", "nastyplot"] },
+        { "species": "lapras", "level": 58, "ability": "waterabsorb", "item": "leftovers", "moves": ["freezedry", "hydropump", "mist", "thunderbolt"] }
+      ]
+    },
+    {
+      "id": "aldo", "name": "Aldo", "type": "Fighting", "sprite": "bruno", "ai": 5,
+      "strategy": "Mackogneur Annule Garde et Dynamopoing ; Kicklee frappe en premier ; Onix et Tartard couvrent les Psy.",
+      "bag": "hyperpotion.2+revive.1",
+      "team": [
+        { "species": "hitmonchan", "level": 58, "ability": "ironfist", "item": "lifeorb", "moves": ["drainpunch", "icepunch", "thunderpunch", "machpunch"] },
+        { "species": "hitmonlee", "level": 58, "ability": "unburden", "item": "whiteherb", "moves": ["highjumpkick", "fakeout", "knockoff", "blazekick"] },
+        { "species": "machamp", "level": 59, "ability": "noguard", "item": "sitrusberry", "moves": ["dynamicpunch", "knockoff", "stoneedge", "bulletpunch"] },
+        { "species": "onix", "level": 58, "ability": "sturdy", "moves": ["stealthrock", "rockslide", "earthquake", "explosion"] },
+        { "species": "poliwrath", "level": 59, "ability": "waterabsorb", "item": "leftovers", "moves": ["waterfall", "brickbreak", "icepunch", "bulkup"] }
+      ]
+    },
+    {
+      "id": "agatha", "name": "Agatha", "type": "Ghost", "sprite": "agatha-gen3", "ai": 5,
+      "strategy": "Hypnose et Malédiction ; Nosferalto pivote ; Ectoplasma sweep spécial.",
+      "bag": "hyperpotion.2+revive.1",
+      "team": [
+        { "species": "haunter", "level": 59, "ability": "levitate", "item": "eviolite", "moves": ["hypnosis", "shadowball", "sludgebomb", "curse"] },
+        { "species": "golbat", "level": 59, "ability": "infiltrator", "item": "eviolite", "moves": ["uturn", "bravebird", "roost", "toxic"] },
+        { "species": "weezing", "level": 59, "ability": "levitate", "item": "blacksludge", "moves": ["willowisp", "sludgebomb", "fireblast", "painsplit"] },
+        { "species": "arbok", "level": 59, "ability": "intimidate", "moves": ["coil", "gunkshot", "suckerpunch", "glare"] },
+        { "species": "gengar", "level": 60, "ability": "cursedbody", "item": "lifeorb", "moves": ["shadowball", "sludgewave", "focusblast", "nastyplot"] }
+      ]
+    },
+    {
+      "id": "peter", "name": "Peter", "type": "Dragon", "sprite": "lance", "ai": 5,
+      "strategy": "Dracolosse Danse Draco et Multiécaille ; Léviator Intimidation ; Ptéra ouvre vite avec Piège de Roc.",
+      "bag": "hyperpotion.2+revive.1",
+      "team": [
+        { "species": "aerodactyl", "level": 60, "ability": "pressure", "item": "focussash", "moves": ["stealthrock", "stoneedge", "earthquake", "taunt"] },
+        { "species": "gyarados", "level": 60, "ability": "intimidate", "item": "leftovers", "moves": ["dragondance", "waterfall", "earthquake", "icefang"] },
+        { "species": "dragonair", "level": 60, "ability": "shedskin", "item": "eviolite", "moves": ["dragonpulse", "thunderwave", "extremespeed", "aquatail"] },
+        { "species": "charizard", "level": 60, "ability": "blaze", "item": "heavydutyboots", "moves": ["flamethrower", "airslash", "dragonpulse", "roost"] },
+        { "species": "dragonite", "level": 61, "ability": "multiscale", "item": "lumberry", "moves": ["dragondance", "outrage", "extremespeed", "earthquake"] }
+      ]
+    }
+  ],
+  "champion": {
+    "id": "blue", "name": "Blue", "type": "Champion", "sprite": "blue", "ai": 5,
+    "strategy": "L'équipe la plus équilibrée de Kanto : Roucarnage ouvre avec Demi-Tour, Alakazam et Rhinoféros balaient, Arcanin pivote. Son starter contre ton équipe.",
+    "bag": "hyperpotion.2+revive.1",
+    "team": [
+      { "species": "pidgeot", "level": 64, "ability": "keeneye", "item": "heavydutyboots", "moves": ["uturn", "bravebird", "roost", "heatwave"] },
+      { "species": "alakazam", "level": 65, "ability": "magicguard", "item": "lifeorb", "moves": ["psychic", "shadowball", "focusblast", "calmmind"] },
+      { "species": "rhydon", "level": 64, "ability": "lightningrod", "item": "eviolite", "moves": ["earthquake", "stoneedge", "megahorn", "stealthrock"] },
+      { "species": "exeggutor", "level": 64, "ability": "chlorophyll", "item": "sitrusberry", "moves": ["gigadrain", "psychic", "sleeppowder", "leechseed"] },
+      { "species": "arcanine", "level": 65, "ability": "intimidate", "item": "leftovers", "moves": ["flareblitz", "extremespeed", "wildcharge", "morningsun"] }
+    ],
+    "starters": {
+      "venusaur": { "species": "venusaur", "level": 66, "ability": "overgrow", "item": "blacksludge", "moves": ["gigadrain", "sludgebomb", "sleeppowder", "synthesis"] },
+      "charizard": { "species": "charizard", "level": 66, "ability": "blaze", "item": "heavydutyboots", "moves": ["flamethrower", "airslash", "focusblast", "roost"] },
+      "blastoise": { "species": "blastoise", "level": 66, "ability": "torrent", "item": "leftovers", "moves": ["surf", "icebeam", "rapidspin", "shellsmash"] }
+    }
+  },
+  "shop": [
+    { "id": "potion", "kind": "bag", "price": 300, "from": 1 },
+    { "id": "revive", "kind": "bag", "price": 2000, "from": 2 },
+    { "id": "superpotion", "kind": "bag", "price": 700, "from": 3 },
+    { "id": "hyperpotion", "kind": "bag", "price": 1500, "from": 6 },
+    { "id": "sitrusberry", "kind": "held", "price": 500, "from": 1 },
+    { "id": "lumberry", "kind": "held", "price": 500, "from": 1 },
+    { "id": "leftovers", "kind": "held", "price": 3000, "from": 3 },
+    { "id": "heavydutyboots", "kind": "held", "price": 3000, "from": 3 },
+    { "id": "focussash", "kind": "held", "price": 3000, "from": 3 },
+    { "id": "lifeorb", "kind": "held", "price": 5000, "from": 5 },
+    { "id": "choiceband", "kind": "held", "price": 5000, "from": 5 },
+    { "id": "choicespecs", "kind": "held", "price": 5000, "from": 5 },
+    { "id": "choicescarf", "kind": "held", "price": 5000, "from": 5 },
+    { "id": "rockyhelmet", "kind": "held", "price": 5000, "from": 5 },
+    { "id": "bodyslam", "kind": "tm", "price": 2000, "from": 1 },
+    { "id": "dig", "kind": "tm", "price": 2000, "from": 2 },
+    { "id": "protect", "kind": "tm", "price": 2000, "from": 2 },
+    { "id": "thunderwave", "kind": "tm", "price": 2000, "from": 3 },
+    { "id": "swordsdance", "kind": "tm", "price": 3000, "from": 3 },
+    { "id": "rockslide", "kind": "tm", "price": 3000, "from": 4 },
+    { "id": "sludgebomb", "kind": "tm", "price": 3000, "from": 4 },
+    { "id": "thunderbolt", "kind": "tm", "price": 5000, "from": 5 },
+    { "id": "icebeam", "kind": "tm", "price": 5000, "from": 5 },
+    { "id": "flamethrower", "kind": "tm", "price": 5000, "from": 5 },
+    { "id": "surf", "kind": "tm", "price": 4000, "from": 5 },
+    { "id": "shadowball", "kind": "tm", "price": 4000, "from": 6 }
+  ]
+}

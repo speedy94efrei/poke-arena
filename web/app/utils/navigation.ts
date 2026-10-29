@@ -61,10 +61,11 @@ export const NAVIGATION: Record<Universe, NavItem[]> = {
   ],
   route: [
     { icon: '◉', label: 'Régions', color: '#2a7a40', to: '/route-des-ligues' },
-    { icon: '★', label: 'Tirage du banc', color: '#2a7a40' },
-    { icon: '▤', label: 'Carte de la région', color: '#2a7a40' },
-    { icon: '⚔', label: 'Arène', color: '#2a7a40' },
-    { icon: '$', label: 'Boutique', color: '#2a7a40' },
+    { icon: '★', label: 'Tirage du banc', color: '#2a7a40', to: '/route-des-ligues/tirage' },
+    { icon: '▤', label: 'Carte de la région', color: '#2a7a40', to: '/route-des-ligues/carte' },
+    { icon: '⚔', label: 'Arène', color: '#2a7a40', to: '/route-des-ligues/arene' },
+    { icon: '$', label: 'Boutique', color: '#2a7a40', to: '/route-des-ligues/boutique' },
+    { icon: '↑', label: 'Évolution', color: '#2a7a40', to: '/route-des-ligues/evolution' },
   ],
   budget: [
     { icon: '▶', label: 'Accueil', color: '#16756c', to: '/budget' },

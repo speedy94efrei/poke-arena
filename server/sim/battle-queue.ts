@@ -111,7 +111,24 @@ export interface PokemonAction {
 	event?: string;
 }
 
-export type Action = MoveAction | SwitchAction | TeamAction | FieldAction | PokemonAction;
+/** Arène : objet du sac utilisé sur un Pokémon de l'équipe (Route des Ligues), avant les changements et les attaques. */
+export interface ItemAction {
+	/** action type */
+	choice: 'useitem';
+	order: 102;
+	/** priority of the action (higher first) */
+	priority: number;
+	/** speed of the active pokemon giving up its turn (higher first if priority tie) */
+	speed: number;
+	/** the active pokemon giving up its turn */
+	pokemon: Pokemon;
+	/** the pokemon healed or revived */
+	target: Pokemon;
+	/** bag item id */
+	item: ID;
+}
+
+export type Action = MoveAction | SwitchAction | TeamAction | FieldAction | PokemonAction | ItemAction;
 
 /**
  * An ActionChoice is like an Action and has the same structure, but it doesn't need to be fully filled out.
@@ -180,6 +197,7 @@ export class BattleQueue {
 				revivalblessing: 6,
 
 				runSwitch: 101,
+				useitem: 102,
 				switch: 103,
 				megaEvo: 104,
 				megaEvoX: 104,

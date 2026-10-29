@@ -19,7 +19,7 @@ import { Teams } from './teams';
 import { Field } from './field';
 import { Pokemon, type EffectState, RESTORATIVE_BERRIES } from './pokemon';
 import { PRNG, type PRNGSeed } from './prng';
-import { type MoveRequest, type ChoiceRequest, Side } from './side';
+import { type MoveRequest, type ChoiceRequest, Side, BAG_ITEMS } from './side';
 import { State } from './state';
 import { BattleQueue, type Action } from './battle-queue';
 import { BattleActions } from './battle-actions';
@@ -1462,6 +1462,7 @@ export class Battle {
 				if (side.allySide) {
 					(requests[i] as MoveRequest).ally = side.allySide.getRequestData(true);
 				}
+				if (side.bag) (requests[i] as MoveRequest).bag = side.bagRequest();
 			}
 			break;
 		}
@@ -2837,6 +2838,35 @@ export class Battle {
 			this.add('-heal', action.target, action.target.getHealth, '[from] move: Revival Blessing');
 			action.pokemon.side.removeSlotCondition(action.pokemon, 'revivalblessing');
 			break;
+		case 'useitem': {
+			// Arène : objet du sac (Route des Ligues), qui prend le tour du Pokémon actif.
+			const side = action.pokemon.side;
+			const item = BAG_ITEMS[action.item];
+			const target = action.target;
+			if (!item || !side.bag?.[action.item]) break;
+			side.bag[action.item]--;
+			side.bagUsed[item.kind]++;
+			this.add('bagitem', side.id, item.name, target);
+			if (item.kind === 'revive') {
+				if (!target.fainted) {
+					this.add('-fail', target);
+					break;
+				}
+				side.pokemonLeft++;
+				target.fainted = false;
+				target.faintQueued = false;
+				target.subFainted = false;
+				target.status = '';
+				target.hp = 1;
+				target.sethp(Math.floor(target.maxhp * item.amount));
+				this.add('-heal', target, target.getHealth, `[from] item: ${item.name}`);
+			} else if (target.fainted || !target.heal(Math.floor(target.maxhp * item.amount))) {
+				this.add('-fail', target);
+			} else {
+				this.add('-heal', target, target.getHealth, `[from] item: ${item.name}`);
+			}
+			break;
+		}
 		case 'runSwitch':
 			this.actions.runSwitch(action.pokemon);
 			break;
