@@ -12,3 +12,5 @@ web/public/combat/
 
 # Secrets du déploiement (deploy/.env.example pour le modèle).
 deploy/.env
+
+.vercel
