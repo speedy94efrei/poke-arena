@@ -1,0 +1,13 @@
+.git
+**/node_modules
+**/.env
+api/vendor
+api/storage/logs/*
+api/storage/framework/cache/*
+api/storage/framework/sessions/*
+api/storage/framework/views/*
+api/bootstrap/cache/*.php
+api/database/*.sqlite
+data
+server
+web

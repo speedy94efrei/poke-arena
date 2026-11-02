@@ -9,3 +9,6 @@ data/cache/
 
 # Décors de combat découpés depuis des planches tierces (voir data/README.md) : non versionnés.
 web/public/combat/
+
+# Secrets du déploiement (deploy/.env.example pour le modèle).
+deploy/.env

@@ -1,0 +1,14 @@
+.git
+**/node_modules
+**/.env
+api
+web
+deploy/**/.env
+data/cache
+server/dist
+server/logs/**
+!server/logs/**/README.md
+!server/logs/logging.md
+server/databases/*.db
+server/config/*.json
+server/config/config.js

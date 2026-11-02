@@ -311,6 +311,48 @@ Sans eux, le site se rabat sur les décors en ligne de Showdown.
 
 Voir [data/README.md](data/README.md).
 
+## Déployer
+
+Le site est une application sans rendu serveur : il part sur Vercel. Le serveur de combat (connexions WebSocket permanentes, combats en mémoire, bots, fichiers de sauvegarde) et l'API (PHP, base SQLite) ont besoin d'un serveur allumé en continu : ils partent ensemble sur un VPS, avec Docker Compose et Caddy, qui fournit le HTTPS et le WSS (`deploy/`).
+
+### Serveur de combat et API (VPS)
+
+Il faut un serveur Linux avec Docker et son plugin Compose (2 Go de mémoire au minimum, 4 conseillés), les ports 80 et 443 ouverts, et deux noms de domaine qui pointent vers lui (enregistrements DNS A, et AAAA en IPv6), par exemple `combat.mondomaine.fr` et `api.mondomaine.fr`.
+
+```bash
+git clone https://github.com/speedy94efrei/poke-arena.git
+cd poke-arena/deploy
+cp .env.example .env
+docker compose up -d --build
+```
+
+Avant le `up`, remplir `deploy/.env` : les deux domaines, `ARENE_SECRET` (secret partagé entre le serveur de combat et l'API, `openssl rand -hex 32`) et `APP_KEY` (`base64:` suivi de `openssl rand -base64 32`, à ne plus changer ensuite). Caddy obtient les certificats au premier démarrage. L'API applique ses migrations à chaque démarrage ; un conteneur `scheduler` lance la tâche quotidienne du classement (`ranked:decay`).
+
+Pour mettre à jour : `git pull`, puis `docker compose up -d --build` dans `deploy/`. Les données survivent dans des volumes Docker : `arene_combat-config` (salons, ladders, sauvegardes du Roguelike et de la Route des Ligues), `arene_combat-logs`, `arene_api-data` (la base SQLite), `arene_api-storage` et `arene_caddy-data` (les certificats). Pour sauvegarder la base :
+
+```bash
+docker run --rm -v arene_api-data:/base -v "$PWD":/sauvegarde alpine tar czf /sauvegarde/api-data.tgz -C /base .
+```
+
+Les journaux se lisent avec `docker compose logs -f combat` (ou `api`, `caddy`).
+
+### Site (Vercel)
+
+Importer le dépôt GitHub dans Vercel, avec `web` comme dossier racine (Root Directory) et l'option « Include files outside the root directory » laissée active : le site lit `data/` au moment du build. Version de Node : 22.x. `web/vercel.json` règle le reste : build statique (`nuxi generate`) et renvoi de toutes les adresses vers l'application.
+
+Deux variables d'environnement, à définir avant le build (elles sont écrites dans le site à ce moment-là, un changement demande donc un nouveau déploiement) :
+
+- `NUXT_PUBLIC_SHOWDOWN_URL` : `wss://combat.mondomaine.fr/showdown/websocket` ;
+- `NUXT_PUBLIC_API_URL` : `https://api.mondomaine.fr/api`.
+
+L'API accepte les requêtes de n'importe quelle origine (règle CORS par défaut de Laravel) : les comptes passent par un jeton dans l'en-tête `Authorization`, sans cookie.
+
+### Avant d'ouvrir au public
+
+- Le serveur de combat tourne encore avec `--no-security` : n'importe qui peut prendre un pseudo libre, y compris celui d'un autre joueur absent, et reprendre sa progression du Roguelike ou de la Route des Ligues. Il faudra lier la connexion au serveur de combat aux comptes de l'API.
+- Les décors de combat (`web/public/combat/`) ne sont pas versionnés : sur Vercel, l'écran de combat utilise son décor de secours.
+- Les noms, sprites et données de Pokémon appartiennent à Nintendo et The Pokémon Company : un site public reste un projet de fan.
+
 ## Tests automatiques
 
 À chaque push sur `main` et à chaque pull request, GitHub Actions (`.github/workflows/tests.yml`) lance trois jobs en parallèle : le serveur de combat (build, typecheck, tests de `test/sim/pokedraft/`), le site (`nuxi typecheck`) et l'API (`php artisan test`, avec SQLite en mémoire). Le workflow se relance aussi à la main depuis l'onglet Actions du dépôt.

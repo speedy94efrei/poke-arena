@@ -1,0 +1,11 @@
+# HTTPS pour les deux domaines publics : Caddy obtient et renouvelle les certificats tout seul (ports 80 et 443 ouverts,
+# DNS des deux domaines pointé vers le serveur). Les WebSockets du serveur de combat passent tels quels.
+{$COMBAT_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy combat:8000
+}
+
+{$API_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy api:80
+}
