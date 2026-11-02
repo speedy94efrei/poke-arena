@@ -52,6 +52,27 @@ class ShowdownSessionTest extends TestCase
             ->assertJsonValidationErrors(['token' => 'Jeton inconnu ou expiré.']);
     }
 
+    public function test_token_without_a_showdown_name_gives_the_account_to_log_in_with(): void
+    {
+        Sanctum::actingAs(User::factory()->named('Mistral')->create());
+        $token = $this->postJson('/api/me/showdown-tokens')->json('token');
+
+        $this->internal()->postJson('/api/internal/showdown-sessions', ['token' => $token])
+            ->assertOk()
+            ->assertExactJson(['name' => 'Mistral', 'showdown_id' => 'mistral']);
+    }
+
+    public function test_battle_server_lists_the_names_of_every_account(): void
+    {
+        User::factory()->named('Mistral')->create();
+        User::factory()->named('Brume Noire')->create();
+
+        $this->getJson('/api/internal/protected-names')->assertForbidden();
+        $this->internal()->getJson('/api/internal/protected-names')
+            ->assertOk()
+            ->assertExactJson(['showdown_ids' => ['brumenoire', 'mistral']]);
+    }
+
     public function test_token_returns_422_when_used_under_another_showdown_name(): void
     {
         Sanctum::actingAs(User::factory()->named('Mistral')->create());

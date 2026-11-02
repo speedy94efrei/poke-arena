@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::prefix('internal')->name('internal.')->middleware(EnsureInternalRequest::class)->group(function () {
     Route::post('/showdown-sessions', [Internal\ShowdownSessionController::class, 'store'])->name('showdown-sessions.store');
+    Route::get('/protected-names', [Internal\ProtectedNameController::class, 'index'])->name('protected-names.index');
     Route::get('/players/{user:showdown_id}/queue-status', [Internal\QueueStatusController::class, 'show'])->name('players.queue-status');
     Route::post('/battles', [Internal\BattleController::class, 'store'])->name('battles.store');
     Route::post('/abandons', [Internal\AbandonController::class, 'store'])->name('abandons.store');

@@ -11,14 +11,16 @@
       Connecté en tant que <b>{{ store.name }}</b>
     </p>
     <p class="connection__hint">
-      Serveur de combat : <code>{{ serverUrl }}</code>. En local, n'importe quel pseudo libre est accepté.
+      <template v-if="loggedIn">Avec le pseudo de ton compte, tu te connectes au compte : ta progression et ton classement lui restent attachés.</template>
+      <template v-else>Le pseudo d'un compte Arène est réservé à son propriétaire. Sans compte, un pseudo libre suffit, mais il n'est pas protégé : crée un compte pour garder ta progression.</template>
+      Serveur de combat : <code>{{ serverUrl }}</code>.
     </p>
   </UiPanel>
 </template>
 
 <script setup lang="ts">
 const { store, serverUrl, connect } = useShowdown()
-const { session } = useAccount()
+const { session, loggedIn } = useAccount()
 const name = useState('lobby-name', () => session.value.name ?? '')
 
 watch(() => session.value.name, (account) => {

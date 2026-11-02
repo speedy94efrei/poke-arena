@@ -12,7 +12,8 @@ use Illuminate\Validation\ValidationException;
 class ShowdownSessionController extends Controller
 {
     /**
-     * Échange un jeton du site contre le compte qu'il prouve. Le jeton ne sert qu'une fois.
+     * Échange un jeton du site contre le compte qu'il prouve. Le jeton ne sert qu'une fois. Sans showdown_id, le serveur
+     * de combat connecte le joueur sous le pseudo du compte ; avec, il vérifie que le pseudo déjà pris est le bon.
      */
     public function store(StoreShowdownSessionRequest $request): JsonResponse
     {
@@ -22,7 +23,7 @@ class ShowdownSessionController extends Controller
         if (! $user) {
             throw ValidationException::withMessages(['token' => 'Jeton inconnu ou expiré.']);
         }
-        if ($user->showdown_id !== $request->string('showdown_id')->toString()) {
+        if ($request->has('showdown_id') && $user->showdown_id !== $request->string('showdown_id')->toString()) {
             throw ValidationException::withMessages(['showdown_id' => "Connecte-toi au serveur de combat sous le pseudo {$user->name}."]);
         }
 

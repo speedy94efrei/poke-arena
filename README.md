@@ -34,7 +34,7 @@ npm ci
 node pokemon-showdown start --no-security 8100
 ```
 
-Le serveur écoute sur le port 8100, celui qu'attend le site. `--no-security` est réservé au développement : il accepte n'importe quel pseudo libre, sans passer par le serveur de connexion de Showdown.
+Le serveur écoute sur le port 8100, celui qu'attend le site. `--no-security` est réservé au développement : il accepte n'importe quel pseudo libre, sans passer par le serveur de connexion de Showdown, et coupe aussi l'anti-flood. Avec l'API branchée (ci-dessous), les pseudos des comptes Arène restent réservés à leur propriétaire, même ainsi.
 
 Pour que les drafts classés comptent, branche le serveur sur l'API avec deux variables d'environnement : l'adresse de l'API et le secret partagé (`ARENE_INTERNAL_SECRET` dans `api/.env`).
 
@@ -76,7 +76,7 @@ Le premier affiche le taux de victoire avec son intervalle de confiance, la dur�
 
 Les tests (`server/test/sim/pokedraft/entrainement.js`) vérifient les choix de chaque niveau dans des situations précises, la reconstruction du combat par le moteur, et font jouer de vrais combats au simulateur : le niveau 5, par règles comme par simulation, doit battre le niveau 1, en PokéDraft comme en OU avec les sets Smogon.
 
-En production, avec un vrai serveur de connexion, ces pseudos devront correspondre à des comptes enregistrés.
+Ces pseudos sont réservés par le serveur lui-même : ni un joueur ni un compte Arène ne peut les prendre.
 
 ### Combat à budget
 
@@ -148,7 +148,7 @@ Le site envoie des commandes `/pokedraft …` (`auth`, `search`, `challenge`, `a
 
 Quand le serveur de combat est branché sur l'API, les drafts lancés par la file sont classés ; les défis entre joueurs restent amicaux.
 
-- **Compte vérifié.** Le serveur de combat accepte n'importe quel pseudo en local, il ne sait donc pas qui joue. Le site demande à l'API un jeton à usage unique (5 min) et l'envoie avec `/pokedraft auth` ; le plugin le fait valider par l'API, qui vérifie que le pseudo du serveur de combat est bien celui du compte. Seul un compte vérifié peut chercher une partie classée. Le site fait cette liaison tout seul quand le pseudo de connexion au serveur de combat est celui du compte.
+- **Compte vérifié.** Le pseudo d'un compte Arène est réservé à son propriétaire (`server/server/chat-plugins/comptes.ts`). Quand le pseudo choisi est celui du compte connecté, le site demande à l'API un jeton à usage unique (5 min) et l'envoie avec `/compte connexion` au lieu de `/trn` : le plugin le fait valider par l'API, puis connecte le joueur sous le pseudo du compte, comme un compte enregistré de Showdown (un invité qui occupait ce pseudo repasse en invité), déjà vérifié pour le classé. Personne d'autre ne peut prendre ce pseudo par `/trn` : le serveur charge la liste des pseudos des comptes au démarrage, puis chaque minute (`GET /api/internal/protected-names`). Un pseudo sans compte reste libre pour tout le monde. Seul un compte vérifié peut chercher une partie classée ; `/pokedraft auth` vérifie encore un joueur déjà connecté sous le pseudo de son compte.
 - **Résultat.** À la fin du combat, le plugin envoie à l'API les bans, les picks et le vainqueur. L'API met à jour les deux joueurs et renvoie leur gain ou perte de PL, que le site affiche en fin de combat. Un même combat n'est jamais compté deux fois.
 - **Abandon.** Quitter un draft classé coûte 5 PL ; 3 abandons en 24 h imposent 15 min d'attente avant la file suivante.
 
@@ -349,7 +349,7 @@ L'API accepte les requêtes de n'importe quelle origine (règle CORS par défaut
 
 ### Avant d'ouvrir au public
 
-- Le serveur de combat tourne encore avec `--no-security` : n'importe qui peut prendre un pseudo libre, y compris celui d'un autre joueur absent, et reprendre sa progression du Roguelike ou de la Route des Ligues. Il faudra lier la connexion au serveur de combat aux comptes de l'API.
+- Les pseudos des comptes Arène sont réservés à leur propriétaire, et la progression du Roguelike et de la Route des Ligues d'un compte est donc protégée. Un pseudo sans compte reste ouvert à tous : la progression d'un invité peut être reprise par quelqu'un qui prend le même pseudo. Le site le signale sous le formulaire de connexion.
 - Les décors de combat (`web/public/combat/`) ne sont pas versionnés : sur Vercel, l'écran de combat utilise son décor de secours.
 - Les noms, sprites et données de Pokémon appartiennent à Nintendo et The Pokémon Company : un site public reste un projet de fan.
 

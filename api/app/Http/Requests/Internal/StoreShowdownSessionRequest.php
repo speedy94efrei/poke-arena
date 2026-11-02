@@ -14,7 +14,7 @@ class StoreShowdownSessionRequest extends FormRequest
     {
         return [
             'token' => ['required', 'string', 'max:100'],
-            'showdown_id' => ['required', 'string', 'max:18'],
+            'showdown_id' => ['sometimes', 'string', 'max:18'],
         ];
     }
 }

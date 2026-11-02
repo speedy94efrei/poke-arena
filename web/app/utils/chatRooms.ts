@@ -76,6 +76,8 @@ const NOTICES: [RegExp, string | ((match: RegExpExecArray) => string)][] = [
   [/You must be registered to send private messages/i, 'Les messages privés sont réservés aux comptes Arène reliés au serveur de combat.'],
   [/is unregistered and cannot be PMed/i, "Ce joueur n'a pas de compte Arène relié : il ne peut pas recevoir de messages privés."],
   [/user .*(was not found|is offline)/i, 'Joueur introuvable : il est peut-être hors ligne.'],
+  [/Your name contains a banned word/i, "Ce pseudo est réservé : il appartient à un compte Arène (connecte-toi à ce compte pour le prendre) ou à un bot du serveur."],
+  [/Someone is already using the name "(.+)"/i, match => `Le pseudo ${match[1]} est déjà pris par un joueur connecté.`],
   [/wants to battle!$|accepted the challenge, starting/i, ''],
   [/^(.+) rejected the challenge\.?$/i, match => `${match[1]} a refusé le défi.`],
   [/^(.+) cancelled the challenge\.?$/i, match => `${match[1]} a annulé le défi.`],

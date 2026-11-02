@@ -46,6 +46,8 @@ const QUERY_TIMEOUT = 6000
 const LOBBY = 'lobby'
 let socket: WebSocket | null = null
 let wantedName = ''
+/** Pseudo du compte Arène : le serveur de combat ne le donne que sur un jeton à usage unique de l'API. */
+let accountToken: (() => Promise<string>) | null = null
 let noticeCounter = 0
 let pmCounter = 0
 
@@ -65,6 +67,21 @@ function notify(text: string) {
 
 function send(text: string) {
   socket?.send(text)
+}
+
+/** Prend le pseudo voulu : celui du compte avec un jeton de l'API, un pseudo libre sinon. */
+async function login() {
+  if (accountToken) {
+    try {
+      send(`|/compte connexion ${await accountToken()}`)
+      return
+    } catch {
+      notify("Ton compte Arène ne répond pas : impossible de prendre son pseudo pour l'instant.")
+      if (store.status === 'connexion') store.status = 'deconnecte'
+      return
+    }
+  }
+  send(`|/trn ${wantedName}`)
 }
 
 function applyPendingRequest(battle: BattleState) {
@@ -139,7 +156,7 @@ function handleGlobal(line: string) {
   const [, command = '', ...args] = line.split('|')
   switch (command) {
     case 'challstr':
-      send(`|/trn ${wantedName}`)
+      void login()
       break
     case 'updateuser': {
       store.name = cleanName(args[0])
@@ -148,6 +165,8 @@ function handleGlobal(line: string) {
     }
     case 'nametaken':
       notify(args[1] || `Le pseudo ${args[0]} est déjà pris.`)
+      // Pseudo refusé pendant la connexion : le formulaire redevient utilisable, la connexion reste ouverte.
+      if (store.status === 'connexion') store.status = 'deconnecte'
       break
     case 'popup':
       if (validationWaiter && /team (is valid|was rejected)/i.test(args.join('|'))) {
@@ -256,14 +275,18 @@ function handleData(data: string) {
 
 export function useShowdown() {
   const url = useRuntimeConfig().public.showdownUrl as string
+  const { session, showdownToken } = useAccount()
 
   const connect = (name: string) => {
     wantedName = name.trim()
     if (!wantedName) return
-    if (socket && socket.readyState <= WebSocket.OPEN) {
-      send(`|/trn ${wantedName}`)
+    const accountName = session.value.token ? session.value.name : null
+    accountToken = accountName && showdownId(accountName) === showdownId(wantedName) ? showdownToken : null
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      void login()
       return
     }
+    if (socket && socket.readyState === WebSocket.CONNECTING) return
     store.status = 'connexion'
     socket = new WebSocket(url)
     socket.onmessage = event => handleData(String(event.data))
